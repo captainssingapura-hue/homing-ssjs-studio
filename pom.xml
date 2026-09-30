@@ -35,6 +35,11 @@
         <module>homing-catalogue-demo-notes</module>
         <module>homing-catalogue-demo-recipes</module>
         <module>homing-catalogue-demo</module>
+        <!-- DocView, the first stage: a doc made into a tree of headings, each with its leaf of parts;
+             the tree as a placement of widgets; the content of every part. Pure, headless. -->
+        <module>homing-docview-tree</module>
+        <!-- The reference docs: one of each kind the view takes, crafted to hold every construct. Docs as data. -->
+        <module>homing-docview-reference</module>
     </modules>
 
     <properties>
