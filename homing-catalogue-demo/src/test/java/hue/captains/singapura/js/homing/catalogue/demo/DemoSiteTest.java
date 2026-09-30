@@ -7,6 +7,9 @@ import hue.captains.singapura.js.homing.catalogue.demo.recipes.RecipesCatalogue;
 import hue.captains.singapura.js.homing.catalogue.demo.recipes.TimerApp;
 import hue.captains.singapura.js.homing.catalogue.site.CatalogueListingApp;
 import hue.captains.singapura.js.homing.catalogue.site.EntryGetAction;
+import hue.captains.singapura.js.homing.docview.site.DocInspectorApp;
+import hue.captains.singapura.js.homing.docview.site.DocViews;
+import hue.captains.singapura.js.homing.docview.site.PayloadGetAction;
 import hue.captains.singapura.js.homing.server.EmptyParam;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Query;
@@ -74,10 +77,20 @@ class DemoSiteTest {
     void theRootAsTheWidgetsReadIt() throws Exception {
         JsonObject root = entry("/");
         assertEquals("Catalogue demo", root.getString("name"));
-        assertEquals(List.of("Notes", "Kitchen", "Welcome"), children(root, "name"));
-        assertEquals(List.of("/notes", "/recipes", "/welcome"), children(root, "to"));
-        assertEquals(List.of("catalogue", "catalogue", "page"), children(root, "kind"));
+        assertEquals(List.of("Notes", "Kitchen", "Reference docs", "Welcome"), children(root, "name"));
+        assertEquals(List.of("/notes", "/recipes", "/reference", "/welcome"), children(root, "to"));
+        assertEquals(List.of("catalogue", "catalogue", "catalogue", "page"), children(root, "kind"));
         assertEquals(List.of("/recipes/soups/laksa", "/recipes/soups/tom-yum"), children(entry("/recipes/soups"), "to"));
+    }
+
+    @Test
+    void theReferenceDocs_eachAtItsPath_inspected_itsPayloadByThatPath() throws Exception {
+        assertEquals(List.of("/reference/markdown", "/reference/rigid", "/reference/named-rigid", "/reference/composed"), children(entry("/reference"), "to"));
+        assertTrue(page("/reference/markdown").contains(DocInspectorApp.class.getCanonicalName()), "the inspector, as a page");
+        String payload = new PayloadGetAction(new DocViews(DemoSite.ROUTER)).execute(new PayloadGetAction.Query("/reference/composed"),
+                new EmptyParam.NoHeaders()).get().body();
+        assertEquals("/reference/composed", new JsonObject(payload).getString("doc"));
+        assertEquals("tree", new JsonObject(payload).getJsonObject("arrangement").getString("engine"));
     }
 
     @Test

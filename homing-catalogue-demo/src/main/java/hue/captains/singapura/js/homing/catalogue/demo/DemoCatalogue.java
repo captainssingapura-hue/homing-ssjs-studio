@@ -26,7 +26,8 @@ public record DemoCatalogue() implements L0_Catalogue<DemoCatalogue> {
     @Override
     public List<Graft<DemoCatalogue>> grafts() {
         return List.of(Graft.of(this, NotesCatalogue.INSTANCE),
-                       Graft.of(this, RecipesCatalogue.INSTANCE).shownAs("Kitchen", "What we cook - the recipes app's tree, shown here as the kitchen"));
+                       Graft.of(this, RecipesCatalogue.INSTANCE).shownAs("Kitchen", "What we cook - the recipes app's tree, shown here as the kitchen"),
+                       Graft.of(this, ReferenceDocsCatalogue.INSTANCE));
     }
 
     @Override

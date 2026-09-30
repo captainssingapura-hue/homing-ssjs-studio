@@ -35,6 +35,17 @@
             <artifactId>homing-catalogue-demo-recipes</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- DocView on the site: its routes and the inspector; and the reference docs it places. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-docview-site</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-docview-reference</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- The site's one MPA: the standard implementation, and the designs it offers. -->
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>

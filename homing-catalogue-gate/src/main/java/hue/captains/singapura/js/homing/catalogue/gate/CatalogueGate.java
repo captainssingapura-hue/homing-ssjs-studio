@@ -105,7 +105,7 @@ public final class CatalogueGate {
         }
         var problems = new ArrayList<String>();
         for (Crate c : closure) {
-            if (!c.name().startsWith("homing-catalogue")) continue;
+            if (!ours(c.name())) continue;
             for (CrateEntry e : c.entries()) {
                 String script = script(e.moduleClass());
                 if (script == null) continue;
@@ -135,7 +135,7 @@ public final class CatalogueGate {
     public static void noPlainModuleImportsADomModule(Crate crate) {
         var problems = new ArrayList<String>();
         for (Crate c : CrateClosure.of(List.of(crate))) {
-            if (!c.name().startsWith("homing-catalogue")) continue;
+            if (!ours(c.name())) continue;
             for (CrateEntry e : c.entries()) {
                 if (e.module() instanceof DomModule<?>) continue;
                 for (var mi : e.module().imports().getAllImports().values()) {
@@ -147,12 +147,15 @@ public final class CatalogueGate {
     }
 
     /**
-     * Classes only the studio's old stack has - its catalogue, its docs and plans, its
-     * bootstrap, its workspace: none is on the classpath, and no crate of it is in the closure.
+     * Classes only the studio's old stack has - its catalogue, its docs' wire to the old
+     * viewers, its plans, its bootstrap, its workspace: none is on the classpath, and no crate
+     * of it is in the closure. The docs themselves are not among them: they are data, in core's
+     * pure {@code homing-doc-model}, which keeps the old package names for compatibility - a
+     * doc's class name says nothing of the stack.
      */
     public static void noOldStudio(Crate crate) {
         for (String name : List.of(
-                "hue.captains.singapura.js.homing.studio.base.Doc",
+                "hue.captains.singapura.js.homing.studio.base.LegacyDocWire",
                 "hue.captains.singapura.js.homing.studio.base.app.Catalogue",
                 "hue.captains.singapura.js.homing.studio.base.tracker.Plan",
                 "hue.captains.singapura.js.homing.studio.base.Bootstrap",
@@ -192,4 +195,7 @@ public final class CatalogueGate {
             return in == null ? null : new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
+
+    /** A crate of this repo's: the catalogue's, or DocView's. */
+    private static boolean ours(String crate) { return crate.startsWith("homing-catalogue") || crate.startsWith("homing-docview"); }
 }

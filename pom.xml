@@ -40,6 +40,8 @@
         <module>homing-docview-tree</module>
         <!-- The reference docs: one of each kind the view takes, crafted to hold every construct. Docs as data. -->
         <module>homing-docview-reference</module>
+        <!-- DocView on a site: a doc placed in a catalogue, its page holding it; the routes by its authentic path; the inspector. -->
+        <module>homing-docview-site</module>
     </modules>
 
     <properties>
