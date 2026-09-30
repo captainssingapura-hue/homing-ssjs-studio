@@ -35,8 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * The listing, knowing no app: at each catalogue, a page of the site's MPA - the
  * listing app, handed the catalogue's address - so it wears the site's chrome
- * and is told its trail; the catalogue as the listing reads it, from the route,
- * its grafted trees among its catalogues, each entry with its authentic path;
+ * and is told its trail; an entry as the widgets read it, from the route -
+ * its grafted trees among its catalogues, each entry with its authentic path
+ * and how its app opens;
  * the route mounted before the site's catch-all.
  */
 class ListingTest {
@@ -79,6 +80,7 @@ class ListingTest {
         static final ShedCatalogue INSTANCE = new ShedCatalogue();
         @Override public HomeCatalogue parent() { return HomeCatalogue.INSTANCE; }
         @Override public String name() { return "Shed"; }
+        @Override public List<Leaf<ShedCatalogue>> leaves() { return List.of(Leaf.of(this, "Clock", "", new Note("clock")).opens(Leaf.Opening.NEW_TAB)); }
     }
 
     static final CatalogueRouter ROUTER = CatalogueRouter.at(Path.of("cat"), HomeCatalogue.INSTANCE, new SayingMpa()).listing(AppListing.INSTANCE);
@@ -96,25 +98,38 @@ class ListingTest {
         assertTrue(e.getMessage().contains("CatalogueRouter.at(mount, root, mpa)"), e.getMessage());
     }
 
-    @Test
-    void theRouteReadsACatalogue_itsGraftsAmongItsCatalogues_eachEntryAtItsAuthenticPath() throws Exception {
-        JsonObject v = new JsonObject(new VertexGetAction(ROUTER).execute(new VertexGetAction.Query("/cat"), new EmptyParam.NoHeaders()).get().body());
-        assertEquals("/cat", v.getString("path"));
-        assertEquals("Home", v.getString("name"));
-        assertEquals(List.of("/cat/shed", "/cat/pantry"), v.getJsonArray("catalogues").stream().map(o -> ((JsonObject) o).getString("to")).toList());
-        JsonObject pantry = v.getJsonArray("catalogues").getJsonObject(1);
-        assertEquals("🥫", pantry.getString("icon"));
-        assertEquals("What is in", pantry.getString("summary"));
-        JsonObject about = v.getJsonArray("pages").getJsonObject(0);
-        assertEquals(Map.of("to", "/cat/about", "name", "About", "summary", "", "badge", "NOTE", "icon", ""), about.getMap());
-        JsonObject inPantry = new JsonObject(new VertexGetAction(ROUTER).execute(new VertexGetAction.Query("/cat/pantry"), new EmptyParam.NoHeaders()).get().body());
-        assertEquals("/cat/pantry/rice", inPantry.getJsonArray("pages").getJsonObject(0).getString("to"));
+    private static JsonObject read(String address) throws Exception {
+        return new JsonObject(new EntryGetAction(ROUTER).execute(new EntryGetAction.Query(address), new EmptyParam.NoHeaders()).get().body());
     }
 
     @Test
-    void anAddressThatNamesNoCatalogueIsAMiss() {
-        for (String nowhere : List.of("/cat/about", "/cat/nope", "/elsewhere")) {
-            var failed = new VertexGetAction(ROUTER).execute(new VertexGetAction.Query(nowhere), new EmptyParam.NoHeaders());
+    void theRouteReadsACatalogue_itsGraftsAmongItsCatalogues_eachEntryAtItsAuthenticPath() throws Exception {
+        JsonObject home = read("/cat");
+        assertEquals("/cat", home.getString("to"));
+        assertEquals("catalogue", home.getString("kind"));
+        assertEquals("Home", home.getString("name"));
+        assertEquals(List.of("/cat/shed catalogue", "/cat/pantry catalogue", "/cat/about page"),
+                home.getJsonArray("children").stream().map(o -> ((JsonObject) o).getString("to") + " " + ((JsonObject) o).getString("kind")).toList());
+        JsonObject pantry = home.getJsonArray("children").getJsonObject(1);
+        assertEquals("🥫", pantry.getString("icon"));
+        assertEquals("What is in", pantry.getString("summary"));
+        JsonObject about = home.getJsonArray("children").getJsonObject(2);
+        assertEquals(Map.of("to", "/cat/about", "kind", "page", "name", "About", "summary", "", "badge", "NOTE", "icon", "", "opens", "in-place"), about.getMap());
+        assertEquals("/cat/pantry/rice", read("/cat/pantry").getJsonArray("children").getJsonObject(0).getString("to"));
+    }
+
+    @Test
+    void theRouteReadsAPage_asItsAppSaysItOpens() throws Exception {
+        JsonObject about = read("/cat/about");
+        assertEquals("page", about.getString("kind"));
+        assertEquals(0, about.getJsonArray("children").size());
+        assertEquals("new-tab", read("/cat/shed/clock").getString("opens"));
+    }
+
+    @Test
+    void anAddressThatNamesNoEntryIsAMiss() {
+        for (String nowhere : List.of("/cat/about/more", "/cat/nope", "/elsewhere")) {
+            var failed = new EntryGetAction(ROUTER).execute(new EntryGetAction.Query(nowhere), new EmptyParam.NoHeaders());
             assertThrows(ExecutionException.class, failed::get, nowhere);
         }
     }
@@ -123,10 +138,10 @@ class ListingTest {
     void theRouteIsMountedBeforeTheSitesCatchAll() {
         var site = new ActionRegistry<RoutingContext>() {
             @Override public Map<String, GetAction<RoutingContext, ?, ?, ?>> getActions() {
-                return Map.of("/*", new VertexGetAction(ROUTER));
+                return Map.of("/*", new EntryGetAction(ROUTER));
             }
             @Override public Map<String, PostAction<RoutingContext, ?, ?, ?>> postActions() { return Map.of(); }
         };
-        assertEquals(List.of(VertexGetAction.PATH, "/*"), List.copyOf(CatalogueRoutes.with(site, ROUTER).getActions().keySet()));
+        assertEquals(List.of(EntryGetAction.PATH, "/*"), List.copyOf(CatalogueRoutes.with(site, ROUTER).getActions().keySet()));
     }
 }

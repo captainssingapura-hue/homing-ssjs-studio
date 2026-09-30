@@ -21,6 +21,12 @@ public record RecipesCatalogue() implements L0_Catalogue<RecipesCatalogue> {
     @Override public String summary() { return "Soups and noodles"; }
     @Override public String icon() { return "🍜"; }
 
+    /** A tool beside the recipes: its app opens it beside, not in place of the recipe being read. */
+    @Override public List<Leaf<RecipesCatalogue>> leaves(Mpa mpa) {
+        return List.of(Leaf.of(this, "Kitchen timer", "Counts a few minutes down, beside the recipe", mpa.page(TimerApp.INSTANCE, new TimerApp.Params("Kitchen timer", 5)))
+                .badge("TOOL").icon("⏲️").opens(Leaf.Opening.NEW_TAB));
+    }
+
     @Override public List<? extends L1_Catalogue<RecipesCatalogue, ?>> subCatalogues() {
         return List.of(SoupsCatalogue.INSTANCE, NoodlesCatalogue.INSTANCE);
     }

@@ -13,10 +13,11 @@
     <artifactId>homing-catalogue-site</artifactId>
 
     <description>
-        The catalogue as a site shows it, knowing no app: the listing at each catalogue -
-        a page of the site's MPA, so it wears the chrome every other page does - the
-        catalogue it reads, as JSON, from /catalogue/vertex, and the helper that mounts
-        that route before the site's catch-all. One crate: CatalogueSiteCrate.
+        The catalogue as a site serves it, knowing no app: what the catalogue widgets read -
+        an entry, a catalogue or a page, from /catalogue/entry - and the helper that mounts
+        that route before the site's catch-all; the listing at each catalogue, a page of the
+        site's MPA hosting the catalogue browser, so it wears the chrome every other page
+        does, and opens an entry as its app says. One crate: CatalogueSiteCrate.
     </description>
 
     <dependencies>
@@ -31,22 +32,11 @@
             <artifactId>homing-site-mpa</artifactId>
             <version>${homing.core.version}</version>
         </dependency>
-        <!-- The party the listing mints from; the href manager and the css manager. -->
+        <!-- The widgets the listing page hosts, and the party they meet in. -->
         <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-core-js</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-component-base</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <!-- The design words the listing's sheet wears. -->
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-design-core</artifactId>
-            <version>${homing.core.version}</version>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-catalogue-widgets</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <!-- The route: a GetAction on the site's server. -->
         <dependency>
@@ -60,41 +50,12 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- The gate, headless and strict. -->
         <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-conformance-rules</artifactId>
-            <version>${homing.core.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-conformance-engine</artifactId>
-            <version>${homing.core.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-designs</artifactId>
-            <version>${homing.core.version}</version>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-catalogue-gate</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <!-- The gate (CatalogueGate) is shared: every module of this repo takes it from this test-jar. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <goals><goal>test-jar</goal></goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

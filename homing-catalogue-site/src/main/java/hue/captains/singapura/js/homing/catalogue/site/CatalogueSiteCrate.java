@@ -1,17 +1,19 @@
 package hue.captains.singapura.js.homing.catalogue.site;
 
+import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetsCrate;
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
+import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
+import hue.captains.singapura.js.homing.workspace.parties.WorkspacePartiesCrate;
 
 import java.util.List;
 
 /**
- * The catalogue as a site shows it: the listing's sheet, the listing, and the
- * page it is. A site that serves its catalogues with {@link AppListing} requires it.
+ * The catalogue as a site shows it: a catalogue's page, the catalogue widgets' host,
+ * and its sheet. A site that serves its catalogues with {@link AppListing} requires it.
  */
 public final class CatalogueSiteCrate implements Crate {
 
@@ -23,19 +25,21 @@ public final class CatalogueSiteCrate implements Crate {
 
     @Override public List<Crate> requires() {
         return List.of(
-                // the DomOpsParty the listing mints from
+                // the page's DomOps party
                 CoreJsCrate.INSTANCE,
-                // the css manager and the href manager
+                // the page's focus party, the css manager
                 ServerCrate.INSTANCE,
-                // the design words the sheet wears
-                DesignCrate.INSTANCE);
+                // the widgets it hosts, and the party they meet in
+                CatalogueWidgetsCrate.INSTANCE,
+                WorkspacePartiesCrate.INSTANCE,
+                // the view buttons
+                UiElementsCrate.INSTANCE);
     }
 
     @Override
     public List<CrateEntry> entries() {
         return List.of(
                 CrateEntry.of(ListingStyles.INSTANCE),
-                CrateEntry.of(CatalogueListingModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(CatalogueListingApp.INSTANCE, StandardJsModuleType.CONSUMER));
     }
 }

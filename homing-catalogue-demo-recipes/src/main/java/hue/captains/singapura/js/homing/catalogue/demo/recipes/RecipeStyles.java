@@ -65,6 +65,29 @@ public record RecipeStyles() implements CssGroup<RecipeStyles> {
         }
     }
 
+    /** The timer's clock: the minutes and seconds left, as a heading, its digits all one width. */
+    public record rc_clock() implements CssClass<RecipeStyles> {
+        @Override public List<? extends Wearable> wears() {
+            return List.of(of(Heading.class, Type.Face.class), of(Heading.class, Type.Scale.class), of(Heading.class, Type.Weight.class), of(Heading.class, Color.Ink.class));
+        }
+        @Override public String body() { return """
+            margin: 8px 0;
+            font-variant-numeric: tabular-nums;
+            """;
+        }
+    }
+
+    /** The timer's buttons, in a row. */
+    public record rc_row() implements CssClass<RecipeStyles> {
+        @Override public String body() { return """
+            display: flex;
+            gap: 8px;
+            """;
+        }
+    }
+
     @Override
-    public List<CssClass<RecipeStyles>> cssClasses() { return List.of(new rc_root(), new rc_title(), new rc_serves(), new rc_heading(), new rc_list()); }
+    public List<CssClass<RecipeStyles>> cssClasses() {
+        return List.of(new rc_root(), new rc_title(), new rc_serves(), new rc_heading(), new rc_list(), new rc_clock(), new rc_row());
+    }
 }

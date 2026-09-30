@@ -4,8 +4,9 @@ import hue.captains.singapura.js.homing.catalogue.demo.notes.NoteApp;
 import hue.captains.singapura.js.homing.catalogue.demo.notes.NotesCatalogue;
 import hue.captains.singapura.js.homing.catalogue.demo.recipes.RecipeApp;
 import hue.captains.singapura.js.homing.catalogue.demo.recipes.RecipesCatalogue;
+import hue.captains.singapura.js.homing.catalogue.demo.recipes.TimerApp;
 import hue.captains.singapura.js.homing.catalogue.site.CatalogueListingApp;
-import hue.captains.singapura.js.homing.catalogue.site.VertexGetAction;
+import hue.captains.singapura.js.homing.catalogue.site.EntryGetAction;
 import hue.captains.singapura.js.homing.server.EmptyParam;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Query;
@@ -61,14 +62,30 @@ class DemoSiteTest {
         }
     }
 
+    private static JsonObject entry(String at) throws Exception {
+        return new JsonObject(new EntryGetAction(DemoSite.ROUTER).execute(new EntryGetAction.Query(at), new EmptyParam.NoHeaders()).get().body());
+    }
+
+    private static List<String> children(JsonObject e, String field) {
+        return e.getJsonArray("children").stream().map(o -> ((JsonObject) o).getString(field)).toList();
+    }
+
     @Test
-    void theRootAsItsListingReadsIt() throws Exception {
-        JsonObject root = new JsonObject(new VertexGetAction(DemoSite.ROUTER).execute(new VertexGetAction.Query("/"), new EmptyParam.NoHeaders()).get().body());
+    void theRootAsTheWidgetsReadIt() throws Exception {
+        JsonObject root = entry("/");
         assertEquals("Catalogue demo", root.getString("name"));
-        assertEquals(List.of("Notes", "Kitchen"), root.getJsonArray("catalogues").stream().map(o -> ((JsonObject) o).getString("name")).toList());
-        assertEquals(List.of("/notes", "/recipes"), root.getJsonArray("catalogues").stream().map(o -> ((JsonObject) o).getString("to")).toList());
-        assertEquals(List.of("/welcome"), root.getJsonArray("pages").stream().map(o -> ((JsonObject) o).getString("to")).toList());
-        JsonObject soups = new JsonObject(new VertexGetAction(DemoSite.ROUTER).execute(new VertexGetAction.Query("/recipes/soups"), new EmptyParam.NoHeaders()).get().body());
-        assertEquals(List.of("/recipes/soups/laksa", "/recipes/soups/tom-yum"), soups.getJsonArray("pages").stream().map(o -> ((JsonObject) o).getString("to")).toList());
+        assertEquals(List.of("Notes", "Kitchen", "Welcome"), children(root, "name"));
+        assertEquals(List.of("/notes", "/recipes", "/welcome"), children(root, "to"));
+        assertEquals(List.of("catalogue", "catalogue", "page"), children(root, "kind"));
+        assertEquals(List.of("/recipes/soups/laksa", "/recipes/soups/tom-yum"), children(entry("/recipes/soups"), "to"));
+    }
+
+    @Test
+    void eachPageOpensAsItsAppSays_theTimerBeside() throws Exception {
+        JsonObject kitchen = entry("/recipes");
+        assertEquals(List.of("/recipes/soups", "/recipes/noodles", "/recipes/kitchen-timer"), children(kitchen, "to"));
+        assertEquals(List.of("in-place", "in-place", "new-tab"), children(kitchen, "opens"));
+        assertEquals("in-place", entry("/recipes/soups/laksa").getString("opens"));
+        assertTrue(page("/recipes/kitchen-timer").contains(TimerApp.class.getCanonicalName()), "the timer app, as a page");
     }
 }

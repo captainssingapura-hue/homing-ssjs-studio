@@ -22,14 +22,19 @@
     <packaging>pom</packaging>
 
     <modules>
-        <!-- The catalogue as a site shows it: the listing at each catalogue, a page of the site's MPA,
-             and the route it reads a catalogue from. Knows no app. -->
+        <!-- The gate every module's tests hold it to. -->
+        <module>homing-catalogue-gate</module>
+        <!-- The catalogue as widgets, each independent, meeting in a catalogue party: the tree, the details,
+             the cards, and the browser - the tree and the details composed. Knows no app. -->
+        <module>homing-catalogue-widgets</module>
+        <!-- The catalogue as a site serves it: the route the widgets read an entry from, and the listing at
+             each catalogue - a page of the site's MPA hosting the browser. Knows no app. -->
         <module>homing-catalogue-site</module>
+        <!-- The demo: two hypothetical apps, each a module of its own that knows no site - notes and
+             recipes, their pages and their trees - and a site that grafts both, on 8106. -->
         <module>homing-catalogue-demo-notes</module>
         <module>homing-catalogue-demo-recipes</module>
         <module>homing-catalogue-demo</module>
-        <!-- The demo: two hypothetical apps, each a module of its own that knows no site - notes and
-             recipes, their pages and their trees - and a site that grafts both, on 8106. -->
     </modules>
 
     <properties>
@@ -40,6 +45,10 @@
         <homing.core.version>LOCAL-SNAPSHOT</homing.core.version>
         <!-- The ui-components (and the MPA's standard implementation), from homing-ssjs-ui-components. -->
         <homing.components.version>LOCAL-SNAPSHOT</homing.components.version>
+        <!-- The workspace: the widget contract and the typed parties widgets meet in (homing-ssjs-workspace). -->
+        <homing.ws.version>LOCAL-SNAPSHOT</homing.ws.version>
+        <!-- The relation grid family (a repo of its own): the tree. -->
+        <homing.relgrid.version>LOCAL-SNAPSHOT</homing.relgrid.version>
         <junit.version>5.11.3</junit.version>
     </properties>
 
