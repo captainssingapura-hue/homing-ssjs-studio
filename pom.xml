@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- The studio sub-domain of homing.js, rebuilt on the site stack: catalogues
+         organise otherwise independent pages, trees compose by grafting, and every
+         page is reached by its authentic path - its position in the composed tree.
+
+         The MODEL is core's (homing-site-catalogue): the catalogue, the graft, the
+         tree and its router, knowing no app. This repo is the implementation around
+         it - the listing a site shows at each catalogue, wearing the site's chrome,
+         and the route it reads from - and, later, the applications: technical
+         writing (docs) and planning (plans), each an app that contributes pages.
+
+         Nothing here depends on the studio's old stack (homing-studio-base and
+         what it brings); a gate says so. -->
+    <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+    <artifactId>homing.js.studio</artifactId>
+    <version>LOCAL-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <!-- The catalogue as a site shows it: the listing at each catalogue, a page of the site's MPA,
+             and the route it reads a catalogue from. Knows no app. -->
+        <module>homing-catalogue-site</module>
+        <module>homing-catalogue-demo-notes</module>
+        <module>homing-catalogue-demo-recipes</module>
+        <module>homing-catalogue-demo</module>
+        <!-- The demo: two hypothetical apps, each a module of its own that knows no site - notes and
+             recipes, their pages and their trees - and a site that grafts both, on 8106. -->
+    </modules>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- The substrate, from the core repo. Its own version, not ours. -->
+        <homing.core.version>LOCAL-SNAPSHOT</homing.core.version>
+        <!-- The ui-components (and the MPA's standard implementation), from homing-ssjs-ui-components. -->
+        <homing.components.version>LOCAL-SNAPSHOT</homing.components.version>
+        <junit.version>5.11.3</junit.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
