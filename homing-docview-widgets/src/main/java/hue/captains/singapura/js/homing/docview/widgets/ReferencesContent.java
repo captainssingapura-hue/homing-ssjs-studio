@@ -18,9 +18,12 @@ public sealed interface ReferencesContent {
     /**
      * A reference: its name, as the doc cites it; its kind - doc, unplaced, external, image; the
      * title and summary of what it names; where it goes - an authentic path, an address, or empty;
-     * and the sections that cite it, by path, the root's "".
+     * and the sections that cite it, each by its path - the root's "" - and its heading.
      */
-    record Ref(String name, String kind, String title, String summary, String to, List<String> citedIn) {}
+    record Ref(String name, String kind, String title, String summary, String to, List<Citing> citedIn) {}
+
+    /** A section citing a reference: its path, and its heading. */
+    record Citing(String path, String label) {}
 
     /** The doc's references, in the order it declares them - none, when it declares none. */
     record References(List<Ref> rows) {}

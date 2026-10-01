@@ -6,7 +6,6 @@ import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
 import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.libs.LibsCrate;
-import hue.captains.singapura.js.homing.relgrid.RelGridCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.panzoom.UiPanZoomCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
@@ -42,9 +41,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 // zoom and pan, for a drawing in place
                 UiPanZoomCrate.INSTANCE,
                 // the stage: the button a widget offers itself by
-                WorkspaceStageCrate.INSTANCE,
-                // the relation grid the references are a table on
-                RelGridCrate.INSTANCE);
+                WorkspaceStageCrate.INSTANCE);
     }
 
     @Override
@@ -79,8 +76,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(DocCodeModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocTableModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocImageModule.INSTANCE, StandardJsModuleType.CONSUMER),
-                // the doc's references, on the relation grid: its relation, and the widget
-                CrateEntry.of(ReferenceRowsModule.INSTANCE, StandardJsModuleType.CONSUMER),
+                // the doc's references, as its last section lists them
                 CrateEntry.of(DocReferencesModule.INSTANCE, StandardJsModuleType.CONSUMER));
     }
 }

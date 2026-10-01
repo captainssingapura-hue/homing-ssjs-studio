@@ -9,6 +9,7 @@ import java.util.List;
 
 import static hue.captains.singapura.js.homing.design.DesignClass.of;
 import static hue.captains.singapura.js.homing.design.Box.Control;
+import static hue.captains.singapura.js.homing.design.Interaction.Current;
 import static hue.captains.singapura.js.homing.design.Interaction.Selectable;
 import static hue.captains.singapura.js.homing.design.Target.Affordance;
 import static hue.captains.singapura.js.homing.design.Target.Motion;
@@ -246,29 +247,49 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return "align-self: flex-end;\n"; }
     }
 
-    /** A doc's references: the whole of the box it is lent - a column of the doc's page - a column of its own: its head, its table. */
+    /** A doc's references, its last section's list: no markers, an entry under the one before. */
     public record dw_refs() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "position: absolute;\ninset: 0;\nbox-sizing: border-box;\npadding: 12px;\noverflow: hidden;\n"; }
+        @Override public String body() { return "list-style: none;\nmargin: 0;\npadding: 0;\ndisplay: flex;\nflex-direction: column;\n"; }
     }
 
-    /** The references' head: what they are, and how many. */
-    public record dw_refs_head() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "flex: none;\ndisplay: flex;\nalign-items: baseline;\ngap: 8px;\n"; }
+    /** A reference's entry: a hairline above it, its head, its summary, where it goes. */
+    public record dw_ref() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Hairline.class, Color.Edge.class)); }
+        @Override public String body() { return "display: flex;\nflex-direction: column;\ngap: 4px;\npadding: 10px 12px;\nborder-top-width: 1px;\nborder-top-style: solid;\n"; }
     }
 
-    public record dw_refs_title() implements CssClass<DocWidgetStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Heading.class, Type.Face.class), of(Heading.class, Type.Weight.class), of(Heading.class, Color.Ink.class)); }
-        @Override public String body() { return "margin: 0;\nfont-size: inherit;\n"; }
-    }
-
-    public record dw_refs_count() implements CssClass<DocWidgetStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Caption.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
+    /** The entry a citation followed asks for: the design's current surface. */
+    public record dw_ref_current() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Current.class, Color.Surface.class)); }
         @Override public String body() { return ""; }
     }
 
-    /** The table's box: the rest of the column, scrolling what it cannot hold. */
-    public record dw_refs_box() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "flex: 1 1 auto;\nmin-height: 0;\noverflow: auto;\n"; }
+    /** An entry's head: its title, and what it is when it is not a page of the site. */
+    public record dw_ref_head() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "display: flex;\nflex-wrap: wrap;\nalign-items: baseline;\ngap: 8px;\n"; }
+    }
+
+    /** A reference's title: set strong; a link, where it goes. */
+    public record dw_ref_title() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Label.class, Type.Weight.class)); }
+        @Override public String body() { return ""; }
+    }
+
+    public record dw_ref_summary() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Muted.class, Color.Ink.class)); }
+        @Override public String body() { return "margin: 0;\nline-height: 1.5;\n"; }
+    }
+
+    /** Where it goes, and where it is cited: small, set back. */
+    public record dw_ref_meta() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Caption.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
+        @Override public String body() { return "margin: 0;\n"; }
+    }
+
+    /** Where a reference goes, as an address is written. */
+    public record dw_ref_where() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Code.class, Type.Face.class)); }
+        @Override public String body() { return "overflow-wrap: anywhere;\n"; }
     }
 
     /** A table's or a figure's caption. */
@@ -283,7 +304,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
                 new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_table_box(), new dw_table(), new dw_th(), new dw_td(),
                 new dw_left(), new dw_center(), new dw_right(), new dw_strong(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
                 new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_drawing(), new dw_diagram(), new dw_push(),
-                new dw_figure_bar(), new dw_fill(), new dw_refs(), new dw_refs_head(), new dw_refs_title(), new dw_refs_count(), new dw_refs_box(),
+                new dw_figure_bar(), new dw_fill(), new dw_refs(), new dw_ref(), new dw_ref_current(), new dw_ref_head(), new dw_ref_title(), new dw_ref_summary(), new dw_ref_meta(), new dw_ref_where(),
                 new dw_caption(),
                 // last, so what is hidden stays hidden whatever else in the sheet says how it lays out
                 new dw_hidden());

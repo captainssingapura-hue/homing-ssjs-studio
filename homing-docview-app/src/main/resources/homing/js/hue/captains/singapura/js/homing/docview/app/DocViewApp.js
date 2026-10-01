@@ -12,10 +12,10 @@
 // followed there. The address's fragment is the section in view - a section's
 // address opens at it, and the fragment follows the reader. The keys: the
 // contents lead; a widget that takes them gives them back to the contents.
-// The references, when the doc declares any: a third column, a table of them; a
-// citation pressed in the doc shows its reference there, the cursor on it - or,
-// with Ctrl or ⌘, opens what it names in a tab of its own; a #ref:name address
-// shows it too.
+// The references, when the doc declares any: the doc's last section, a list of
+// them, in the contents as any section is; a citation pressed in the doc shows
+// its reference there, marked - or, with Ctrl or ⌘, opens what it names in a
+// tab of its own; a #ref:name address shows it too.
 // The stage: one, modal, a party the widgets are given; its steward asks the
 // doc's layout to lend the widget asked for and takes it back after - the very
 // widget, never a copy - so the stage knows the layout, and nothing else.
@@ -23,19 +23,22 @@
 
 const _docViewOwner = Object.freeze({ toString: () => "docView" });
 
-/** The widget types a doc's tree places: its primitives. */
-var _DOC_KINDS = Object.freeze({ prose: DocProse, code: DocCode, table: DocTable, image: DocImage });
+/** The widget types a doc's tree places: its primitives, and the list of its references. */
+var _DOC_KINDS = Object.freeze({ prose: DocProse, code: DocCode, table: DocTable, image: DocImage, references: DocReferences });
 
 class DocView {
     constructor(place, el, payload, at) {
-        var a = DocArrangement.of(payload.tree, payload.doc), self = this;
-        this._refs = payload.references || [];
-        var cells = [{ node: { kind: "cell", id: "contents" }, ratio: 1 }, { node: { kind: "cell", id: "doc" }, ratio: 3 }];
-        if (this._refs.length) cells.push({ node: { kind: "cell", id: "references" }, ratio: 1.4 });
+        var refs = payload.references || [], self = this;
+        var tree = DocView._withReferences(payload.tree, refs);
+        var a = DocArrangement.of(tree, payload.doc);
+        this._refs = refs;
+        this._refsPath = refs.length ? tree.children[tree.children.length - 1].name : null;
         var shell = DocView._el(place, "shell", dv_shell, el);
         var grid = new SplitGrid(place.createBranch("grid"), {
             host: shell, minCellPx: 160, seam: true,
-            layout: { kind: "split", orientation: "horizontal", children: cells }
+            layout: { kind: "split", orientation: "horizontal", children: [
+                { node: { kind: "cell", id: "contents" }, ratio: 1 },
+                { node: { kind: "cell", id: "doc" }, ratio: 3 }] }
         });
         var contentsBox = DocView._el(place, "contentsBox", dv_cell, grid.cell("contents"));
         var docBox = DocView._el(place, "docBox", dv_cell, grid.cell("doc"));
@@ -51,22 +54,30 @@ class DocView {
             StageSteward.over({ placement: function () { return self.layout; }, branch: place.createBranch("stage") }));
         this.contents = new TreeToc(contentsBox, { arrangement: a, label: "Contents" });
         this.layout = new TreeLayout(docBox, { arrangement: a, kinds: _DOC_KINDS, given: given, onShown: function (path) { self._shown(path); } });
+        this.references = this._refsPath ? this.layout.widget(a.root.children[a.root.children.length - 1].leaf[0]) : null;
         this.contents.onPick(function (path) { self.layout.show(path); });
         this.contents.onFold(function (path, open) { self.layout.fold(path, !open); });
         place.graft("contents", this.contents.roots.dom);
         place.graft("doc", this.layout.roots.dom);
         focusParty.root.graft("contents", this.contents.roots.focus);
         this.contents.graft("doc", this.layout.roots.focus);
-        if (this._refs.length) {
-            this.references = new DocReferences(DocView._el(place, "referencesBox", dv_cell, grid.cell("references")), { doc: payload.doc });
-            this.references.join(given);
-            place.graft("references", this.references.roots.dom);
-            this.contents.graft("references", this.references.roots.focus);
-        }
         docBox.addEventListener("click", function (ev) { self._clicked(ev); });
         this.contents.follow(this.layout.shown());
         this._off = HrefManagerInstance.onHashChange(function (h) { self._go(h); });
         if (at) requestAnimationFrame(function () { self._go(at); });
+    }
+
+    /**
+     * The doc's tree with its references appended - its last section, References, its leaf the
+     * list of them - named so no section of the doc's is shadowed. The tree as it came, when the
+     * doc declares none.
+     */
+    static _withReferences(tree, refs) {
+        if (!refs.length) return tree;
+        var taken = new Set(tree.children.map(function (c) { return c.name; })), name = "references";
+        for (var n = 2; taken.has(name); n++) name = "references-" + n;
+        var section = { name: name, label: { text: "References", runs: [] }, leaf: [{ type: "references", key: name + ":0" }], children: [] };
+        return Object.assign({}, tree, { children: tree.children.concat([section]) });
     }
 
     /** A fragment followed: a citation's - #ref:name - its reference shown, the fragment the section's again; else the section it names. */
@@ -84,11 +95,13 @@ class DocView {
         this._cite(cite.getAttribute("data-ref"), ev.ctrlKey || ev.metaKey);
     }
 
-    /** A citation followed: its reference shown beside the doc, the cursor on it - or, asked directly, what it names opened in a tab of its own. */
+    /** A citation followed: its reference shown in the references, marked - or, asked directly, what it names opened in a tab of its own. */
     _cite(name, direct) {
         var ref = this._refs.find(function (r) { return r.name === name; });
         if (direct && ref && ref.to && (ref.kind === "doc" || ref.kind === "external")) { HrefManagerInstance.openNew(ref.to); return; }
-        if (this.references) this.references.show(name);
+        if (!this.references) return;
+        this.layout.show(this._refsPath);
+        this.references.show(name);
     }
 
     /** The section in view: followed in the contents, and written to the fragment - the root's, none. */
@@ -104,7 +117,6 @@ class DocView {
         return e;
     }
 }
-
 function appMain(el, params) {
     css.addClass(el, dv_page);
     var place = domOpsParty.createBranch("docView");

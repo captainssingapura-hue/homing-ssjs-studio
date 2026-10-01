@@ -29,7 +29,12 @@ public final class DocReferences {
     /** The doc's references, resolved against where the site's docs are read. */
     public static List<DocRef> of(Doc doc, DocTree tree, DocPlaces places) {
         Map<String, List<String>> cited = Citations.of(tree);
-        return doc.references().stream().map(r -> resolve(r, cited.getOrDefault(r.name(), List.of()), places)).toList();
+        return doc.references().stream().map(r -> resolve(r, citing(tree, cited.getOrDefault(r.name(), List.of())), places)).toList();
+    }
+
+    /** The sections at those paths, each with its heading as the doc gives it - the root's, the doc's title. */
+    static List<DocRef.Citing> citing(DocTree tree, List<String> paths) {
+        return paths.stream().map(p -> new DocRef.Citing(p, tree.node(p).map(n -> n.label().text()).orElse(p))).toList();
     }
 
     /** The names the doc cites and does not declare: a citation that goes nowhere, which a doc must not have. */
@@ -38,7 +43,7 @@ public final class DocReferences {
         return Citations.of(tree).keySet().stream().filter(n -> !declared.contains(n)).toList();
     }
 
-    static DocRef resolve(Reference r, List<String> citedIn, DocPlaces places) {
+    static DocRef resolve(Reference r, List<DocRef.Citing> citedIn, DocPlaces places) {
         return switch (r) {
             case DocReference d -> places.pathOf(d.target())
                     .map(at -> new DocRef(d.name(), DocRef.DOC, d.target().title(), d.target().summary(), at, citedIn))

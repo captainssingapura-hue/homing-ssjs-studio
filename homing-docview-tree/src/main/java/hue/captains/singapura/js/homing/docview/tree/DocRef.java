@@ -13,10 +13,13 @@ import java.util.Objects;
  *                 catalogue places, {@code to} empty; {@link #EXTERNAL} - an address off the site; {@link #IMAGE} - an
  *                 image the doc ships, not shown yet
  * @param to       where it goes: an authentic path, an address, or empty
- * @param citedIn  the sections citing it, by path - the root's "" - each once, in reading order; empty when it is declared
- *                 and never cited
+ * @param citedIn  the sections citing it - each its path, the root's "", and its label - each once, in reading order;
+ *                 empty when it is declared and never cited
  */
-public record DocRef(String name, String kind, String title, String summary, String to, List<String> citedIn) {
+public record DocRef(String name, String kind, String title, String summary, String to, List<Citing> citedIn) {
+
+    /** A section citing a reference: its path, and its heading as the doc gives it. */
+    public record Citing(String path, String label) {}
 
     public static final String DOC = "doc";
     public static final String UNPLACED = "unplaced";

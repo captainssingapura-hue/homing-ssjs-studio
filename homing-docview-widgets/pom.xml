@@ -47,12 +47,6 @@
             <artifactId>homing-ui-panzoom</artifactId>
             <version>${homing.components.version}</version>
         </dependency>
-        <!-- The relation grid, from its own repo: the doc's references are a table on it. -->
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.ssjs</groupId>
-            <artifactId>rel-grid</artifactId>
-            <version>${homing.relgrid.version}</version>
-        </dependency>
         <!-- The stage: the button a widget offers itself to it by, and the party's type. -->
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js.ws</groupId>

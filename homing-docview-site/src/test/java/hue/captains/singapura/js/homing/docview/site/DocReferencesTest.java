@@ -76,6 +76,9 @@ class DocReferencesTest {
 
     private static DocTree tree(Doc d) { return DocTrees.of(d); }
 
+    /** The section the markdown reference cites from: its path, and its heading. */
+    private static final List<DocRef.Citing> CITATIONS = List.of(new DocRef.Citing("citations", "Citations"));
+
     @Test
     void aDocsPath_isItsReadingPages_neverTheInspectors() {
         var places = DocPlaces.of(ROUTER);
@@ -91,10 +94,10 @@ class DocReferencesTest {
     void theMarkdownReferences_referencesResolve_eachKindAsItShould() {
         var refs = DocReferences.of(MarkdownReference.INSTANCE, tree(MarkdownReference.INSTANCE), DocPlaces.of(ROUTER));
         assertEquals(List.of(
-                new DocRef("rigid", DocRef.DOC, "Rigid reference", ReferenceDocs.RIGID.summary(), "/rigid", List.of("citations")),
-                new DocRef("composed", DocRef.DOC, "Composed reference", ReferenceDocs.COMPOSED.summary(), "/composed", List.of("citations")),
-                new DocRef("commonmark", DocRef.EXTERNAL, "CommonMark", "The markdown specification the reader follows.", "https://commonmark.org", List.of("citations")),
-                new DocRef("unplaced", DocRef.UNPLACED, "An unplaced doc", "Declared and cited, and placed by no catalogue.", "", List.of("citations")),
+                new DocRef("rigid", DocRef.DOC, "Rigid reference", ReferenceDocs.RIGID.summary(), "/rigid", CITATIONS),
+                new DocRef("composed", DocRef.DOC, "Composed reference", ReferenceDocs.COMPOSED.summary(), "/composed", CITATIONS),
+                new DocRef("commonmark", DocRef.EXTERNAL, "CommonMark", "The markdown specification the reader follows.", "https://commonmark.org", CITATIONS),
+                new DocRef("unplaced", DocRef.UNPLACED, "An unplaced doc", "Declared and cited, and placed by no catalogue.", "", CITATIONS),
                 new DocRef("named-rigid", DocRef.DOC, "Named rigid reference", ReferenceDocs.NAMED_RIGID.summary(), "/named-rigid", List.of())), refs,
                 "in the order declared; the last declared and never cited");
         assertEquals(List.of("rigid", "composed", "commonmark", "unplaced"), List.copyOf(Citations.of(tree(MarkdownReference.INSTANCE)).keySet()),
@@ -128,7 +131,8 @@ class DocReferencesTest {
         assertEquals(5, refs.size());
         assertEquals("/rigid", refs.getJsonObject(0).getString("to"));
         assertEquals("unplaced", refs.getJsonObject(3).getString("kind"));
-        assertEquals(List.of("citations"), refs.getJsonObject(0).getJsonArray("citedIn").getList());
+        assertEquals("Citations", refs.getJsonObject(0).getJsonArray("citedIn").getJsonObject(0).getString("label"));
+        assertEquals("citations", refs.getJsonObject(0).getJsonArray("citedIn").getJsonObject(0).getString("path"));
         assertTrue(!body.contains("5d2b8f2e"), "no id anywhere in it");
     }
 

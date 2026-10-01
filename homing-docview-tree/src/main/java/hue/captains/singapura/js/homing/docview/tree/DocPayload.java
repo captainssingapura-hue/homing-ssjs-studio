@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
  *   "items": [ { "type": "prose", "params": [{ "name": "doc", "value": "…" }, { "name": "key", "value": ":0" }],
  *                "content": { "text": "…" } }, … ],
  *   "references": [ { "name": "rigid", "kind": "doc", "title": "…", "summary": "…", "to": "/reference/rigid",
- *                     "citedIn": ["citations"] }, … ] }
+ *                     "citedIn": [{ "path": "citations", "label": "Citations" }] }, … ] }
  * }</pre>
  * The references are the site's to resolve ({@link DocRef}): a doc's tree knows what it declares
  * and cites, and the site where every doc is placed.
@@ -52,10 +52,11 @@ public final class DocPayload {
                 "references", Json.arr(references, DocPayload::reference)));
     }
 
-    /** A reference as the page reads it: { name, kind, title, summary, to, citedIn }. */
+    /** A reference as the page reads it: { name, kind, title, summary, to, citedIn: [{ path, label }] }. */
     private static String reference(DocRef r) {
         return Json.obj(ordered("name", Json.str(r.name()), "kind", Json.str(r.kind()), "title", Json.str(r.title()),
-                "summary", Json.str(r.summary()), "to", Json.str(r.to()), "citedIn", Json.arr(r.citedIn(), Json::str)));
+                "summary", Json.str(r.summary()), "to", Json.str(r.to()),
+                "citedIn", Json.arr(r.citedIn(), c -> Json.obj(ordered("path", Json.str(c.path()), "label", Json.str(c.label()))))));
     }
 
     /** A node of the tree as the page reads it: its name, its label, its leaf's parts by type and key, its children. */
