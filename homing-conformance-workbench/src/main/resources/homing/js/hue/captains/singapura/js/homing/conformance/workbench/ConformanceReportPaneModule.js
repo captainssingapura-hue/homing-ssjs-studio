@@ -56,7 +56,8 @@ class ConformanceReportPane extends WorkbenchPane {
     /** A type's section: its name and how many, its rule set folded, every module with its findings. */
     _type(b, into, name, type, ms, rs, setId) {
         var self = this, sec = this.text(name, "section", wb_type, null, into, b);
-        this.text(name + "-head", "p", wb_section, (_REPORT_TYPES[type] || type) + " (" + ms.length + " module" + (ms.length === 1 ? "" : "s") + ")", sec, b);
+        // A downstream's own type is named by the rule set it registered for it.
+        this.text(name + "-head", "p", wb_section, (_REPORT_TYPES[type] || (rs && rs.title) || type) + " (" + ms.length + " module" + (ms.length === 1 ? "" : "s") + ")", sec, b);
         var withFindings = ms.filter(function (m) { return m.findings.length; }).length;
         var rules = rs && rs.rules ? rs.rules : [];
         var fold = this.text(name + "-rules", "details", wb_rules, null, sec, b);

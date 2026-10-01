@@ -13,10 +13,11 @@
 
     <description>
         Core's conformance studio, parked here: the conformance workbench over core's
-        own crates on the new stack - its JS, its server, its themes - graded with core's
-        allowances and baseline, the report exported on every build. Parked in the studio
-        repo because the workbench needs what core cannot: the workspace and the catalogue
-        site. Run with CoreConformanceStudioServer; listens on 8090.
+        own crates on the new stack - its JS, its server, its palettes - saying of their
+        rules what core's build exported; the report travels in homing-conformance-self's
+        jar and is read from there. The check stays in core; only the viewer is here,
+        because the workbench needs what core cannot have: the workspace and the
+        catalogue site. Run with CoreConformanceStudioServer; listens on 8090.
     </description>
 
     <dependencies>
@@ -25,41 +26,20 @@
             <artifactId>homing-conformance-workbench</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Core's crates on the new stack: its JS, its server, its themes. -->
+        <!-- The check, and through it the crates it grades: their definition, and the report core's build exported. -->
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-core-js</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-component-base</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-theme-color</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-theme-type</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <!-- The run the export makes, and the report it writes. -->
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-conformance-engine</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-conformance-rules</artifactId>
+            <artifactId>homing-conformance-self</artifactId>
             <version>${homing.core.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-conformance-export</artifactId>
+            <version>${homing.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-component-base</artifactId>
             <version>${homing.core.version}</version>
         </dependency>
 
@@ -72,25 +52,10 @@
 
     <build>
         <plugins>
-            <!-- The report, exported on every build and read back by the served studio. -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <id>export-core-conformance-report</id>
-                        <phase>process-classes</phase>
-                        <goals><goal>java</goal></goals>
-                        <configuration>
-                            <mainClass>hue.captains.singapura.js.homing.conformance.studio.core.CoreConformanceExport</mainClass>
-                            <arguments>
-                                <argument>${project.build.outputDirectory}/conformance-report</argument>
-                            </arguments>
-                            <classpathScope>compile</classpathScope>
-                        </configuration>
-                    </execution>
-                </executions>
                 <configuration>
                     <mainClass>hue.captains.singapura.js.homing.conformance.studio.core.CoreConformanceStudioServer</mainClass>
                 </configuration>
