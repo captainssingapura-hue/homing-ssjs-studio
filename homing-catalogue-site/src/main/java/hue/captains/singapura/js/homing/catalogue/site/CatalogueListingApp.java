@@ -1,7 +1,6 @@
 package hue.captains.singapura.js.homing.catalogue.site;
 
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueBrowserModule;
-import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueCardsModule;
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueChoiceModule;
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueChoiceSecretaryModule;
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule;
@@ -15,7 +14,6 @@ import hue.captains.singapura.js.homing.core.ParamCodec;
 import hue.captains.singapura.js.homing.core.QueryString;
 import hue.captains.singapura.js.homing.core.js.DomOpsPartyModule;
 import hue.captains.singapura.js.homing.core.js.domOpsParty;
-import hue.captains.singapura.js.homing.ui.elements.Elements;
 import hue.captains.singapura.js.homing.workspace.parties.MessagingPartyModule;
 
 import java.util.List;
@@ -24,7 +22,7 @@ import java.util.Objects;
 
 /**
  * A catalogue as a page of the site's MPA: the catalogue widgets' host at the catalogue
- * at {@code path} - the tree and the details, or the cards - under the chrome every page
+ * at {@code path} - the tree and the details - under the chrome every page
  * of the site wears. A site makes one per catalogue through {@link AppListing}; the path
  * is stamped into the page, never read off its address - the address is the catalogue's own.
  */
@@ -63,11 +61,9 @@ public record CatalogueListingApp() implements AppModule<CatalogueListingApp.Par
                 .add(new ModuleImports<>(List.of(new CatalogueChoiceModule.CATALOGUE()), CatalogueChoiceModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueChoiceSecretaryModule.CatalogueChoiceSecretary()), CatalogueChoiceSecretaryModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueWidgetModule.CatalogueWidget()), CatalogueWidgetModule.INSTANCE))
-                // the views
+                // the view
                 .add(new ModuleImports<>(List.of(new CatalogueBrowserModule.CatalogueBrowser()), CatalogueBrowserModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new CatalogueCardsModule.CatalogueCards()), CatalogueCardsModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new Elements.ButtonBuilder()), Elements.INSTANCE))
-                .add(new ModuleImports<>(List.of(new ListingStyles.cl_page(), new ListingStyles.cl_bar(), new ListingStyles.cl_host()), ListingStyles.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ListingStyles.cl_page(), new ListingStyles.cl_host()), ListingStyles.INSTANCE))
                 .build();
     }
 

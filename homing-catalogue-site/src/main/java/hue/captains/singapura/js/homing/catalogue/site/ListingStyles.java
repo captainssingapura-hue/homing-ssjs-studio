@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * The listing page's sheet: layout alone - the widget it hosts wears the design's
- * words. The MPA's slot, the whole of what the chrome leaves it; a bar of the views
- * it offers; and under it the box the widget fills.
+ * words. The MPA's slot, the whole of what the chrome leaves it, and in it the box
+ * the widget fills.
  */
 public record ListingStyles() implements CssGroup<ListingStyles> {
 
@@ -16,8 +16,8 @@ public record ListingStyles() implements CssGroup<ListingStyles> {
 
     /**
      * The MPA's slot, as the listing lays it out: the whole of what the page leaves
-     * it, not the reading column's - the bar, then the widget's box, one under the
-     * other. Unlayered, so it outranks the column the slot wears in the MPA's layout layer.
+     * it, not the reading column's - the widget's box, filling it. Unlayered, so it
+     * outranks the column the slot wears in the MPA's layout layer.
      */
     public record cl_page() implements CssClass<ListingStyles> {
         @Override public String body() { return """
@@ -25,7 +25,6 @@ public record ListingStyles() implements CssGroup<ListingStyles> {
             flex: 1 1 auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
             width: auto;
             max-width: none;
             min-height: 0;
@@ -33,17 +32,6 @@ public record ListingStyles() implements CssGroup<ListingStyles> {
             padding: 12px 24px 16px;
             box-sizing: border-box;
             overflow: hidden;
-            """;
-        }
-    }
-
-    /** The views the page offers, in a row. */
-    public record cl_bar() implements CssClass<ListingStyles> {
-        @Override public String body() { return """
-            display: flex;
-            flex: 0 0 auto;
-            align-items: center;
-            gap: 6px;
             """;
         }
     }
@@ -60,5 +48,5 @@ public record ListingStyles() implements CssGroup<ListingStyles> {
     }
 
     @Override
-    public List<CssClass<ListingStyles>> cssClasses() { return List.of(new cl_page(), new cl_bar(), new cl_host()); }
+    public List<CssClass<ListingStyles>> cssClasses() { return List.of(new cl_page(), new cl_host()); }
 }
