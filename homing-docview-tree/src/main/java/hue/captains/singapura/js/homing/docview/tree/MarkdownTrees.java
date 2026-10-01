@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
  *       headings are prose.</li>
  *   <li><b>Nesting is structural.</b> A heading nests under the nearest heading above it of a lower
  *       level, however many levels it skips.</li>
+ *   <li><b>An anchor in a heading</b>, {@code ## Side-bar <a id="side-bar"></a>}, is the section's
+ *       name, used as written as an author's name is; the tag is no part of its label.</li>
  *   <li><b>The title.</b> A first-level heading that comes first and repeats the doc's title is the
  *       root, not a node.</li>
  *   <li><b>Fences.</b> A fence opens with three or more backticks or tildes and closes with the same
@@ -35,6 +37,10 @@ public final class MarkdownTrees {
 
     private static final Pattern HEADING = Pattern.compile("^ {0,3}(#{1,6})(?:[ \\t]+(.*?))?[ \\t]*$");
     private static final Pattern FENCE = Pattern.compile("^( *)(`{3,}|~{3,})(.*)$");
+    /** An anchor its author set in a heading, {@code <a id="x"></a>}: the section's name, as written - and no part of its label. */
+    private static final Pattern ANCHOR = Pattern.compile("\\s*<a\\s+(?:id|name)\\s*=\\s*[\"']([^\"']+)[\"']\\s*/?>\\s*(?:</a>)?");
+    /** What a name may be as written: a name's grammar. */
+    private static final Pattern NAMABLE = Pattern.compile("[A-Za-z0-9._-]{1,48}");
     private static final Pattern DELIMITER = Pattern.compile("^ {0,1}\\|?\\s*:?-+:?\\s*(\\|\\s*:?-+:?\\s*)*\\|?\\s*$");
 
     /** A doc's markdown as a tree, its root labelled by the doc's title. */
@@ -95,8 +101,11 @@ public final class MarkdownTrees {
                 at.flush(prose);
                 while (stack.size() > 1 && stack.get(stack.size() - 1).level >= level) stack.remove(stack.size() - 1);
                 Building parent = stack.get(stack.size() - 1);
-                Label label = HeadingLabels.of(text);
-                var child = new Building(Optional.of(parent.siblings.take(NodeNames.of(label.text()))), label, level);
+                Matcher anchor = ANCHOR.matcher(text);
+                String authored = anchor.find() ? anchor.group(1) : null;
+                Label label = HeadingLabels.of(authored == null ? text : anchor.replaceAll(" ").strip());
+                String name = authored == null ? NodeNames.of(label.text()) : NAMABLE.matcher(authored).matches() ? authored : NodeNames.of(authored);
+                var child = new Building(Optional.of(parent.siblings.take(name)), label, level);
                 parent.children.add(child);
                 stack.add(child);
                 continue;

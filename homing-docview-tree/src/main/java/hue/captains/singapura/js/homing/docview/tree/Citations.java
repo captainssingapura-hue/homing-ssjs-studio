@@ -47,7 +47,7 @@ public final class Citations {
     static String withoutCode(String text) { return SPAN.matcher(FENCE.matcher(text).replaceAll("")).replaceAll(""); }
 
     /** What of a part may cite: its words, wherever they are. */
-    private static List<String> texts(Part part) {
+    static List<String> texts(Part part) {
         return switch (part) {
             case Part.Prose p -> List.of(p.text());
             case Part.Code c -> List.of();
