@@ -4,7 +4,6 @@ import hue.captains.singapura.js.homing.studio.base.composed.ArticulatedCell;
 import hue.captains.singapura.js.homing.studio.base.composed.Articulation;
 import hue.captains.singapura.js.homing.studio.base.composed.CodeSegment;
 import hue.captains.singapura.js.homing.studio.base.composed.ComposedSegment;
-import hue.captains.singapura.js.homing.studio.base.composed.EmbeddedSegment;
 import hue.captains.singapura.js.homing.studio.base.composed.ImageSegment;
 import hue.captains.singapura.js.homing.studio.base.composed.Listable;
 import hue.captains.singapura.js.homing.studio.base.composed.MarkdownSegment;
@@ -40,7 +39,6 @@ import java.util.Optional;
  *   <tr><td>a list whose items are all prose</td><td>prose, written as a markdown list</td></tr>
  *   <tr><td>a list holding other items</td><td>its items, as parts in order</td></tr>
  *   <tr><td>ComposedSegment</td><td>a doc held: a card, its title a link to where the site reads it (grafting its tree in is still an open question)</td></tr>
- *   <tr><td>EmbeddedSegment</td><td>prose naming what is embedded: not shown yet, an open question</td></tr>
  * </table>
  */
 public final class SegmentParts {
@@ -69,7 +67,6 @@ public final class SegmentParts {
             case UnorderedListSegment u -> list(u.items(), false);
             case OrderedListSegment o -> list(o.items(), true);
             case ComposedSegment c -> List.of(new Part.Held(c.doc(), c.resolvedCaption()));
-            case EmbeddedSegment e -> prose("*" + e.resolvedCaption() + "* - an app embedded here; it is not shown in this view yet.");
         };
     }
 
