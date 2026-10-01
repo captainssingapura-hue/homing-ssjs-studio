@@ -23,7 +23,7 @@ public record MermaidEngineModule() implements DomModule<MermaidEngineModule> {
     @Override
     public ImportsFor<MermaidEngineModule> imports() {
         return ImportsFor.<MermaidEngineModule>builder()
-                .add(new ModuleImports<>(List.of(new MermaidLibraryModule.MERMAID_LIBRARY(), new MermaidLibraryModule.MERMAID_GROUND()), MermaidLibraryModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new MermaidLibraryModule.MERMAID_LIBRARY(), new MermaidLibraryModule.MERMAID_PALETTE()), MermaidLibraryModule.INSTANCE))
                 .build();
     }
 

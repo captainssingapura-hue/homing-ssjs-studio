@@ -39,7 +39,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
 
     public static final DocWidgetStyles INSTANCE = new DocWidgetStyles();
 
-    /** The ground a diagram is drawn on - its plate's surface - which its engine reads to draw dark on a dark one. */
+    /** The ground a diagram is drawn on - its plate's surface - which its engine draws on, in the design's colours (MermaidPalette). */
     public static final DesignClass<?> PLATE_GROUND = of(Base.class, Color.Surface.class);
 
     /**
@@ -226,6 +226,8 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
     /** A drawing's view, as a doc dresses it: on the plate's ground, its corners the code's - the frame and the ring are the view's own. */
     public record dw_drawing() implements CssClass<DocWidgetStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(PLATE_GROUND, of(Code.class, Shape.Corner.class)); }
+        /** The design's colours a diagram is drawn in - read by the engine from the page: so every design binds them wherever a drawing is. */
+        @Override public List<? extends Wearable> reads() { return MermaidPalette.pairs(); }
         @Override public String body() { return "padding: 12px;\nflex: 1 1 auto;\nmin-height: 0;\n"; }
     }
 
