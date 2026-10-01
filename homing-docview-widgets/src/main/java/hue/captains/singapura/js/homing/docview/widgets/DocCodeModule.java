@@ -22,6 +22,7 @@ public record DocCodeModule() implements DomModule<DocCodeModule> {
         return ImportsFor.<DocCodeModule>builder()
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CodeContentModule.CODE()), CodeContentModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CodeDiagramModule.CodeDiagram()), CodeDiagramModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_lang(), new DocWidgetStyles.dw_pre()), DocWidgetStyles.INSTANCE))
                 .build();
     }

@@ -22,6 +22,7 @@ public record DocImageModule() implements DomModule<DocImageModule> {
         return ImportsFor.<DocImageModule>builder()
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ImageContentModule.IMAGE()), ImageContentModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new SvgMarkupModule.SvgMarkup()), SvgMarkupModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_figure(), new DocWidgetStyles.dw_svg(), new DocWidgetStyles.dw_caption()),
                         DocWidgetStyles.INSTANCE))
                 .build();

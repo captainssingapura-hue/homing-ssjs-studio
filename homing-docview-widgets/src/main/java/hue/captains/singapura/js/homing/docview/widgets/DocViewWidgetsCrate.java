@@ -12,9 +12,9 @@ import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
 import java.util.List;
 
 /**
- * A doc's primitives, as widgets: prose, code, a table, an image - each made from its type and
- * params alone, asking its content party; their content types, their stewards, and the doc they
- * read from; markdown made into elements; their sheet.
+ * A doc's primitives, as widgets: prose, code - a diagram's drawn beside its source - a table, an
+ * image - each made from its type and params alone, asking its content party; their content types,
+ * their stewards, and the doc they read from; markdown made into elements; their sheet.
  */
 public final class DocViewWidgetsCrate implements Crate {
 
@@ -47,6 +47,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(CodeContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(TableContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(ImageContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                CrateEntry.of(DiagramContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 // the doc they read from, and their stewards
                 CrateEntry.of(DocSourcesModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DocPartStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
@@ -54,8 +55,14 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(CodeStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(TableStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(ImageStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                // diagrams: where mermaid is, its engine - the library loaded only when a diagram is wanted - and their steward, which draws
+                CrateEntry.of(MermaidLibraryModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                CrateEntry.of(MermaidEngineModule.INSTANCE, StandardJsModuleType.CONSUMER),
+                CrateEntry.of(DiagramStewardModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 // markdown made into elements, the base of every primitive, and the primitives
                 CrateEntry.of(MarkdownDomModule.INSTANCE, StandardJsModuleType.CONSUMER),
+                CrateEntry.of(SvgMarkupModule.INSTANCE, StandardJsModuleType.CONSUMER),
+                CrateEntry.of(CodeDiagramModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(ContentWidgetModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocProseModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocCodeModule.INSTANCE, StandardJsModuleType.CONSUMER),

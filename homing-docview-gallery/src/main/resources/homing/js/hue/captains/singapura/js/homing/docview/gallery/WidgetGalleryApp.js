@@ -31,6 +31,7 @@ function appMain(el, params) {
     given[CODE.name] = new MessagingParty(CODE, ContentSecretary, CodeSteward);
     given[TABLE.name] = new MessagingParty(TABLE, ContentSecretary, TableSteward);
     given[IMAGE.name] = new MessagingParty(IMAGE, ContentSecretary, ImageSteward);
+    given[DIAGRAM.name] = new MessagingParty(DIAGRAM, ContentSecretary, DiagramSteward);
 
     var kinds = params.kind === "all" ? Object.keys(_GALLERY_KINDS) : [params.kind];
     var intro = mk("p", gl_intro, el);

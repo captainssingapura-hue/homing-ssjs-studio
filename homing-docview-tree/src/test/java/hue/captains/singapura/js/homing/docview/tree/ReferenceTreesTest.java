@@ -36,7 +36,7 @@ class ReferenceTreesTest {
                 a-table-between-prose  P T3x3 P
                 code-between-prose  P C(java) P C P
                 a-table-first  T2x1
-                a-diagram  C(mermaid)
+                a-diagram  C(mermaid) P C(mermaid)
                 a-section-with-its-own-content-and-86e72a  P
                 a-section-with-its-own-content-and-86e72a/the-first-child  P
                 a-section-with-its-own-content-and-86e72a/the-second-child

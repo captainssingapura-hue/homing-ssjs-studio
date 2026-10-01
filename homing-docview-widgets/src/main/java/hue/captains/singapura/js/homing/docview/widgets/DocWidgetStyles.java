@@ -3,10 +3,15 @@ package hue.captains.singapura.js.homing.docview.widgets;
 import hue.captains.singapura.js.homing.core.CssClass;
 import hue.captains.singapura.js.homing.core.CssGroup;
 import hue.captains.singapura.js.homing.core.Wearable;
+import hue.captains.singapura.js.homing.design.DesignClass;
 
 import java.util.List;
 
 import static hue.captains.singapura.js.homing.design.DesignClass.of;
+import static hue.captains.singapura.js.homing.design.Box.Control;
+import static hue.captains.singapura.js.homing.design.Interaction.Selectable;
+import static hue.captains.singapura.js.homing.design.Target.Affordance;
+import static hue.captains.singapura.js.homing.design.Target.Motion;
 import static hue.captains.singapura.js.homing.design.Emphasis.Muted;
 import static hue.captains.singapura.js.homing.design.Feedback.Danger;
 import static hue.captains.singapura.js.homing.design.Feedback.Success;
@@ -26,12 +31,16 @@ import static hue.captains.singapura.js.homing.design.Text.Link;
 /**
  * The sheet of a doc's primitives, in the design's words and nothing of their own: a widget's
  * column and what it says while it has nothing to show; prose - paragraphs, headings, lists,
- * quotes, code spans, links, rules; a code block and its language; a table - its cells, their
+ * quotes, code spans, links, rules; a code block and its language; a diagram, its plate and the
+ * views picked between; a table - its cells, their
  * alignment, badges and emphasis; a figure and its caption.
  */
 public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
 
     public static final DocWidgetStyles INSTANCE = new DocWidgetStyles();
+
+    /** The ground a diagram is drawn on - its plate's surface - which its engine reads to draw dark on a dark one. */
+    public static final DesignClass<?> PLATE_GROUND = of(Base.class, Color.Surface.class);
 
     /** A widget's root: a column, its content as tall as it needs. */
     public record dw_widget() implements CssClass<DocWidgetStyles> {
@@ -180,6 +189,37 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return "display: block;\nmax-width: 100%;\nheight: auto;\n"; }
     }
 
+
+    /** A part's views, side by side - a diagram, its source - and then what the part is. */
+    public record dw_views() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "display: flex;\nalign-items: center;\ngap: 4px;\n"; }
+    }
+
+    /**
+     * One of a part's views, to pick: a control's rule and corners, a tab's colours - seen at rest,
+     * the design's when picked ({@code aria-selected}) - and the ring a control wears on focus.
+     */
+    public record dw_view() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() {
+            return List.of(of(Control.class, Shape.Rule.class), of(Control.class, Shape.Corner.class), of(Control.class, Color.Edge.class),
+                    of(Selectable.Tab.class, Color.Surface.class), of(Selectable.Tab.class, Color.Ink.class), of(Selectable.Tab.class, Color.Edge.class),
+                    of(Selectable.class, Motion.Ease.class), of(Selectable.class, Affordance.Cursor.class),
+                    of(Body.class, Type.Face.class), of(Caption.class, Type.Scale.class));
+        }
+        @Override public String body() { return "margin: 0;\npadding: 2px 10px;\nborder-style: solid;\n"; }
+    }
+
+    /** A diagram's plate: the drawing on the code's ground, scrolling across when it is wider than the column. */
+    public record dw_plate() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(PLATE_GROUND, of(Hairline.class, Color.Edge.class), of(Code.class, Shape.Corner.class)); }
+        @Override public String body() { return "padding: 12px;\nborder-width: 1px;\nborder-style: solid;\noverflow-x: auto;\n"; }
+    }
+
+    /** A diagram drawn: centred on its plate, as wide as its engine drew it and no wider than the plate. */
+    public record dw_diagram() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "display: block;\nmargin: 0 auto;\nmax-width: 100%;\nheight: auto;\n"; }
+    }
+
     /** A table's or a figure's caption. */
     public record dw_caption() implements CssClass<DocWidgetStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(of(Caption.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
@@ -191,6 +231,6 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         return List.of(new dw_widget(), new dw_note(), new dw_hidden(), new dw_para(), new dw_heading(), new dw_list(), new dw_quote(), new dw_code_span(),
                 new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_table_box(), new dw_table(), new dw_th(), new dw_td(),
                 new dw_left(), new dw_center(), new dw_right(), new dw_strong(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
-                new dw_danger(), new dw_figure(), new dw_svg(), new dw_caption());
+                new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_diagram(), new dw_caption());
     }
 }

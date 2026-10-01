@@ -36,6 +36,7 @@ class DocView {
         given[CODE.name] = new MessagingParty(CODE, ContentSecretary, CodeSteward);
         given[TABLE.name] = new MessagingParty(TABLE, ContentSecretary, TableSteward);
         given[IMAGE.name] = new MessagingParty(IMAGE, ContentSecretary, ImageSteward);
+        given[DIAGRAM.name] = new MessagingParty(DIAGRAM, ContentSecretary, DiagramSteward);
         this.contents = new TreeToc(contentsBox, { arrangement: a, label: "Contents" });
         this.layout = new TreeLayout(docBox, { arrangement: a, kinds: _DOC_KINDS, given: given, onShown: function (path) { self._shown(path); } });
         this.contents.onPick(function (path) { self.layout.show(path); });

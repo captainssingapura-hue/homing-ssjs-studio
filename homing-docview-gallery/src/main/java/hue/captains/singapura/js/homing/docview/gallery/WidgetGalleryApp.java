@@ -12,6 +12,8 @@ import hue.captains.singapura.js.homing.core.js.DomOpsPartyModule;
 import hue.captains.singapura.js.homing.core.js.domOpsParty;
 import hue.captains.singapura.js.homing.docview.widgets.CodeContentModule;
 import hue.captains.singapura.js.homing.docview.widgets.CodeStewardModule;
+import hue.captains.singapura.js.homing.docview.widgets.DiagramContentModule;
+import hue.captains.singapura.js.homing.docview.widgets.DiagramStewardModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocCodeModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocImageModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocProseModule;
@@ -72,6 +74,8 @@ public record WidgetGalleryApp() implements AppModule<WidgetGalleryApp.Params, W
                 .add(new ModuleImports<>(List.of(new CodeStewardModule.CodeSteward()), CodeStewardModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new TableStewardModule.TableSteward()), TableStewardModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ImageStewardModule.ImageSteward()), ImageStewardModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new DiagramContentModule.DIAGRAM()), DiagramContentModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new DiagramStewardModule.DiagramSteward()), DiagramStewardModule.INSTANCE))
                 // the primitives, and what they are shown with
                 .add(new ModuleImports<>(List.of(new DocProseModule.DocProse()), DocProseModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocCodeModule.DocCode()), DocCodeModule.INSTANCE))

@@ -58,6 +58,13 @@ flowchart LR
     leaf --> parts
 ```
 
+A diagram its engine cannot read: the view says why, and keeps its source.
+
+```mermaid
+flowchart LR
+    an [unclosed --> bracket
+```
+
 ## A section with its own content and children
 
 Its own lead - its leaf - shown before its children.

@@ -57,7 +57,8 @@ public final class Specimens {
         by.put("code", List.of(
                 of("Java", "A fence said to be java.", "markdown", "code-between-prose:1"),
                 of("No language said", "A tilde fence with no language: its source, a hash line and all.", "markdown", "code-between-prose:3"),
-                of("Mermaid, as its source", "Until the diagram renderer is registered, a diagram is its source.", "markdown", "a-diagram:0"),
+                of("Mermaid, drawn", "A diagram: drawn by the diagram steward in the background, its source a pick away.", "markdown", "a-diagram:0"),
+                of("Mermaid that cannot be read", "The steward says why it cannot be drawn; the source is still there.", "markdown", "a-diagram:2"),
                 of("A composed doc's code segment", "Said to be bash.", "composed", "a-titled-code-segment:0"),
                 of("A rigid doc by names", "A typed code segment, java.", "named-rigid", "how_it_reads:0"),
                 missing("code")));
