@@ -42,6 +42,10 @@
         <module>homing-docview-reference</module>
         <!-- DocView on a site: a doc placed in a catalogue, its page holding it; the routes by its authentic path; the inspector. -->
         <module>homing-docview-site</module>
+        <!-- A doc's primitives as widgets - prose, code, a table, an image - each working alone, by its params. -->
+        <module>homing-docview-widgets</module>
+        <!-- The DocView widgets gallery, on 8107: each primitive working alone, by its params. -->
+        <module>homing-docview-gallery</module>
     </modules>
 
     <properties>
