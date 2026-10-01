@@ -57,6 +57,8 @@
         <!-- The conformance studio on the new stack: its workbench, and the studios parked here. -->
         <module>homing-conformance-workbench</module>
         <module>homing-conformance-studio-core</module>
+        <module>homing-conformance-studio-components</module>
+        <module>homing-conformance-studio-workspace</module>
     </modules>
 
     <properties>

@@ -27,8 +27,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -113,18 +115,26 @@ public final class ConformanceStudio {
     /**
      * The report a build exported beside {@code anchor}: {@code conformance-report/} at the root of
      * the classpath entry the anchor's class was loaded from - a directory, or a jar read in place.
+     * That entry's own, never another's: a classpath can carry the reports of several builds.
      */
     public static ConformanceReportSource exportedReport(Class<?> anchor) {
-        URL url = anchor.getResource("/conformance-report/report.json");
-        if (url == null) throw new IllegalStateException("no exported conformance report beside " + anchor.getName() + ": the build's export must run first");
+        URL where = anchor.getProtectionDomain().getCodeSource().getLocation();
         try {
-            URI uri = url.toURI();
-            if ("jar".equals(uri.getScheme())) {
-                try { FileSystems.newFileSystem(uri, Map.of()); } catch (FileSystemAlreadyExistsException already) { /* read in place, as before */ }
+            Path entry = Path.of(where.toURI());
+            Path dir;
+            if (Files.isDirectory(entry)) dir = entry.resolve("conformance-report");
+            else {
+                URI jar = URI.create("jar:" + entry.toUri());
+                FileSystem fs;
+                try { fs = FileSystems.newFileSystem(jar, Map.of()); }
+                catch (FileSystemAlreadyExistsException already) { fs = FileSystems.getFileSystem(jar); }
+                dir = fs.getPath("/conformance-report");
             }
-            return new ConformanceReportSource(Path.of(uri).getParent());
+            if (!Files.isRegularFile(dir.resolve("report.json")))
+                throw new IllegalStateException("no exported conformance report beside " + anchor.getName() + " in " + entry + ": the build's export must run first");
+            return new ConformanceReportSource(dir);
         } catch (URISyntaxException | IOException e) {
-            throw new IllegalStateException("the exported report could not be opened: " + url, e);
+            throw new IllegalStateException("the exported report could not be opened beside " + anchor.getName() + ": " + where, e);
         }
     }
 
