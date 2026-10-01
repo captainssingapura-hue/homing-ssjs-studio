@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+        <artifactId>homing.js.studio</artifactId>
+        <version>LOCAL-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>homing-docview-gallery</artifactId>
+
+    <description>
+        The DocView widgets gallery, a small site of its own on 8107: a page for each of a doc's
+        primitives - prose, code, a table, an image - and one for all of them, each specimen a
+        widget made from its type and params alone, asking the page's content parties, whose
+        stewards read the reference docs placed beside them. Every specimen is checked against
+        the docs it names.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-docview-widgets</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- The routes the stewards read from, and the inspector at each reference doc. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-docview-site</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-docview-reference</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- The listing at each catalogue. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-catalogue-site</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- The site's one MPA: the standard implementation, and the designs it offers. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-site-mpa-standard</artifactId>
+            <version>${homing.components.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-designs</artifactId>
+            <version>${homing.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-catalogue-gate</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- mvn -o -pl homing-docview-gallery exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>hue.captains.singapura.js.homing.docview.gallery.GalleryServer</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
