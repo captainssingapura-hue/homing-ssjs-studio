@@ -1,6 +1,8 @@
 // =============================================================================
 // CatalogueBrowser — a site's catalogue browsed: the tree and the details of
-// what is picked, side by side - one above the other when its box is narrow.
+// what is picked, side by side on one sheet - a panel lifted off the page once,
+// everything on it flat: the tree the lesser part of a golden split, a hairline
+// between them, each scrolling on its own.
 // A composed widget, an umbrella over two of its own (CatalogueTree,
 // CatalogueDetails), each lent a box of the browser's own and grafted: its
 // DomOps party into the browser's, its focus party into the browser's - which
@@ -36,15 +38,22 @@ class CatalogueBrowser {
         css.addClass(root, cw_browser);
         root.setAttribute("role", "region");
         root.setAttribute("aria-label", "Catalogue, and the entry picked");
+        container.appendChild(root);
+        // one sheet: a panel, lifted off the page once - in a design that draws depth, the only thing
+        // that is - and what it holds lies flat on it, nothing raised off the sheet
+        this._sheet = new PanelBuilder().fills().host(root).build(this._dom.createBranch("sheet"));   // the panel activates the branch it is given
+        this._sheet.elevation("elevated");
+        var split = this._dom.createElement("split", "div");
+        css.addClass(split, cw_split);
         var treeBox = this._dom.createElement("treeBox", "div");
         css.addClass(treeBox, cw_pane);
         css.addClass(treeBox, cw_pane_tree);
         var detailsBox = this._dom.createElement("detailsBox", "div");
         css.addClass(detailsBox, cw_pane);
         css.addClass(detailsBox, cw_pane_details);
-        root.appendChild(treeBox);
-        root.appendChild(detailsBox);
-        container.appendChild(root);
+        split.appendChild(treeBox);
+        split.appendChild(detailsBox);
+        this._sheet.body.appendChild(split);
         this.root = root;
         this._focusParty = focusParties.mobile(name);
         this._tree = new CatalogueTree(treeBox, { at: (params && params.at) || "/" });
@@ -89,6 +98,7 @@ class CatalogueBrowser {
         this.leave();
         this._details.dispose();
         this._tree.dispose();
+        this._sheet.dispose();
         this._focusParty.dissolve();
         this._dom.dissolve();
     }

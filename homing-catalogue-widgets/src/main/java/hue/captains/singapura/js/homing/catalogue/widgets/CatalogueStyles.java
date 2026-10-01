@@ -12,6 +12,7 @@ import static hue.captains.singapura.js.homing.design.Emphasis.Muted;
 import static hue.captains.singapura.js.homing.design.Feedback.Danger;
 import static hue.captains.singapura.js.homing.design.Interaction.Interactive;
 import static hue.captains.singapura.js.homing.design.Layer.Raised;
+import static hue.captains.singapura.js.homing.design.Structure.Hairline;
 import static hue.captains.singapura.js.homing.design.Target.Affordance;
 import static hue.captains.singapura.js.homing.design.Target.Color;
 import static hue.captains.singapura.js.homing.design.Target.Motion;
@@ -23,12 +24,13 @@ import static hue.captains.singapura.js.homing.design.Text.Heading;
 import static hue.captains.singapura.js.homing.design.Text.Kicker;
 import static hue.captains.singapura.js.homing.design.Text.Label;
 import static hue.captains.singapura.js.homing.design.Text.Lede;
+import static hue.captains.singapura.js.homing.design.Text.Link;
 
 /**
  * The catalogue widgets' sheet, in the design's words and nothing of their own:
- * the bodies lay out, the designs colour, set and shape. The browser's two panes
- * side by side, one above the other when narrow; a tree row's name and badge;
- * the details' box; and the cards - a catalogue's head, then its entries as
+ * the bodies lay out, the designs colour, set and shape. The browser's one sheet,
+ * its two panes in a golden split; a tree row's name and badge; the details,
+ * flat on the sheet; and the cards - a catalogue's head, then its entries as
  * raised tiles, each a press away.
  */
 public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
@@ -37,37 +39,53 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
 
     // ── the browser ─────────────────────────────────────────────────────────
 
-    /** The browser: the tree and the details side by side, wrapping one above the other when the width will not hold both. */
+    /** The browser: room around the one sheet it lays its two panes on. */
     public record cw_browser() implements CssClass<CatalogueStyles> {
         @Override public String body() { return """
             display: flex;
-            flex-wrap: wrap;
-            align-content: stretch;
-            gap: 16px;
+            flex-direction: column;
+            box-sizing: border-box;
             padding: 16px;
+            min-height: 0;
+            """;
+        }
+    }
+
+    /**
+     * The sheet's two panes, side by side in a golden split: the tree the lesser part, the details
+     * the greater - 1 to 1.618 - the tree never narrower than its names can bear.
+     */
+    public record cw_split() implements CssClass<CatalogueStyles> {
+        @Override public String body() { return """
+            display: grid;
+            grid-template-columns: minmax(180px, 1fr) minmax(0, 1.618fr);
+            flex: 1 1 auto;
+            min-height: 0;
+            """;
+        }
+    }
+
+    /** A pane the browser lends a subordinate: a box it fills, scrolling on its own. */
+    public record cw_pane() implements CssClass<CatalogueStyles> {
+        @Override public String body() { return """
+            position: relative;
+            box-sizing: border-box;
+            min-width: 0;
+            min-height: 0;
             overflow: auto;
             """;
         }
     }
 
-    /** A pane the browser lends a subordinate: a box it fills. */
-    public record cw_pane() implements CssClass<CatalogueStyles> {
-        @Override public String body() { return """
-            position: relative;
-            min-width: 0;
-            min-height: 320px;
-            """;
-        }
-    }
-
-    /** The tree's pane: the narrower. */
+    /** The tree's pane: the lesser part, a hairline at its end - the one line on the sheet. */
     public record cw_pane_tree() implements CssClass<CatalogueStyles> {
-        @Override public String body() { return "flex: 1 1 240px;\n"; }
+        @Override public List<? extends Wearable> wears() { return List.of(of(Hairline.class, Color.Edge.class)); }
+        @Override public String body() { return "padding: 12px 8px;\nborder-inline-end-width: 1px;\nborder-inline-end-style: solid;\n"; }
     }
 
-    /** The details' pane: the wider. */
+    /** The details' pane: the greater part, the entry set in it with room to read. */
     public record cw_pane_details() implements CssClass<CatalogueStyles> {
-        @Override public String body() { return "flex: 2 1 320px;\n"; }
+        @Override public String body() { return "padding: 28px 36px;\n"; }
     }
 
     // ── a tree row ──────────────────────────────────────────────────────────
@@ -108,6 +126,24 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
             box-sizing: border-box;
             """;
         }
+    }
+
+    /** The entry picked, flat on the sheet: its kicker, its name, its summary, the way to it - a column with room between. */
+    public record cw_entry() implements CssClass<CatalogueStyles> {
+        @Override public String body() { return """
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            max-width: 64ch;
+            """;
+        }
+    }
+
+    /** The way to the entry - Browse, Open: a link, set as a label is. */
+    public record cw_way() implements CssClass<CatalogueStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Link.class, Color.Ink.class), of(Link.class, Type.Decoration.class), of(Label.class, Type.Weight.class)); }
+        @Override public String body() { return "margin-top: 8px;\n"; }
     }
 
     /** Pick an entry to see it here - said quietly. */
@@ -218,9 +254,9 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
 
     @Override
     public List<CssClass<CatalogueStyles>> cssClasses() {
-        return List.of(new cw_browser(), new cw_pane(), new cw_pane_tree(), new cw_pane_details(),
+        return List.of(new cw_browser(), new cw_split(), new cw_pane(), new cw_pane_tree(), new cw_pane_details(),
                 new cw_row(), new cw_row_name(), new cw_row_badge(),
-                new cw_details(), new cw_hint(), new cw_failed(), new cw_hidden(),
+                new cw_details(), new cw_entry(), new cw_way(), new cw_hint(), new cw_failed(), new cw_hidden(),
                 new cw_cards(), new cw_kicker(), new cw_title(), new cw_summary(), new cw_section_title(), new cw_grid(),
                 new cw_tile(), new cw_tile_name(), new cw_tile_badge(), new cw_tile_summary());
     }
