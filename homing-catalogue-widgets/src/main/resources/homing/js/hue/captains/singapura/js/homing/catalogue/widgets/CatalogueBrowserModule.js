@@ -19,7 +19,8 @@
 // then the details; leaving is the other way round. Joined with nothing given,
 // the scope stands alone, and the tree and the details still meet in it.
 //
-//   new CatalogueBrowser(container, params)   params: { at } - the catalogue browsed from, "/" by default
+//   new CatalogueBrowser(container, params)   params: { at, here? } - the catalogue browsed from, "/" by
+//                                             default; the page's own address, for the details (CatalogueDetails)
 //   browser.root  browser.roots   { dom, focus }: its own, its subordinates' grafted in them
 //   browser.join(given)   given: { [type name]: party }; a second join without a leave is refused
 //   browser.leave()   browser.scope()   browser.activate()   browser.dispose()
@@ -62,7 +63,7 @@ class CatalogueBrowser {
         this.root = root;
         this._focusParty = focusParties.mobile(name);
         this._tree = new CatalogueTree(treeBox, { at: (params && params.at) || "/" });
-        this._details = new CatalogueDetails(detailsBox, {});
+        this._details = new CatalogueDetails(detailsBox, { here: params && params.here });
         this._dom.graft("tree", this._tree.roots.dom);
         this._dom.graft("details", this._details.roots.dom);
         this._focusParty.root.graft("tree", this._tree.roots.focus);

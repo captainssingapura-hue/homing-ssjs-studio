@@ -30,7 +30,7 @@ function appMain(el, params) {
     el.appendChild(box);
     var given = {};
     given[CATALOGUE.name] = party;
-    var widget = new CatalogueBrowser(box, { at: at });
+    var widget = new CatalogueBrowser(box, { at: at, here: at });   // the page is the catalogue's: the details offer no way to it
     place.graft("widget", widget.roots.dom);
     focusParty.root.graft("widget", widget.roots.focus);
     widget.join(given);
