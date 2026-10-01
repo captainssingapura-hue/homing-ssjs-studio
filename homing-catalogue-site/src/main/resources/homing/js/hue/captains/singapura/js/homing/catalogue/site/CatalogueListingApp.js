@@ -10,9 +10,9 @@
 // The page is the substrate of the catalogue party the widgets meet in
 // (Messaging Parties Are Joined Top-Down): a party at the root, its own
 // secretary the type's; the page a member of it, first - it picks its own
-// catalogue, the tree's place, so the details open on it - then the widget,
-// made, grafted and joined. Opening is the page's: on Opening it goes where
-// the entry's app says - in place, or beside.
+// catalogue, the tree's root row, so the cursor and the details open on it -
+// then the widget, made, grafted and joined. Opening is the page's: on Opening
+// it goes where the entry's app says - in place, or beside.
 // =============================================================================
 
 const _listingOwner = Object.freeze({ toString: () => "catalogueListing" });

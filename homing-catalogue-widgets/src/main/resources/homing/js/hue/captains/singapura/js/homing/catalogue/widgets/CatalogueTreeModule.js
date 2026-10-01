@@ -3,7 +3,8 @@
 // down - its catalogues (its own and the trees it grafts, alike) and its pages,
 // each a row with its icon, name and badge; a catalogue folds, a page is a
 // leaf; what is under a catalogue read from the site when it is first
-// unfolded. The catalogue at `at` is the tree's place, not a row.
+// unfolded. The catalogue at `at` is the tree's root row, open from the start,
+// what is under it beneath it - the listing's own catalogue, where the tree is.
 // It paints no ground of its own: it lies on whatever holds it - a pane, a
 // sheet - as the details do.
 //
@@ -48,7 +49,10 @@ class CatalogueTree extends CatalogueWidget {
         });
         this.entries.get(this._at).then(function (e) {
             if (!self.alive) return;
-            self._roots = self._read(e, 0);
+            // the catalogue at `at`: the root row, open, its own beneath it
+            self._nodes.set(self._at, { entry: e, depth: 0, kids: self._read(e, 1) });
+            self._open.add(self._at);
+            self._roots = [self._at];
             self._tree.tell(new RelTreeViewChanged());
             if (self._pending) self._follow(self._pending);
         }, function (e) { console.error("[CatalogueTree] the catalogue at " + self._at + " was not read: " + e.message); });
@@ -116,15 +120,16 @@ class CatalogueTree extends CatalogueWidget {
 
     /**
      * The cursor to what someone else picked - the catalogues that hold it read and unfolded
-     * first, as its address names them; and a catalogue picked, unfolded too, so what is in it shows.
+     * first, as its address names them, the root among them; and a catalogue picked, unfolded too,
+     * so what is in it shows. The root itself picked, the cursor is on the root row.
      */
     _follow(to) {
         var self = this;
         this._picked = to;
-        if (!CatalogueEntries.under(this._at, to)) return;
+        if (to !== this._at && !CatalogueEntries.under(this._at, to)) return;
         if (!this._roots.length) { this._pending = to; return; }
         this._pending = null;
-        var holders = CatalogueEntries.between(this._at, to).concat([to]);
+        var holders = to === this._at ? [to] : [this._at].concat(CatalogueEntries.between(this._at, to), [to]);
         holders.reduce(function (p, h) { return p.then(function () { return self._load(h); }); }, Promise.resolve()).then(function () {
             if (!self.alive || self._picked !== to) return;
             holders.forEach(function (h) { var n = self._nodes.get(h); if (n && n.entry.kind === "catalogue") self._open.add(h); });
