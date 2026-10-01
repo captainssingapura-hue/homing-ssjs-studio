@@ -4,6 +4,8 @@
 // each a row with its icon, name and badge; a catalogue folds, a page is a
 // leaf; what is under a catalogue read from the site when it is first
 // unfolded. The catalogue at `at` is the tree's place, not a row.
+// It paints no ground of its own: it lies on whatever holds it - a pane, a
+// sheet - as the details do.
 //
 // Joined to a catalogue party, the cursor is the pick: a move onto an entry
 // tells the party it is picked, and what the party says is picked, the cursor
@@ -38,6 +40,7 @@ class CatalogueTree extends CatalogueWidget {
         this.root.appendChild(box);
         this._tree = new RelTree({
             container: box, branch: this.branch.createBranch("tree"), label: "Catalogue", folder: true,
+            surface: false,   // no ground of its own: it lies on what holds it, as the details do
             relation: { view: function () { return self._places(); }, cellFor: function (key) { return self._cellFor(key); } },
             ask: function (q) { return self._answer(q); },
             onCursorMoved: function (key) { if (key !== self._picked && self._nodes.has(key)) { self._picked = key; self.pick(key); } },

@@ -39,14 +39,33 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
 
     // ── the browser ─────────────────────────────────────────────────────────
 
-    /** The browser: room around the one sheet it lays its two panes on. */
+    /** The browser: room around the one sheet it lays its two panes on, the sheet in its middle. */
     public record cw_browser() implements CssClass<CatalogueStyles> {
         @Override public String body() { return """
             display: flex;
             flex-direction: column;
+            align-items: center;
             box-sizing: border-box;
             padding: 16px;
             min-height: 0;
+            """;
+        }
+    }
+
+    /**
+     * Where the sheet lies: the page's middle part - its golden share, 61.8% - never narrower than
+     * 880px, all of a narrower page, and no wider than 1440px however wide the page is. The sheet
+     * fills it, as a panel fills what holds it.
+     */
+    public record cw_sheet() implements CssClass<CatalogueStyles> {
+        @Override public String body() { return """
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+            box-sizing: border-box;
+            width: min(100%, max(880px, 61.8%));
+            max-width: 1440px;
             """;
         }
     }
@@ -254,7 +273,7 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
 
     @Override
     public List<CssClass<CatalogueStyles>> cssClasses() {
-        return List.of(new cw_browser(), new cw_split(), new cw_pane(), new cw_pane_tree(), new cw_pane_details(),
+        return List.of(new cw_browser(), new cw_sheet(), new cw_split(), new cw_pane(), new cw_pane_tree(), new cw_pane_details(),
                 new cw_row(), new cw_row_name(), new cw_row_badge(),
                 new cw_details(), new cw_entry(), new cw_way(), new cw_hint(), new cw_failed(), new cw_hidden(),
                 new cw_cards(), new cw_kicker(), new cw_title(), new cw_summary(), new cw_section_title(), new cw_grid(),

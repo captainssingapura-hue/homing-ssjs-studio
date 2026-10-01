@@ -1,8 +1,9 @@
 // =============================================================================
 // CatalogueBrowser — a site's catalogue browsed: the tree and the details of
 // what is picked, side by side on one sheet - a panel lifted off the page once,
-// everything on it flat: the tree the lesser part of a golden split, a hairline
-// between them, each scrolling on its own.
+// in its middle part and never narrower than its least, everything on it flat:
+// the tree the lesser part of a golden split, a hairline between them, each
+// scrolling on its own.
 // A composed widget, an umbrella over two of its own (CatalogueTree,
 // CatalogueDetails), each lent a box of the browser's own and grafted: its
 // DomOps party into the browser's, its focus party into the browser's - which
@@ -39,9 +40,13 @@ class CatalogueBrowser {
         root.setAttribute("role", "region");
         root.setAttribute("aria-label", "Catalogue, and the entry picked");
         container.appendChild(root);
-        // one sheet: a panel, lifted off the page once - in a design that draws depth, the only thing
-        // that is - and what it holds lies flat on it, nothing raised off the sheet
-        this._sheet = new PanelBuilder().fills().host(root).build(this._dom.createBranch("sheet"));   // the panel activates the branch it is given
+        // one sheet, in the middle of the page and never less than its least: a panel, lifted off the
+        // page once - in a design that draws depth, the only thing that is - and what it holds lies
+        // flat on it, nothing raised off the sheet
+        var place = this._dom.createElement("place", "div");
+        css.addClass(place, cw_sheet);
+        root.appendChild(place);
+        this._sheet = new PanelBuilder().fills().host(place).build(this._dom.createBranch("sheet"));   // the panel activates the branch it is given
         this._sheet.elevation("elevated");
         var split = this._dom.createElement("split", "div");
         css.addClass(split, cw_split);
