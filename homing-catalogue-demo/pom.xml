@@ -41,6 +41,12 @@
             <artifactId>homing-docview-app</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- PlanView: the reference plans, read on the same desk. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-planview-app</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
             <artifactId>homing-docview-site</artifactId>

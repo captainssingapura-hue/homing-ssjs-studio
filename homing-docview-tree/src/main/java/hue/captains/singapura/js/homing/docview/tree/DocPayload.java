@@ -94,7 +94,8 @@ public final class DocPayload {
                 "leaf", Json.arr(n.leaf(), (WidgetRef r) -> Json.str(r.value())), "children", Json.arr(n.children(), DocPayload::node)));
     }
 
-    private static String label(TreePlacement.Label l) {
+    /** A heading's label as the page reads it: its text, and its runs - what any tree a page lays out writes. */
+    public static String label(TreePlacement.Label l) {
         return Json.obj(ordered("text", Json.str(l.text()), "runs", Json.arr(l.runs(), r -> Json.obj(ordered("kind", Json.str(kind(r)), "text", Json.str(r.text()))))));
     }
 
@@ -108,7 +109,7 @@ public final class DocPayload {
     }
 
     /** A widget's params as a party carries them: in the order of their names. */
-    static String params(String doc, String key) {
+    public static String params(String doc, String key) {
         return "[" + Json.obj(ordered("name", Json.str(DocArrangements.DOC), "value", Json.str(doc))) + ","
                 + Json.obj(ordered("name", Json.str(DocArrangements.KEY), "value", Json.str(key))) + "]";
     }
@@ -134,7 +135,8 @@ public final class DocPayload {
                 "badge", Json.str(c.badge()), "align", Json.str(c.align()), "emphasis", Json.str(c.emphasis())));
     }
 
-    private static Map<String, String> ordered(String... kv) {
+    /** Entries in the order given, for {@link Json#obj}: key, value (already JSON), key, value… */
+    public static Map<String, String> ordered(String... kv) {
         var m = new LinkedHashMap<String, String>();
         for (int i = 0; i < kv.length; i += 2) m.put(kv[i], kv[i + 1]);
         return m;

@@ -11,6 +11,7 @@ import hue.captains.singapura.js.homing.docview.app.DocViewApp;
 import hue.captains.singapura.js.homing.docview.site.DocInspectorApp;
 import hue.captains.singapura.js.homing.docview.site.DocViews;
 import hue.captains.singapura.js.homing.docview.site.PayloadGetAction;
+import hue.captains.singapura.js.homing.planview.app.PlanViewApp;
 import hue.captains.singapura.js.homing.server.EmptyParam;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Query;
@@ -78,9 +79,9 @@ class DemoSiteTest {
     void theRootAsTheWidgetsReadIt() throws Exception {
         JsonObject root = entry("/");
         assertEquals("Catalogue demo", root.getString("name"));
-        assertEquals(List.of("Notes", "Kitchen", "Reference docs", "Welcome"), children(root, "name"));
-        assertEquals(List.of("/notes", "/recipes", "/reference", "/welcome"), children(root, "to"));
-        assertEquals(List.of("catalogue", "catalogue", "catalogue", "page"), children(root, "kind"));
+        assertEquals(List.of("Notes", "Kitchen", "Reference docs", "Plans", "Welcome"), children(root, "name"));
+        assertEquals(List.of("/notes", "/recipes", "/reference", "/plans", "/welcome"), children(root, "to"));
+        assertEquals(List.of("catalogue", "catalogue", "catalogue", "catalogue", "page"), children(root, "kind"));
         assertEquals(List.of("/recipes/soups/laksa", "/recipes/soups/tom-yum"), children(entry("/recipes/soups"), "to"));
     }
 
@@ -101,6 +102,17 @@ class DemoSiteTest {
             assertEquals(at, new JsonObject(payload).getString("doc"), "a doc read by the path its page is at");
             assertEquals("Composed reference", new JsonObject(payload).getJsonObject("tree").getJsonObject("label").getString("text"));
         }
+    }
+
+    @Test
+    void theReferencePlan_readInPlanView_itsPayloadByItsPath() throws Exception {
+        assertEquals(List.of("/plans/docview"), children(entry("/plans"), "to"));
+        assertTrue(page("/plans/docview").contains(PlanViewApp.class.getCanonicalName()), "PlanView, as the page");
+        var plan = new JsonObject(new PayloadGetAction(new DocViews(DemoSite.ROUTER)).execute(new PayloadGetAction.Query("/plans/docview"), new EmptyParam.NoHeaders()).get().body());
+        assertEquals("/plans/docview", plan.getString("doc"), "a plan read by the path its page is at, by the route a doc is");
+        assertEquals("DocView on a tree placement", plan.getJsonObject("tree").getJsonObject("label").getString("text"));
+        var docs = plan.getJsonArray("items").getJsonObject(0).getJsonObject("content").getJsonArray("docs");
+        assertEquals("unplaced", docs.getJsonObject(0).getString("kind"), "its execution doc, the RFC, is placed nowhere on this site");
     }
 
     @Test

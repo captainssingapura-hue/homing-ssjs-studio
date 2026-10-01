@@ -37,7 +37,7 @@ public final class ContentGetAction implements GetAction<RoutingContext, Content
 
     @Override
     public CompletableFuture<DocJson> execute(Query query, EmptyParam.NoHeaders headers) {
-        return views.at(query.doc()).filter(DocViews.Built::ok)
+        return views.at(query.doc()).filter(b -> b.ok() && b.tree() != null)   // a plan has no part fetched apart
                 .flatMap(b -> DocPayload.content(b.tree(), b.doc(), String.valueOf(query.key()), DocPayload.NO_RASTERS))
                 .map(json -> CompletableFuture.completedFuture(new DocJson(json)))
                 .orElseGet(() -> DocRoutes.missing("no part " + query.key() + " of a doc at " + query.doc()));

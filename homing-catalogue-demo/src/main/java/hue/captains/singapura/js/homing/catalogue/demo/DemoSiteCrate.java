@@ -8,6 +8,7 @@ import hue.captains.singapura.js.homing.core.CrateEntry;
 
 import hue.captains.singapura.js.homing.docview.app.DocViewAppCrate;
 import hue.captains.singapura.js.homing.docview.site.DocViewSiteCrate;
+import hue.captains.singapura.js.homing.planview.app.PlanViewAppCrate;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public final class DemoSiteCrate implements Crate {
     @Override public String name() { return "homing-catalogue-demo"; }
 
     @Override public List<Crate> requires() {
-        return List.of(CatalogueSiteCrate.INSTANCE, NotesCrate.INSTANCE, RecipesCrate.INSTANCE, DocViewSiteCrate.INSTANCE, DocViewAppCrate.INSTANCE);
+        return List.of(CatalogueSiteCrate.INSTANCE, NotesCrate.INSTANCE, RecipesCrate.INSTANCE, DocViewSiteCrate.INSTANCE, DocViewAppCrate.INSTANCE, PlanViewAppCrate.INSTANCE);
     }
 
     @Override public List<CrateEntry> entries() { return List.of(); }

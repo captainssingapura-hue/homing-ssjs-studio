@@ -148,16 +148,16 @@ public final class CatalogueGate {
 
     /**
      * Classes only the studio's old stack has - its catalogue, its docs' wire to the old
-     * viewers, its plans, its bootstrap, its workspace: none is on the classpath, and no crate
-     * of it is in the closure. The docs themselves are not among them: they are data, in core's
-     * pure {@code homing-doc-model}, which keeps the old package names for compatibility - a
-     * doc's class name says nothing of the stack.
+     * viewers, its plan host, its bootstrap, its workspace: none is on the classpath, and no crate
+     * of it is in the closure. The docs and plans themselves are not among them: they are data, in core's
+     * pure {@code homing-doc-model} and {@code homing-plan-model}, which keep the old package names for compatibility - a
+     * doc's or a plan's class name says nothing of the stack.
      */
     public static void noOldStudio(Crate crate) {
         for (String name : List.of(
                 "hue.captains.singapura.js.homing.studio.base.LegacyDocWire",
                 "hue.captains.singapura.js.homing.studio.base.app.Catalogue",
-                "hue.captains.singapura.js.homing.studio.base.tracker.Plan",
+                "hue.captains.singapura.js.homing.studio.base.tracker.PlanAppHost",
                 "hue.captains.singapura.js.homing.studio.base.Bootstrap",
                 "hue.captains.singapura.js.homing.studio.starter.StudioStarterFixtures",
                 "hue.captains.singapura.js.homing.studio.workspace.StudioWorkspaceCrate",

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Where a site's docs are read: every doc a catalogue places on a reading page ({@link
@@ -46,6 +47,17 @@ public final class DocPlaces {
     public Optional<String> pathOf(Doc doc) {
         List<String> at = paths.get(doc);
         return at == null || at.isEmpty() ? Optional.empty() : Optional.of(at.get(0));
+    }
+
+    /**
+     * The doc read on the site whose id this is - as a plan names its execution doc and dossier,
+     * by an id written as text - or empty: no doc read here has it, or it is no id. The doc is still
+     * found by itself; the id is only how a plan, written before docs had places, says which.
+     */
+    public Optional<Doc> docOf(String id) {
+        UUID uuid;
+        try { uuid = UUID.fromString(Objects.requireNonNull(id, "DocPlaces.id").strip()); } catch (IllegalArgumentException e) { return Optional.empty(); }
+        return paths.keySet().stream().filter(d -> uuid.equals(d.uuid())).findFirst();
     }
 
     /** The docs read at more than one page - each with its paths: what a site must fix, since a doc has one authentic path. */

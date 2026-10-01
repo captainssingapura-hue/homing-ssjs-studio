@@ -48,6 +48,12 @@
         <module>homing-docview-gallery</module>
         <!-- DocView, the app: the page every doc is read on - the contents beside the doc, every part a widget. -->
         <module>homing-docview-app</module>
+        <!-- Plans, on the same desk: a plan made into a tree as a doc is - its pillars and its phases its sections. Pure, headless. -->
+        <module>homing-planview-tree</module>
+        <!-- A plan's widgets - its head, its lists, its phases, their details folded - each working alone, by its params. -->
+        <module>homing-planview-widgets</module>
+        <!-- PlanView, the app: the page every plan is read on - DocView's desk, with a plan's widgets. -->
+        <module>homing-planview-app</module>
     </modules>
 
     <properties>

@@ -17,13 +17,20 @@
         page reads it from, by the doc's authentic path: the payload (the arrangement and every
         plain part's content, in one) and one part's content by its key; each doc's tree built
         once and kept. And the inspector, a page that shows a doc's tree, its arrangement and
-        its payload, for the first stage to be seen whole. No doc registry, no id.
+        its payload, for the first stage to be seen whole. No doc registry, no id. A plan is
+        placed and read the same way: its page holds it, and the payload route serves its tree.
     </description>
 
     <dependencies>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
             <artifactId>homing-docview-tree</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- A plan's tree and payload, served by the same route as a doc's. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-planview-tree</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- Where a doc is placed, and the router a path resolves by. -->
