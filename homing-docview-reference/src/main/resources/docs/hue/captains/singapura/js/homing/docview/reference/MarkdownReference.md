@@ -131,3 +131,13 @@ A setext heading
 ----------------
 
 A setext heading is prose, and so is the rule it is underlined with.
+
+## Citations
+
+A doc cites what it declares: the [rigid reference](#ref:rigid) and the [composed one](#ref:composed),
+placed beside it; [CommonMark](#ref:commonmark), off the site; and [a doc no catalogue places](#ref:unplaced),
+shown, and going nowhere.
+
+| Where | What |
+|---|---|
+| a table's cell | the [rigid reference](#ref:rigid), cited again |

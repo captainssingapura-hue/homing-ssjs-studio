@@ -51,7 +51,8 @@ class ReferenceTreesTest {
                 cafe-creme-and-umlauts  P
                 section  P
                 code-inside-a-list  P
-                a-quote-holding-a-table  P""", Outlines.of(tree("markdown")));
+                a-quote-holding-a-table  P
+                citations  P T2x1""", Outlines.of(tree("markdown")));
     }
 
     @Test

@@ -15,6 +15,9 @@ import hue.captains.singapura.js.homing.docview.widgets.CodeContentModule;
 import hue.captains.singapura.js.homing.docview.widgets.CodeStewardModule;
 import hue.captains.singapura.js.homing.docview.widgets.DiagramContentModule;
 import hue.captains.singapura.js.homing.docview.widgets.DiagramStewardModule;
+import hue.captains.singapura.js.homing.docview.widgets.DocReferencesModule;
+import hue.captains.singapura.js.homing.docview.widgets.ReferencesContentModule;
+import hue.captains.singapura.js.homing.docview.widgets.ReferencesStewardModule;
 import hue.captains.singapura.js.homing.workspace.stage.StagePartyModule;
 import hue.captains.singapura.js.homing.workspace.stage.StageSecretaryModule;
 import hue.captains.singapura.js.homing.workspace.stage.StageStewardModule;
@@ -101,6 +104,9 @@ public record DocViewApp() implements AppModule<DocViewApp.Params, DocViewApp> {
                 .add(new ModuleImports<>(List.of(new ImageStewardModule.ImageSteward()), ImageStewardModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DiagramContentModule.DIAGRAM()), DiagramContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DiagramStewardModule.DiagramSteward()), DiagramStewardModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ReferencesContentModule.REFERENCES()), ReferencesContentModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ReferencesStewardModule.ReferencesSteward()), ReferencesStewardModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new DocReferencesModule.DocReferences()), DocReferencesModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StagePartyModule.STAGE()), StagePartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StageSecretaryModule.StageSecretary()), StageSecretaryModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StageStewardModule.StageSteward()), StageStewardModule.INSTANCE))

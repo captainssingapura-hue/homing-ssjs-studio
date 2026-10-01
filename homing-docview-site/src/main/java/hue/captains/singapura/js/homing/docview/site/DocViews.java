@@ -15,13 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The docs a site places, as their routes read them: a doc found by its authentic path - the
  * leaf that places it, whose page holds it - and its tree and payload, built on the first
- * request and kept, since a doc cannot change while the server runs. A doc whose tree cannot be
- * built is kept as that, with the reason, and the other docs are untouched.
+ * request and kept, since a doc cannot change while the server runs. Its references are resolved
+ * against where the site's docs are read ({@link DocPlaces}), read off the tree once. A doc whose
+ * tree cannot be built is kept as that, with the reason, and the other docs are untouched.
  */
 public final class DocViews {
 
     private final CatalogueRouter router;
     private final ConcurrentHashMap<String, Built> built = new ConcurrentHashMap<>();
+    private volatile DocPlaces places;
 
     public DocViews(CatalogueRouter router) { this.router = Objects.requireNonNull(router, "DocViews.router"); }
 
@@ -44,10 +46,17 @@ public final class DocViews {
                 : Optional.empty());
     }
 
-    private static Built build(String at, Doc doc) {
+    /** Where the site's docs are read: read off its tree the first time a doc is built, and kept. */
+    public DocPlaces places() {
+        DocPlaces p = places;
+        if (p == null) { p = DocPlaces.of(router); places = p; }
+        return p;
+    }
+
+    private Built build(String at, Doc doc) {
         try {
             DocTree tree = DocTrees.of(doc);
-            return new Built(at, tree, DocPayload.json(tree, at), "");
+            return new Built(at, tree, DocPayload.json(tree, at, DocReferences.of(doc, tree, places())), "");
         } catch (RuntimeException e) {
             return new Built(at, null, null, e.getClass().getSimpleName() + ": " + e.getMessage());
         }

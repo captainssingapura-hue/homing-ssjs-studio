@@ -103,11 +103,16 @@ class MarkdownDom {
         }
     }
 
-    /** A link: a citation drawn as one; any other followed through the href manager. */
+    /**
+     * A link, followed through the href manager. A citation - {@code #ref:name} - is a link too, to
+     * its fragment, so it is reached and followed as any link is; it says which reference it cites
+     * (data-ref), and what following it means is the page's: the widget never knows the references.
+     */
     _link(t, into) {
         var { href: target } = t;   // the token's own field: the address the link was written with
         if (String(target).indexOf("#ref:") === 0) {
-            var cite = this._el("span", dw_cite, into);
+            var cite = this._el("a", dw_cite, into);
+            HrefManagerInstance.set(cite, target);
             cite.setAttribute("data-ref", String(target).slice(5));
             this._inline(t.tokens, cite);
             return;

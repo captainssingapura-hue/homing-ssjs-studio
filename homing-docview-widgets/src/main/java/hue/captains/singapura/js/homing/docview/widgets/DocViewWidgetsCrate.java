@@ -6,6 +6,7 @@ import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
 import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.libs.LibsCrate;
+import hue.captains.singapura.js.homing.relgrid.RelGridCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.panzoom.UiPanZoomCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
@@ -41,7 +42,9 @@ public final class DocViewWidgetsCrate implements Crate {
                 // zoom and pan, for a drawing in place
                 UiPanZoomCrate.INSTANCE,
                 // the stage: the button a widget offers itself by
-                WorkspaceStageCrate.INSTANCE);
+                WorkspaceStageCrate.INSTANCE,
+                // the relation grid the references are a table on
+                RelGridCrate.INSTANCE);
     }
 
     @Override
@@ -54,6 +57,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(TableContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(ImageContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DiagramContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                CrateEntry.of(ReferencesContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 // the doc they read from, and their stewards
                 CrateEntry.of(DocSourcesModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DocPartStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
@@ -61,6 +65,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(CodeStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(TableStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(ImageStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                CrateEntry.of(ReferencesStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 // diagrams: where mermaid is, its engine - the library loaded only when a diagram is wanted - and their steward, which draws
                 CrateEntry.of(MermaidLibraryModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(MermaidEngineModule.INSTANCE, StandardJsModuleType.CONSUMER),
@@ -73,6 +78,9 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(DocProseModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocCodeModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocTableModule.INSTANCE, StandardJsModuleType.CONSUMER),
-                CrateEntry.of(DocImageModule.INSTANCE, StandardJsModuleType.CONSUMER));
+                CrateEntry.of(DocImageModule.INSTANCE, StandardJsModuleType.CONSUMER),
+                // the doc's references, on the relation grid: its relation, and the widget
+                CrateEntry.of(ReferenceRowsModule.INSTANCE, StandardJsModuleType.CONSUMER),
+                CrateEntry.of(DocReferencesModule.INSTANCE, StandardJsModuleType.CONSUMER));
     }
 }

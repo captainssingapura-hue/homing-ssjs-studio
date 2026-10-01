@@ -24,8 +24,12 @@ import java.util.function.BiFunction;
  *   "tree": { "name": "", "label": { "text": "…", "runs": [] }, "leaf": [{ "type": "prose", "key": ":0" }],
  *             "children": [ { "name": "prose-only", … }, … ] },
  *   "items": [ { "type": "prose", "params": [{ "name": "doc", "value": "…" }, { "name": "key", "value": ":0" }],
- *                "content": { "text": "…" } }, … ] }
+ *                "content": { "text": "…" } }, … ],
+ *   "references": [ { "name": "rigid", "kind": "doc", "title": "…", "summary": "…", "to": "/reference/rigid",
+ *                     "citedIn": ["citations"] }, … ] }
  * }</pre>
+ * The references are the site's to resolve ({@link DocRef}): a doc's tree knows what it declares
+ * and cites, and the site where every doc is placed.
  */
 public final class DocPayload {
 
@@ -34,14 +38,24 @@ public final class DocPayload {
     /** How a raster's address is made from the doc's address and the part's key: the route that serves it. */
     public static final BiFunction<String, String, String> NO_RASTERS = (doc, key) -> "";
 
-    /** The payload of a doc's tree, at its address. */
-    public static String json(DocTree tree, String doc) {
+    /** The payload of a doc's tree, at its address: no references. */
+    public static String json(DocTree tree, String doc) { return json(tree, doc, List.of()); }
+
+    /** The payload of a doc's tree, at its address, with its references as the site resolved them. */
+    public static String json(DocTree tree, String doc, List<DocRef> references) {
         var items = new ArrayList<String>();
         for (DocTree.Spot s : tree.spots()) {
             if (s.part() instanceof Part.Image) continue;
             items.add(Json.obj(ordered("type", Json.str(s.part().type()), "params", params(doc, s.key()), "content", content(s.part(), doc, s.key(), NO_RASTERS))));
         }
-        return Json.obj(ordered("doc", Json.str(doc), "tree", tree(tree.root(), ""), "items", "[" + String.join(",", items) + "]"));
+        return Json.obj(ordered("doc", Json.str(doc), "tree", tree(tree.root(), ""), "items", "[" + String.join(",", items) + "]",
+                "references", Json.arr(references, DocPayload::reference)));
+    }
+
+    /** A reference as the page reads it: { name, kind, title, summary, to, citedIn }. */
+    private static String reference(DocRef r) {
+        return Json.obj(ordered("name", Json.str(r.name()), "kind", Json.str(r.kind()), "title", Json.str(r.title()),
+                "summary", Json.str(r.summary()), "to", Json.str(r.to()), "citedIn", Json.arr(r.citedIn(), Json::str)));
     }
 
     /** A node of the tree as the page reads it: its name, its label, its leaf's parts by type and key, its children. */

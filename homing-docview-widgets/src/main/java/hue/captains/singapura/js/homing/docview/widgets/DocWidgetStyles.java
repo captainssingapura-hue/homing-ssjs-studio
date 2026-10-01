@@ -101,9 +101,9 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return ""; }
     }
 
-    /** A citation, until the references say what it names. */
+    /** A citation: a link to the reference it cites - what following it means is the page's. */
     public record dw_cite() implements CssClass<DocWidgetStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Link.class, Color.Ink.class)); }
+        @Override public List<? extends Wearable> wears() { return List.of(of(Link.class, Color.Ink.class), of(Link.class, Type.Decoration.class)); }
         @Override public String body() { return ""; }
     }
 
@@ -246,6 +246,31 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return "align-self: flex-end;\n"; }
     }
 
+    /** A doc's references: the whole of the box it is lent - a column of the doc's page - a column of its own: its head, its table. */
+    public record dw_refs() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "position: absolute;\ninset: 0;\nbox-sizing: border-box;\npadding: 12px;\noverflow: hidden;\n"; }
+    }
+
+    /** The references' head: what they are, and how many. */
+    public record dw_refs_head() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "flex: none;\ndisplay: flex;\nalign-items: baseline;\ngap: 8px;\n"; }
+    }
+
+    public record dw_refs_title() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Heading.class, Type.Face.class), of(Heading.class, Type.Weight.class), of(Heading.class, Color.Ink.class)); }
+        @Override public String body() { return "margin: 0;\nfont-size: inherit;\n"; }
+    }
+
+    public record dw_refs_count() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(of(Caption.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
+        @Override public String body() { return ""; }
+    }
+
+    /** The table's box: the rest of the column, scrolling what it cannot hold. */
+    public record dw_refs_box() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "flex: 1 1 auto;\nmin-height: 0;\noverflow: auto;\n"; }
+    }
+
     /** A table's or a figure's caption. */
     public record dw_caption() implements CssClass<DocWidgetStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(of(Caption.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
@@ -258,7 +283,8 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
                 new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_table_box(), new dw_table(), new dw_th(), new dw_td(),
                 new dw_left(), new dw_center(), new dw_right(), new dw_strong(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
                 new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_drawing(), new dw_diagram(), new dw_push(),
-                new dw_figure_bar(), new dw_fill(), new dw_caption(),
+                new dw_figure_bar(), new dw_fill(), new dw_refs(), new dw_refs_head(), new dw_refs_title(), new dw_refs_count(), new dw_refs_box(),
+                new dw_caption(),
                 // last, so what is hidden stays hidden whatever else in the sheet says how it lays out
                 new dw_hidden());
     }

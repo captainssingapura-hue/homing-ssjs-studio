@@ -112,6 +112,10 @@ public final class ReferenceDocs {
                             Optional.of("A doc inside a doc")),
                     new ComposedSegment(INNER)));
 
+    /** A doc no catalogue places: the markdown reference declares and cites it, and a reference to it goes nowhere. */
+    public static final ComposedDoc UNPLACED = ComposedDoc.of(UUID.fromString("5d2b8f2e-6a41-4c3e-9f0b-1d7e3c9a4b08"), "An unplaced doc",
+            "Declared and cited, and placed by no catalogue.", "DOC", List.of(new MarkdownSegment("No catalogue places this doc.")));
+
     /** Every reference doc, by the path segment it is placed at, in the order they are listed. */
     public static final Map<String, Doc> ALL;
 

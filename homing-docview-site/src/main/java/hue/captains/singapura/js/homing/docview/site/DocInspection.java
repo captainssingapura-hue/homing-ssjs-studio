@@ -24,6 +24,9 @@ public record DocInspection(Mpa mpa, Doc doc) implements Placed, HoldsDoc {
         Objects.requireNonNull(doc, "DocInspection.doc");
     }
 
+    /** Inspected here, not read: a reference to the doc goes to its reading page. */
+    @Override public boolean reads() { return false; }
+
     @Override
     public HtmlPageContent html(Trail trail, Query query) {
         String at = trail.isEmpty() ? "" : trail.last().href();

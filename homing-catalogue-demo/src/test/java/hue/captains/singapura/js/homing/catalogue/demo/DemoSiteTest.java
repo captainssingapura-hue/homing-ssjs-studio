@@ -92,6 +92,10 @@ class DemoSiteTest {
         assertEquals(List.of("/reference/inspector/markdown", "/reference/inspector/rigid", "/reference/inspector/named-rigid", "/reference/inspector/composed"),
                 children(entry("/reference/inspector"), "to"));
         assertTrue(page("/reference/inspector/markdown").contains(DocInspectorApp.class.getCanonicalName()), "the inspector, beside");
+        String markdown = new PayloadGetAction(new DocViews(DemoSite.ROUTER)).execute(new PayloadGetAction.Query("/reference/markdown"), new EmptyParam.NoHeaders()).get().body();
+        var refs = new JsonObject(markdown).getJsonArray("references");
+        assertEquals("/reference/rigid", refs.getJsonObject(0).getString("to"), "a reference goes to the doc's reading page - never the inspector's, which holds it too");
+        assertEquals("/reference/named-rigid", refs.getJsonObject(4).getString("to"));
         for (String at : List.of("/reference/composed", "/reference/inspector/composed")) {
             String payload = new PayloadGetAction(new DocViews(DemoSite.ROUTER)).execute(new PayloadGetAction.Query(at), new EmptyParam.NoHeaders()).get().body();
             assertEquals(at, new JsonObject(payload).getString("doc"), "a doc read by the path its page is at");
