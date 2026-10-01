@@ -143,4 +143,18 @@ class DocReferencesTest {
         assertEquals(List.of(), DocReferences.of(ReferenceDocs.RIGID, tree(ReferenceDocs.RIGID), DocPlaces.of(ROUTER)));
         assertTrue(new DocReference("x", ReferenceDocs.RIGID).name().equals("x"));
     }
+
+    @Test
+    void aReferenceWhoseDocWasNotYetMade_goesNowhere_itsNameItsTitle() {
+        // two docs' constants that name each other: whichever class is made first sees the other's still null
+        assertEquals(new DocRef("gone", DocRef.UNPLACED, "gone", DocReferences.MISSING, "", CITATIONS),
+                DocReferences.resolve(new DocReference("gone", null), CITATIONS, DocPlaces.of(ROUTER)));
+    }
+
+    @Test
+    void aCitationInCode_isAnExample_notACitation() {
+        var quoting = ComposedDoc.of(UUID.fromString("5d2b8f2e-6a41-4c3e-9f0b-1d7e3c9a4c02"), "Quoting", "", "DOC",
+                List.of(new MarkdownSegment("Write `[label](#ref:name)` to cite; ``[a](#ref:b)`` too.\n\n```\n[x](#ref:fenced)\n```\n\nBut [this](#ref:real) cites.")));
+        assertEquals(List.of("real"), List.copyOf(Citations.of(tree(quoting)).keySet()));
+    }
 }

@@ -26,6 +26,9 @@ public final class DocReferences {
 
     private DocReferences() {}
 
+    /** What a reference whose doc could not be read says of it. */
+    static final String MISSING = "The doc it names was not yet made when this one was: a cycle between the two docs' constants.";
+
     /** The doc's references, resolved against where the site's docs are read. */
     public static List<DocRef> of(Doc doc, DocTree tree, DocPlaces places) {
         Map<String, List<String>> cited = Citations.of(tree);
@@ -45,6 +48,9 @@ public final class DocReferences {
 
     static DocRef resolve(Reference r, List<DocRef.Citing> citedIn, DocPlaces places) {
         return switch (r) {
+            // a doc whose constant was not yet made when this one was - a cycle between the two
+            // docs' classes - is no doc at all here: said to go nowhere, by its name
+            case DocReference d when d.target() == null -> new DocRef(d.name(), DocRef.UNPLACED, d.name(), MISSING, "", citedIn);
             case DocReference d -> places.pathOf(d.target())
                     .map(at -> new DocRef(d.name(), DocRef.DOC, d.target().title(), d.target().summary(), at, citedIn))
                     .orElseGet(() -> new DocRef(d.name(), DocRef.UNPLACED, d.target().title(), d.target().summary(), "", citedIn));
