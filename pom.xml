@@ -46,6 +46,8 @@
         <module>homing-docview-widgets</module>
         <!-- The DocView widgets gallery, on 8107: each primitive working alone, by its params. -->
         <module>homing-docview-gallery</module>
+        <!-- DocView, the app: the page every doc is read on - the contents beside the doc, every part a widget. -->
+        <module>homing-docview-app</module>
     </modules>
 
     <properties>

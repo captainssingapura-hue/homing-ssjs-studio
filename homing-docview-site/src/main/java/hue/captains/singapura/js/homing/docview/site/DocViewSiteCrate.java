@@ -9,7 +9,7 @@ import hue.captains.singapura.js.homing.server.ServerCrate;
 
 import java.util.List;
 
-/** DocView on a site, as a page serves it: the inspector and its sheet. The routes are the server's. */
+/** DocView on a site, as a page serves it: a doc's arrangement made from its tree, the inspector and its sheet. The routes are the server's. */
 public final class DocViewSiteCrate implements Crate {
 
     public static final DocViewSiteCrate INSTANCE = new DocViewSiteCrate();
@@ -32,6 +32,7 @@ public final class DocViewSiteCrate implements Crate {
     public List<CrateEntry> entries() {
         return List.of(
                 CrateEntry.of(InspectorStyles.INSTANCE),
+                CrateEntry.of(DocArrangementModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DocInspectorApp.INSTANCE, StandardJsModuleType.CONSUMER));
     }
 }

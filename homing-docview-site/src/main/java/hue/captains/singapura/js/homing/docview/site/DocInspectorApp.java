@@ -59,6 +59,7 @@ public record DocInspectorApp() implements AppModule<DocInspectorApp.Params, Doc
     public ImportsFor<DocInspectorApp> imports() {
         return ImportsFor.<DocInspectorApp>builder()
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new DocArrangementModule.DocArrangement()), DocArrangementModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new InspectorStyles.di_page(), new InspectorStyles.di_column(), new InspectorStyles.di_title(), new InspectorStyles.di_muted(),
                         new InspectorStyles.di_code(), new InspectorStyles.di_sections(), new InspectorStyles.di_section(), new InspectorStyles.di_heading(),
                         new InspectorStyles.di_tree(), new InspectorStyles.di_node(), new InspectorStyles.di_chips(), new InspectorStyles.di_chip(),

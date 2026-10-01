@@ -10,39 +10,44 @@
         <version>LOCAL-SNAPSHOT</version>
     </parent>
 
-    <artifactId>homing-docview-site</artifactId>
+    <artifactId>homing-docview-app</artifactId>
 
     <description>
-        DocView on a site: a doc placed in a catalogue - its page holds it - and the routes a
-        page reads it from, by the doc's authentic path: the payload (the arrangement and every
-        plain part's content, in one) and one part's content by its key; each doc's tree built
-        once and kept. And the inspector, a page that shows a doc's tree, its arrangement and
-        its payload, for the first stage to be seen whole. No doc registry, no id.
+        DocView, the app: the page every doc is read on - the same for every doc, told which by
+        its params, the doc's authentic path. It reads the doc's payload, makes the arrangement
+        from the tree it brings, and lays out the contents beside the doc in a split grid, every
+        part's widget mounted at once and asking its content party; the section in view kept in
+        the address's fragment. A catalogue places a doc with it (DocViewLeaves).
     </description>
 
     <dependencies>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
-            <artifactId>homing-docview-tree</artifactId>
+            <artifactId>homing-docview-widgets</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Where a doc is placed, and the router a path resolves by. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+            <artifactId>homing-docview-site</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- The tree placement's engine and its contents. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.ws</groupId>
+            <artifactId>homing-workspace-tree</artifactId>
+            <version>${homing.ws.version}</version>
+        </dependency>
+        <!-- The split grid the contents and the doc are laid out in. -->
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-site-catalogue</artifactId>
-            <version>${homing.core.version}</version>
+            <artifactId>homing-ui-splitgrid</artifactId>
+            <version>${homing.components.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-site-mpa</artifactId>
             <version>${homing.core.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-server</artifactId>
-            <version>${homing.core.version}</version>
-        </dependency>
-        <!-- The inspector: its branch of the page's party, the design words its sheet wears. -->
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-core-js</artifactId>
@@ -73,26 +78,6 @@
             <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
             <artifactId>homing-docview-reference</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- The page's arrangement made headless, beside Java's. -->
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-ssjs-test-fixtures</artifactId>
-            <version>${homing.core.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- A site to resolve paths on, in the tests: the MPA's standard implementation. -->
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-site-mpa-standard</artifactId>
-            <version>${homing.components.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
-            <artifactId>homing-designs</artifactId>
-            <version>${homing.core.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

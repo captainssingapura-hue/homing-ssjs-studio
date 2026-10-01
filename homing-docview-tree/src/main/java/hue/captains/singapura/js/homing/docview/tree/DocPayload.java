@@ -13,16 +13,16 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
- * A doc as a page loads it, in one: its arrangement - the tree, and the widget at every part -
+ * A doc as a page loads it, in one: its tree - every heading, its name and label, and the parts
+ * of its leaf, each by its type and its key - from which the page makes its arrangement itself;
  * and the content of every plain part - prose, code, a table - each with the params it is asked
  * by, as a content party carries them ({@code [{ name, value }]}, in the order of their names).
  * An image is not in it: it is fetched when it is wanted, by its key ({@link #content}).
  *
  * <pre>{@code
  * { "doc": "/reference/markdown",
- *   "arrangement": { "engine": "tree", "workspace": "doc-view",
- *                    "widgets": { "w0": { "kind": "prose", "params": { "doc": "…", "key": ":0" } }, … },
- *                    "root": { "name": "", "label": { "text": "…", "runs": [] }, "leaf": ["w0"], "children": [ … ] } },
+ *   "tree": { "name": "", "label": { "text": "…", "runs": [] }, "leaf": [{ "type": "prose", "key": ":0" }],
+ *             "children": [ { "name": "prose-only", … }, … ] },
  *   "items": [ { "type": "prose", "params": [{ "name": "doc", "value": "…" }, { "name": "key", "value": ":0" }],
  *                "content": { "text": "…" } }, … ] }
  * }</pre>
@@ -36,13 +36,22 @@ public final class DocPayload {
 
     /** The payload of a doc's tree, at its address. */
     public static String json(DocTree tree, String doc) {
-        var arrangement = DocArrangements.of(tree, doc);
         var items = new ArrayList<String>();
         for (DocTree.Spot s : tree.spots()) {
             if (s.part() instanceof Part.Image) continue;
             items.add(Json.obj(ordered("type", Json.str(s.part().type()), "params", params(doc, s.key()), "content", content(s.part(), doc, s.key(), NO_RASTERS))));
         }
-        return Json.obj(ordered("doc", Json.str(doc), "arrangement", arrangement(arrangement), "items", "[" + String.join(",", items) + "]"));
+        return Json.obj(ordered("doc", Json.str(doc), "tree", tree(tree.root(), ""), "items", "[" + String.join(",", items) + "]"));
+    }
+
+    /** A node of the tree as the page reads it: its name, its label, its leaf's parts by type and key, its children. */
+    private static String tree(DocTree.Node n, String path) {
+        var leaf = new ArrayList<String>();
+        for (int i = 0; i < n.leaf().size(); i++) {
+            leaf.add(Json.obj(ordered("type", Json.str(n.leaf().get(i).type()), "key", Json.str(path + ":" + i))));
+        }
+        return Json.obj(ordered("name", Json.str(n.name().map(TreePlacement.Name::value).orElse("")), "label", label(n.label()),
+                "leaf", "[" + String.join(",", leaf) + "]", "children", Json.arr(n.children(), c -> tree(c, DocTree.pathOf(path, c)))));
     }
 
     /** One part's content by its key, as JSON - a raster's address made as {@code src} says; empty when the tree has no such part. */
@@ -50,7 +59,10 @@ public final class DocPayload {
         return tree.part(key).map(p -> Json.obj(ordered("type", Json.str(p.type()), "params", params(doc, key), "content", content(p, doc, key, src))));
     }
 
-    /** The arrangement, as the tree layout reads it. */
+    /**
+     * The arrangement Java makes of a tree, as the tree layout reads it: what the page makes for itself
+     * from the payload's tree - a page's and Java's are held to be the same.
+     */
     public static String arrangement(Arrangement<DocViewSpec, TreePlacement> a) {
         var widgets = new LinkedHashMap<String, String>();
         for (ArrangedWidget w : a.widgets()) {

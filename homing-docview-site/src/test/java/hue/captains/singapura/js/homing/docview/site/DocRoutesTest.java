@@ -89,7 +89,7 @@ class DocRoutesTest {
     void thePayload_byTheDocsAuthenticPath() throws Exception {
         for (String name : ReferenceDocs.ALL.keySet()) {
             String json = payload("/" + name);
-            assertTrue(json.startsWith("{\"doc\":\"/" + name + "\",\"arrangement\":{\"engine\":\"tree\""), json.substring(0, 80));
+            assertTrue(json.startsWith("{\"doc\":\"/" + name + "\",\"tree\":{\"name\":\"\",\"label\":"), json.substring(0, 80));
         }
     }
 

@@ -7,6 +7,7 @@ import hue.captains.singapura.js.homing.catalogue.demo.recipes.RecipesCatalogue;
 import hue.captains.singapura.js.homing.catalogue.demo.recipes.TimerApp;
 import hue.captains.singapura.js.homing.catalogue.site.CatalogueListingApp;
 import hue.captains.singapura.js.homing.catalogue.site.EntryGetAction;
+import hue.captains.singapura.js.homing.docview.app.DocViewApp;
 import hue.captains.singapura.js.homing.docview.site.DocInspectorApp;
 import hue.captains.singapura.js.homing.docview.site.DocViews;
 import hue.captains.singapura.js.homing.docview.site.PayloadGetAction;
@@ -84,13 +85,18 @@ class DemoSiteTest {
     }
 
     @Test
-    void theReferenceDocs_eachAtItsPath_inspected_itsPayloadByThatPath() throws Exception {
-        assertEquals(List.of("/reference/markdown", "/reference/rigid", "/reference/named-rigid", "/reference/composed"), children(entry("/reference"), "to"));
-        assertTrue(page("/reference/markdown").contains(DocInspectorApp.class.getCanonicalName()), "the inspector, as a page");
-        String payload = new PayloadGetAction(new DocViews(DemoSite.ROUTER)).execute(new PayloadGetAction.Query("/reference/composed"),
-                new EmptyParam.NoHeaders()).get().body();
-        assertEquals("/reference/composed", new JsonObject(payload).getString("doc"));
-        assertEquals("tree", new JsonObject(payload).getJsonObject("arrangement").getString("engine"));
+    void theReferenceDocs_eachReadInDocView_inspectedBeside_itsPayloadByItsPath() throws Exception {
+        assertEquals(List.of("/reference/inspector", "/reference/markdown", "/reference/rigid", "/reference/named-rigid", "/reference/composed"),
+                children(entry("/reference"), "to"));
+        assertTrue(page("/reference/markdown").contains(DocViewApp.class.getCanonicalName()), "DocView, as the page");
+        assertEquals(List.of("/reference/inspector/markdown", "/reference/inspector/rigid", "/reference/inspector/named-rigid", "/reference/inspector/composed"),
+                children(entry("/reference/inspector"), "to"));
+        assertTrue(page("/reference/inspector/markdown").contains(DocInspectorApp.class.getCanonicalName()), "the inspector, beside");
+        for (String at : List.of("/reference/composed", "/reference/inspector/composed")) {
+            String payload = new PayloadGetAction(new DocViews(DemoSite.ROUTER)).execute(new PayloadGetAction.Query(at), new EmptyParam.NoHeaders()).get().body();
+            assertEquals(at, new JsonObject(payload).getString("doc"), "a doc read by the path its page is at");
+            assertEquals("Composed reference", new JsonObject(payload).getJsonObject("tree").getJsonObject("label").getString("text"));
+        }
     }
 
     @Test

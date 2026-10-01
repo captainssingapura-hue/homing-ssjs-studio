@@ -49,8 +49,9 @@ class ArrangementAndPayloadTest extends JsModuleTestBase {
             js.getBindings("js").putMember("text", DocPayload.json(tree, AT + name));
             Value p = js.eval("js", "JSON.parse(text)");
             assertEquals(AT + name, p.getMember("doc").asString());
-            assertEquals("tree", p.getMember("arrangement").getMember("engine").asString());
-            assertEquals("doc-view", p.getMember("arrangement").getMember("workspace").asString());
+            assertEquals("", p.getMember("tree").getMember("name").asString(), "the root has no name");
+            assertEquals(tree.root().label().text(), p.getMember("tree").getMember("label").getMember("text").asString());
+            assertEquals(tree.root().leaf().size(), p.getMember("tree").getMember("leaf").getArraySize(), name + ": the root's leaf, part by part");
             long plain = tree.spots().stream().filter(s -> !(s.part() instanceof Part.Image)).count();
             assertEquals(plain, p.getMember("items").getArraySize(), name + ": every plain part, and no image");
             Value first = p.getMember("items").getArrayElement(0);
@@ -72,9 +73,12 @@ class ArrangementAndPayloadTest extends JsModuleTestBase {
         assertEquals("Construct,Where,Count|left,center,right|A pipe | escaped|1|1",
                 js.eval("js", "var tb = byKey['a-table-between-prose:1'].content; tb.columns.map(function (c) { return c.title; }) + '|' + "
                         + "tb.columns.map(function (c) { return c.align; }) + '|' + tb.rows[1].cells[0].text + '|' + tb.rows[1].cells[0].colSpan + '|' + tb.rows[1].cells[0].rowSpan").asString());
-        assertEquals("a-diagram", js.eval("js", "p.arrangement.root.children[4].name").asString());
+        assertEquals("a-diagram", js.eval("js", "p.tree.children[4].name").asString());
+        assertEquals("prose code-between-prose:0,code code-between-prose:1,prose code-between-prose:2,code code-between-prose:3,prose code-between-prose:4",
+                js.eval("js", "p.tree.children[2].leaf.map(function (l) { return l.type + ' ' + l.key; }).join(',')").asString(),
+                "a section's leaf, its parts by type and key - what the page makes its widgets from");
         assertEquals("text,code,text,strong,text,emphasis", js.eval("js",
-                "p.arrangement.root.children.filter(function (n) { return n.label.runs.length; })[0].label.runs.map(function (r) { return r.kind; }).join(',')").asString());
+                "p.tree.children.filter(function (n) { return n.label.runs.length; })[0].label.runs.map(function (r) { return r.kind; }).join(',')").asString());
     }
 
     @Test

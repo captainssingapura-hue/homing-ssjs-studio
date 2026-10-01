@@ -5,7 +5,8 @@
 //
 //   the tree         every heading, its label drawn by its runs, its name in
 //                    the path, and the parts of its leaf - each its type and key
-//   the arrangement  every widget: its name, its type, the key it asks by
+//   the arrangement  every widget: its name, its type, the key it asks by -
+//                    made here from the tree, as every page of the doc makes it
 //   the payload      as it came, the JSON a page loads
 //
 // A doc whose tree could not be built is said so, with the reason. Everything
@@ -55,7 +56,7 @@ class DocInspector {
 
     _show(p) {
         if (p.failed) { this._fail("its tree could not be built - " + p.failed); return; }
-        var a = p.arrangement, widgets = Object.keys(a.widgets), nodes = DocInspector._count(a.root);
+        var a = DocArrangement.of(p.tree, p.doc), widgets = Object.keys(a.widgets), nodes = DocInspector._count(a.root);
         this._status.textContent = nodes + " headings, " + widgets.length + " widgets, " + p.items.length + " parts in the payload";
         this._tree(a);
         this._arrangement(a, widgets);
