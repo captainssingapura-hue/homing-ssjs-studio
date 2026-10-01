@@ -3,15 +3,16 @@
 // widgets' host, at the catalogue whose address was stamped into the page, in
 // the MPA's main slot, under the chrome every page of the site wears.
 //
-// It shows the tree: the site's whole catalogue, and the details of what is
-// picked (CatalogueBrowser), in the box it lends it.
+// It shows the tree: this catalogue, what is under it - not the site's whole;
+// the way up is the chrome's - and the details of what is picked
+// (CatalogueBrowser), in the box it lends it.
 //
 // The page is the substrate of the catalogue party the widgets meet in
 // (Messaging Parties Are Joined Top-Down): a party at the root, its own
 // secretary the type's; the page a member of it, first - it picks its own
-// catalogue, so the tree opens with the cursor on it and the details show it -
-// then the widget, made, grafted and joined. Opening is the page's: on
-// Opening it goes where the entry's app says - in place, or beside.
+// catalogue, the tree's place, so the details open on it - then the widget,
+// made, grafted and joined. Opening is the page's: on Opening it goes where
+// the entry's app says - in place, or beside.
 // =============================================================================
 
 const _listingOwner = Object.freeze({ toString: () => "catalogueListing" });
@@ -29,7 +30,7 @@ function appMain(el, params) {
     el.appendChild(box);
     var given = {};
     given[CATALOGUE.name] = party;
-    var widget = new CatalogueBrowser(box, { at: "/" });
+    var widget = new CatalogueBrowser(box, { at: at });
     place.graft("widget", widget.roots.dom);
     focusParty.root.graft("widget", widget.roots.focus);
     widget.join(given);
