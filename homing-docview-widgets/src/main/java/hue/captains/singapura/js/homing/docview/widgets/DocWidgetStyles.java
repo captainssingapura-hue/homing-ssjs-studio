@@ -42,10 +42,18 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
     /** The ground a diagram is drawn on - its plate's surface - which its engine reads to draw dark on a dark one. */
     public static final DesignClass<?> PLATE_GROUND = of(Base.class, Color.Surface.class);
 
-    /** A widget's root: a column, its content as tall as it needs. */
+    /**
+     * A widget's root: a column, its content as tall as it needs in the flow of a doc - and growing
+     * into a box its host sizes, as a stage's seat is: the widget never knows which it is in.
+     */
     public record dw_widget() implements CssClass<DocWidgetStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(of(Body.class, Type.Face.class), of(Body.class, Color.Ink.class)); }
-        @Override public String body() { return "display: flex;\nflex-direction: column;\ngap: 10px;\nmin-width: 0;\n"; }
+        @Override public String body() { return "display: flex;\nflex-direction: column;\ngap: 10px;\nmin-width: 0;\nflex: 1 1 auto;\nmin-height: 0;\n"; }
+    }
+
+    /** A part of a widget that takes what room a sized box gives - a diagram's view, its source: a column of its own, scrolling what it cannot fit. */
+    public record dw_fill() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "flex: 1 1 auto;\nmin-height: 0;\ndisplay: flex;\nflex-direction: column;\noverflow: auto;\n"; }
     }
 
     /** What a widget says while it has nothing to show: waiting, unavailable, alone. */
@@ -181,7 +189,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
 
     /** A figure: what it shows, then its caption. */
     public record dw_figure() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "margin: 0;\ndisplay: flex;\nflex-direction: column;\ngap: 6px;\nmin-width: 0;\n"; }
+        @Override public String body() { return "margin: 0;\ndisplay: flex;\nflex-direction: column;\ngap: 6px;\nmin-width: 0;\nflex: 1 1 auto;\nmin-height: 0;\n"; }
     }
 
     /** An SVG drawn inline: as wide as it may be, in the text's colour. */
@@ -218,7 +226,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
     /** A drawing's view, as a doc dresses it: on the plate's ground, its corners the code's - the frame and the ring are the view's own. */
     public record dw_drawing() implements CssClass<DocWidgetStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(PLATE_GROUND, of(Code.class, Shape.Corner.class)); }
-        @Override public String body() { return "padding: 12px;\n"; }
+        @Override public String body() { return "padding: 12px;\nflex: 1 1 auto;\nmin-height: 0;\n"; }
     }
 
     /** A diagram drawn: centred in its view, as wide as its engine drew it and no wider than the view. */
@@ -244,10 +252,12 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
 
     @Override
     public List<CssClass<DocWidgetStyles>> cssClasses() {
-        return List.of(new dw_widget(), new dw_note(), new dw_hidden(), new dw_para(), new dw_heading(), new dw_list(), new dw_quote(), new dw_code_span(),
+        return List.of(new dw_widget(), new dw_note(), new dw_para(), new dw_heading(), new dw_list(), new dw_quote(), new dw_code_span(),
                 new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_table_box(), new dw_table(), new dw_th(), new dw_td(),
                 new dw_left(), new dw_center(), new dw_right(), new dw_strong(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
                 new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_drawing(), new dw_diagram(), new dw_push(),
-                new dw_figure_bar(), new dw_caption());
+                new dw_figure_bar(), new dw_fill(), new dw_caption(),
+                // last, so what is hidden stays hidden whatever else in the sheet says how it lays out
+                new dw_hidden());
     }
 }

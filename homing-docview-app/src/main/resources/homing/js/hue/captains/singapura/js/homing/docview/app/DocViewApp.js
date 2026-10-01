@@ -12,6 +12,9 @@
 // followed there. The address's fragment is the section in view - a section's
 // address opens at it, and the fragment follows the reader. The keys: the
 // contents lead; a widget that takes them gives them back to the contents.
+// The stage: one, modal, a party the widgets are given; its steward asks the
+// doc's layout to lend the widget asked for and takes it back after - the very
+// widget, never a copy - so the stage knows the layout, and nothing else.
 // =============================================================================
 
 const _docViewOwner = Object.freeze({ toString: () => "docView" });
@@ -37,6 +40,9 @@ class DocView {
         given[TABLE.name] = new MessagingParty(TABLE, ContentSecretary, TableSteward);
         given[IMAGE.name] = new MessagingParty(IMAGE, ContentSecretary, ImageSteward);
         given[DIAGRAM.name] = new MessagingParty(DIAGRAM, ContentSecretary, DiagramSteward);
+        // the stage: one, modal; its steward swaps a widget the layout keeps with the stage, asking the layout alone
+        given[STAGE.name] = new MessagingParty(STAGE, StageSecretary,
+            StageSteward.over({ placement: function () { return self.layout; }, branch: place.createBranch("stage") }));
         this.contents = new TreeToc(contentsBox, { arrangement: a, label: "Contents" });
         this.layout = new TreeLayout(docBox, { arrangement: a, kinds: _DOC_KINDS, given: given, onShown: function (path) { self._shown(path); } });
         this.contents.onPick(function (path) { self.layout.show(path); });

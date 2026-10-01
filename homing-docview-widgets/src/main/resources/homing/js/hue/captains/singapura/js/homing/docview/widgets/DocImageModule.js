@@ -1,15 +1,20 @@
 // =============================================================================
 // DocImage — a doc's image part, a figure: SVG drawn inline, so it takes the theme's
 // colours - read by SvgMarkup, nothing in it that runs kept - in a view that
-// zooms and pans in place, its bar above it; or a raster by its address. Its alt
-// text its accessible name, its caption under it. A ContentWidget of the type
-// image.
+// zooms and pans, its bar above it, offered to the stage when the page has one;
+// or a raster by its address. Its alt text its accessible name, its caption
+// under it. It fills the box it is in. A ContentWidget of the type image, kept
+// for the stage by a placement that keeps such.
 //
 //   new DocImage(container, params)   params: { doc, key }
 //   w.zoom → the SvgPanZoom of an SVG image, once shown
 // =============================================================================
 
 class DocImage extends ContentWidget {
+
+    /** A placement that keeps widgets for a stage keeps this one. */
+    static STAGEABLE = true;
+
     constructor(container, params) {
         super(container, params, IMAGE, "image");
         this.zoom = null;
@@ -25,9 +30,13 @@ class DocImage extends ContentWidget {
             svg.setAttribute("aria-label", img.alt);
             this.zoom = new SvgPanZoom(branch.createBranch("zoom"), { svg: svg, label: img.alt || "An image" });
             css.addClass(this.zoom.root, dw_drawing);
-            var bar = new PanZoomBar(branch.createBranch("zoomBar"), this.zoom);
-            css.addClass(bar.root, dw_figure_bar);
-            figure.appendChild(bar.root);
+            var tools = branch.createElement("tools", "div");
+            css.addClass(tools, dw_views);
+            css.addClass(tools, dw_figure_bar);
+            tools.appendChild(new PanZoomBar(branch.createBranch("zoomBar"), this.zoom).root);
+            var offer = this._offerStage(branch);
+            if (offer) tools.appendChild(offer);
+            figure.appendChild(tools);
             figure.appendChild(this.zoom.root);
         } else if (img.src) {
             var pic = branch.createElement("picture", "img");

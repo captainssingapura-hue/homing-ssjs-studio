@@ -9,6 +9,7 @@ import hue.captains.singapura.js.homing.libs.LibsCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.panzoom.UiPanZoomCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
+import hue.captains.singapura.js.homing.workspace.stage.WorkspaceStageCrate;
 
 import java.util.List;
 
@@ -38,7 +39,9 @@ public final class DocViewWidgetsCrate implements Crate {
                 // marked: markdown's tokens
                 LibsCrate.INSTANCE,
                 // zoom and pan, for a drawing in place
-                UiPanZoomCrate.INSTANCE);
+                UiPanZoomCrate.INSTANCE,
+                // the stage: the button a widget offers itself by
+                WorkspaceStageCrate.INSTANCE);
     }
 
     @Override

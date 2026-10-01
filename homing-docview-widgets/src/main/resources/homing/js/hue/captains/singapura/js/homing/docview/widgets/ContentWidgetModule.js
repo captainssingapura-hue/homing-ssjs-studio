@@ -5,7 +5,11 @@
 // content with those params, and draws it when it comes; until then, and when
 // the party says the content is unavailable, it says so. Given no party of its
 // type, it stands alone, and says that. A primitive that shows more than its
-// own type asks another party with the same params (_ask).
+// own type asks another party with the same params (_ask). One whose class says
+// STAGEABLE offers itself to the stage, when the page gave it one (_offerStage):
+// a button that asks for it by its name. It never learns where it sits, nor
+// that it moved: it fills the box it is in - its content's height in the flow
+// of a doc, all of a box its host sizes.
 //
 // Self-contained: its DomOps party and its focus party are its own, offered as
 // roots for its host to graft. It flows: as tall as its content.
@@ -14,6 +18,7 @@
 //                                   _draw(content, branch, into) { … } }
 //   w.root  w.roots { dom, focus }   w.join(given)  w.leave()   w.dispose()
 //   w._ask(type, { Content(content), Unavailable(why) })   - for a primitive's own use, once joined
+//   w._offerStage(branch) → the button's element, or null: no stage given
 //   w.state() → "alone" | "waiting" | "shown" | "unavailable" - on the root as data-state too
 // =============================================================================
 
@@ -84,6 +89,13 @@ class ContentWidget {
         });
         this._also.push(member);
         member.tell({ kind: "Wanted", params: this._params });
+    }
+
+    /** The stage offered, when the page gave one: a button that asks for this widget by its name - the one its placement keeps it by. */
+    _offerStage(branch) {
+        var stage = this._given && this._given[STAGE.name];
+        if (!stage) return null;
+        return new StageButton(branch.createBranch("toStage"), { party: stage, widget: this._name }).root;
     }
 
     state() { return this._state; }

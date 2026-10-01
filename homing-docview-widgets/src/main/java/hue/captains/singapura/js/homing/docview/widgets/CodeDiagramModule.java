@@ -29,7 +29,7 @@ public record CodeDiagramModule() implements DomModule<CodeDiagramModule> {
                 .add(new ModuleImports<>(List.of(new SvgPanZoomModule.SvgPanZoom()), SvgPanZoomModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PanZoomBarModule.PanZoomBar()), PanZoomBarModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_views(), new DocWidgetStyles.dw_view(), new DocWidgetStyles.dw_lang(),
-                        new DocWidgetStyles.dw_plate(), new DocWidgetStyles.dw_drawing(), new DocWidgetStyles.dw_diagram(), new DocWidgetStyles.dw_push(),
+                        new DocWidgetStyles.dw_plate(), new DocWidgetStyles.dw_drawing(), new DocWidgetStyles.dw_diagram(), new DocWidgetStyles.dw_push(), new DocWidgetStyles.dw_fill(),
                         new DocWidgetStyles.dw_note(), new DocWidgetStyles.dw_hidden(),
                         new DocWidgetStyles.dw_pre()), DocWidgetStyles.INSTANCE))
                 .build();

@@ -5,24 +5,27 @@
 // The diagram is asked of the diagram party, with the widget's own params, and
 // is drawn when the steward says it is ready; until then a plate says it is
 // being drawn, and when the steward says it cannot be, why. Drawn, it zooms and
-// pans in place - an SvgPanZoom, its bar beside the selector while the diagram
-// is the view picked.
+// pans - an SvgPanZoom, its bar beside the selector while the diagram is the
+// view picked - and it offers itself to the stage, when the page has one. It
+// fills the box it is in: its content's height in the flow of a doc, all of a
+// box its host sizes - the stage's.
 //
-//   CodeDiagram.draw(content, branch, into, ask)   DocCode's renderer contract
+//   CodeDiagram.draw(content, branch, into, host)   DocCode's renderer contract: host.ask, host.offerStage
 //   d.view() → "diagram" | "source"   d.pick(view)   d.state() → "drawing" | "drawn" | "failed"
 //   d.zoom → the SvgPanZoom, once drawn
 // =============================================================================
 
 class CodeDiagram {
 
-    static draw(content, branch, into, ask) { return new CodeDiagram(content, branch, into, ask); }
+    static draw(content, branch, into, host) { return new CodeDiagram(content, branch, into, host); }
 
-    constructor(content, branch, into, ask) {
+    constructor(content, branch, into, host) {
         var self = this;
         this._branch = branch;
         this._language = content.language;
         this.zoom = null;
         this._slot = null;
+        this._host = host;
         var head = branch.createElement("head", "div");
         css.addClass(head, dw_views);
         var tabs = branch.createElement("views", "div");
@@ -35,12 +38,16 @@ class CodeDiagram {
         css.addClass(lang, dw_lang);
         lang.textContent = content.language;
         head.appendChild(lang);
+        this._tools = branch.createElement("tools", "div");
+        css.addClass(this._tools, dw_views);
+        css.addClass(this._tools, dw_push);
+        head.appendChild(this._tools);
         into.appendChild(head);
         this._head = head;
         this._panels = { diagram: this._diagram(into), source: this._source(content.source, into) };
         this.pick("diagram");
         this._at("drawing", "Drawing the diagram…");
-        ask(DIAGRAM, {
+        host.ask(DIAGRAM, {
             Content: function (diagram) { self._drawn(diagram.svg); },
             Unavailable: function (why) { self._at("failed", "The diagram could not be drawn: " + why); }
         });
@@ -75,6 +82,7 @@ class CodeDiagram {
     /** The diagram's panel: a plate that says what there is while there is no drawing, then the drawing. */
     _diagram(into) {
         var panel = this._branch.createElement("diagram", "div");
+        css.addClass(panel, dw_fill);
         panel.setAttribute("role", "tabpanel");
         this._plate = this._branch.createElement("plate", "div");
         css.addClass(this._plate, dw_plate);
@@ -88,6 +96,7 @@ class CodeDiagram {
 
     _source(source, into) {
         var panel = this._branch.createElement("source", "div");
+        css.addClass(panel, dw_fill);
         panel.setAttribute("role", "tabpanel");
         var pre = this._branch.createElement("pre", "pre");
         css.addClass(pre, dw_pre);
@@ -111,10 +120,11 @@ class CodeDiagram {
             css.addClass(this.zoom.root, dw_drawing);
             this._panels.diagram.appendChild(this.zoom.root);
             this._slot = this._branch.createElement("zoomSlot", "div");
-            css.addClass(this._slot, dw_push);
             this._slot.appendChild(new PanZoomBar(this._branch.createBranch("zoomBar"), this.zoom).root);
-            this._head.appendChild(this._slot);
+            this._tools.appendChild(this._slot);
             css.toggleClass(this._slot, dw_hidden, this._view !== "diagram");
+            var offer = this._host.offerStage(this._branch);
+            if (offer) this._tools.appendChild(offer);
             css.toggleClass(this._plate, dw_hidden, true);
             this._at("drawn", "");
         } catch (e) {

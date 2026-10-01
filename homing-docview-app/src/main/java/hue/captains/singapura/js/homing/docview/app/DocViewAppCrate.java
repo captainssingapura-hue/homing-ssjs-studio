@@ -10,6 +10,7 @@ import hue.captains.singapura.js.homing.docview.widgets.DocViewWidgetsCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.splitgrid.UiSplitGridCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
+import hue.captains.singapura.js.homing.workspace.stage.WorkspaceStageCrate;
 import hue.captains.singapura.js.homing.workspace.parties.WorkspacePartiesCrate;
 import hue.captains.singapura.js.homing.workspace.tree.WorkspaceTreeCrate;
 
@@ -34,6 +35,8 @@ public final class DocViewAppCrate implements Crate {
                 WorkspaceTreeCrate.INSTANCE, UiSplitGridCrate.INSTANCE,
                 // the content parties: the runtime, their secretary
                 WorkspacePartiesCrate.INSTANCE, WorkspaceContentCrate.INSTANCE,
+                // the stage: its party, its secretary, its steward
+                WorkspaceStageCrate.INSTANCE,
                 // the page's party, the css and href managers, the design words its sheet wears
                 CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, DesignCrate.INSTANCE);
     }

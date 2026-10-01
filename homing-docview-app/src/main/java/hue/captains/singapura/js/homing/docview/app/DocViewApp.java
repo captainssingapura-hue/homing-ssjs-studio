@@ -15,6 +15,9 @@ import hue.captains.singapura.js.homing.docview.widgets.CodeContentModule;
 import hue.captains.singapura.js.homing.docview.widgets.CodeStewardModule;
 import hue.captains.singapura.js.homing.docview.widgets.DiagramContentModule;
 import hue.captains.singapura.js.homing.docview.widgets.DiagramStewardModule;
+import hue.captains.singapura.js.homing.workspace.stage.StagePartyModule;
+import hue.captains.singapura.js.homing.workspace.stage.StageSecretaryModule;
+import hue.captains.singapura.js.homing.workspace.stage.StageStewardModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocCodeModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocImageModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocProseModule;
@@ -98,6 +101,9 @@ public record DocViewApp() implements AppModule<DocViewApp.Params, DocViewApp> {
                 .add(new ModuleImports<>(List.of(new ImageStewardModule.ImageSteward()), ImageStewardModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DiagramContentModule.DIAGRAM()), DiagramContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DiagramStewardModule.DiagramSteward()), DiagramStewardModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new StagePartyModule.STAGE()), StagePartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new StageSecretaryModule.StageSecretary()), StageSecretaryModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new StageStewardModule.StageSteward()), StageStewardModule.INSTANCE))
                 // the primitives the tree places
                 .add(new ModuleImports<>(List.of(new DocProseModule.DocProse()), DocProseModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocCodeModule.DocCode()), DocCodeModule.INSTANCE))

@@ -10,6 +10,8 @@ import hue.captains.singapura.js.homing.core.ModuleImports;
 import hue.captains.singapura.js.homing.core.js.DomOpsPartyModule;
 import hue.captains.singapura.js.homing.core.js.domOpsParties;
 import hue.captains.singapura.js.homing.workspace.content.ContentParamsModule;
+import hue.captains.singapura.js.homing.workspace.stage.StageButtonModule;
+import hue.captains.singapura.js.homing.workspace.stage.StagePartyModule;
 
 import java.util.List;
 
@@ -30,6 +32,8 @@ public record ContentWidgetModule() implements DomModule<ContentWidgetModule> {
                 .add(new ModuleImports<>(List.of(new domOpsParties()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new focusParties()), FocusPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentParamsModule.ContentParams()), ContentParamsModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new StagePartyModule.STAGE()), StagePartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new StageButtonModule.StageButton()), StageButtonModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_widget(), new DocWidgetStyles.dw_note(), new DocWidgetStyles.dw_hidden()),
                         DocWidgetStyles.INSTANCE))
                 .build();

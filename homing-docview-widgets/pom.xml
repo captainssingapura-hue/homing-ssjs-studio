@@ -47,6 +47,12 @@
             <artifactId>homing-ui-panzoom</artifactId>
             <version>${homing.components.version}</version>
         </dependency>
+        <!-- The stage: the button a widget offers itself to it by, and the party's type. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js.ws</groupId>
+            <artifactId>homing-workspace-stage</artifactId>
+            <version>${homing.ws.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-core-js</artifactId>

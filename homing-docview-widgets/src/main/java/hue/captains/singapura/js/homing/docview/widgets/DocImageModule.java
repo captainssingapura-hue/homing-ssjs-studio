@@ -28,7 +28,7 @@ public record DocImageModule() implements DomModule<DocImageModule> {
                 .add(new ModuleImports<>(List.of(new SvgPanZoomModule.SvgPanZoom()), SvgPanZoomModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PanZoomBarModule.PanZoomBar()), PanZoomBarModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_figure(), new DocWidgetStyles.dw_svg(), new DocWidgetStyles.dw_caption(),
-                        new DocWidgetStyles.dw_drawing(), new DocWidgetStyles.dw_figure_bar()),
+                        new DocWidgetStyles.dw_drawing(), new DocWidgetStyles.dw_figure_bar(), new DocWidgetStyles.dw_views()),
                         DocWidgetStyles.INSTANCE))
                 .build();
     }
