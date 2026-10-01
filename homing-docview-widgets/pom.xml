@@ -41,6 +41,12 @@
             <artifactId>homing-libs</artifactId>
             <version>${homing.core.version}</version>
         </dependency>
+        <!-- Zoom and pan: a drawing that zooms and pans in place, and its bar. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-ui-panzoom</artifactId>
+            <version>${homing.components.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-core-js</artifactId>

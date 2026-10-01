@@ -209,15 +209,31 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return "margin: 0;\npadding: 2px 10px;\nborder-style: solid;\n"; }
     }
 
-    /** A diagram's plate: the drawing on the code's ground, scrolling across when it is wider than the column. */
+    /** A diagram's plate while there is no drawing: what it says, on the drawing's ground, framed as the drawing will be. */
     public record dw_plate() implements CssClass<DocWidgetStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(PLATE_GROUND, of(Hairline.class, Color.Edge.class), of(Code.class, Shape.Corner.class)); }
-        @Override public String body() { return "padding: 12px;\nborder-width: 1px;\nborder-style: solid;\noverflow-x: auto;\n"; }
+        @Override public String body() { return "padding: 12px;\nborder-width: 1px;\nborder-style: solid;\n"; }
     }
 
-    /** A diagram drawn: centred on its plate, as wide as its engine drew it and no wider than the plate. */
+    /** A drawing's view, as a doc dresses it: on the plate's ground, its corners the code's - the frame and the ring are the view's own. */
+    public record dw_drawing() implements CssClass<DocWidgetStyles> {
+        @Override public List<? extends Wearable> wears() { return List.of(PLATE_GROUND, of(Code.class, Shape.Corner.class)); }
+        @Override public String body() { return "padding: 12px;\n"; }
+    }
+
+    /** A diagram drawn: centred in its view, as wide as its engine drew it and no wider than the view. */
     public record dw_diagram() implements CssClass<DocWidgetStyles> {
         @Override public String body() { return "display: block;\nmargin: 0 auto;\nmax-width: 100%;\nheight: auto;\n"; }
+    }
+
+    /** What sits at the far end of a row: a zoom bar after the views. */
+    public record dw_push() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "margin-left: auto;\n"; }
+    }
+
+    /** A figure's zoom bar: above the drawing, at its far end. */
+    public record dw_figure_bar() implements CssClass<DocWidgetStyles> {
+        @Override public String body() { return "align-self: flex-end;\n"; }
     }
 
     /** A table's or a figure's caption. */
@@ -231,6 +247,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         return List.of(new dw_widget(), new dw_note(), new dw_hidden(), new dw_para(), new dw_heading(), new dw_list(), new dw_quote(), new dw_code_span(),
                 new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_table_box(), new dw_table(), new dw_th(), new dw_td(),
                 new dw_left(), new dw_center(), new dw_right(), new dw_strong(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
-                new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_diagram(), new dw_caption());
+                new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_drawing(), new dw_diagram(), new dw_push(),
+                new dw_figure_bar(), new dw_caption());
     }
 }

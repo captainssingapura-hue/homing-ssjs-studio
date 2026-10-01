@@ -5,6 +5,8 @@ import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.Exportable;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
+import hue.captains.singapura.js.homing.ui.panzoom.PanZoomBarModule;
+import hue.captains.singapura.js.homing.ui.panzoom.SvgPanZoomModule;
 
 import java.util.List;
 
@@ -24,8 +26,11 @@ public record CodeDiagramModule() implements DomModule<CodeDiagramModule> {
         return ImportsFor.<CodeDiagramModule>builder()
                 .add(new ModuleImports<>(List.of(new DiagramContentModule.DIAGRAM()), DiagramContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new SvgMarkupModule.SvgMarkup()), SvgMarkupModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new SvgPanZoomModule.SvgPanZoom()), SvgPanZoomModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new PanZoomBarModule.PanZoomBar()), PanZoomBarModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_views(), new DocWidgetStyles.dw_view(), new DocWidgetStyles.dw_lang(),
-                        new DocWidgetStyles.dw_plate(), new DocWidgetStyles.dw_diagram(), new DocWidgetStyles.dw_note(), new DocWidgetStyles.dw_hidden(),
+                        new DocWidgetStyles.dw_plate(), new DocWidgetStyles.dw_drawing(), new DocWidgetStyles.dw_diagram(), new DocWidgetStyles.dw_push(),
+                        new DocWidgetStyles.dw_note(), new DocWidgetStyles.dw_hidden(),
                         new DocWidgetStyles.dw_pre()), DocWidgetStyles.INSTANCE))
                 .build();
     }

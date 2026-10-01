@@ -7,6 +7,7 @@ import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
 import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.libs.LibsCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
+import hue.captains.singapura.js.homing.ui.panzoom.UiPanZoomCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
 
 import java.util.List;
@@ -35,7 +36,9 @@ public final class DocViewWidgetsCrate implements Crate {
                 // the content parties' params and secretary
                 WorkspaceContentCrate.INSTANCE,
                 // marked: markdown's tokens
-                LibsCrate.INSTANCE);
+                LibsCrate.INSTANCE,
+                // zoom and pan, for a drawing in place
+                UiPanZoomCrate.INSTANCE);
     }
 
     @Override

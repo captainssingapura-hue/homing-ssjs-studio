@@ -3,11 +3,14 @@
 // diagram's language to. A small selector on top - the diagram, or its source -
 // and under it the one picked; the diagram first. The source is there at once.
 // The diagram is asked of the diagram party, with the widget's own params, and
-// is drawn when the steward says it is ready; until then the plate says it is
-// being drawn, and when the steward says it cannot be, why.
+// is drawn when the steward says it is ready; until then a plate says it is
+// being drawn, and when the steward says it cannot be, why. Drawn, it zooms and
+// pans in place - an SvgPanZoom, its bar beside the selector while the diagram
+// is the view picked.
 //
 //   CodeDiagram.draw(content, branch, into, ask)   DocCode's renderer contract
 //   d.view() → "diagram" | "source"   d.pick(view)   d.state() → "drawing" | "drawn" | "failed"
+//   d.zoom → the SvgPanZoom, once drawn
 // =============================================================================
 
 class CodeDiagram {
@@ -18,17 +21,23 @@ class CodeDiagram {
         var self = this;
         this._branch = branch;
         this._language = content.language;
-        var bar = branch.createElement("views", "div");
-        css.addClass(bar, dw_views);
-        bar.setAttribute("role", "tablist");
-        bar.setAttribute("aria-label", "The diagram, or its source");
-        this._tabs = { diagram: this._tab(bar, "diagram", "Diagram"), source: this._tab(bar, "source", "Source") };
+        this.zoom = null;
+        this._slot = null;
+        var head = branch.createElement("head", "div");
+        css.addClass(head, dw_views);
+        var tabs = branch.createElement("views", "div");
+        css.addClass(tabs, dw_views);
+        tabs.setAttribute("role", "tablist");
+        tabs.setAttribute("aria-label", "The diagram, or its source");
+        this._tabs = { diagram: this._tab(tabs, "diagram", "Diagram"), source: this._tab(tabs, "source", "Source") };
+        head.appendChild(tabs);
         var lang = branch.createElement("lang", "span");
         css.addClass(lang, dw_lang);
         lang.textContent = content.language;
-        bar.appendChild(lang);
-        into.appendChild(bar);
-        this._panels = { diagram: this._plate(into), source: this._source(content.source, into) };
+        head.appendChild(lang);
+        into.appendChild(head);
+        this._head = head;
+        this._panels = { diagram: this._diagram(into), source: this._source(content.source, into) };
         this.pick("diagram");
         this._at("drawing", "Drawing the diagram…");
         ask(DIAGRAM, {
@@ -49,6 +58,7 @@ class CodeDiagram {
             self._tabs[v].setAttribute("aria-selected", String(v === view));
             css.toggleClass(self._panels[v], dw_hidden, v !== view);
         });
+        if (this._slot) css.toggleClass(this._slot, dw_hidden, view !== "diagram");
     }
 
     _tab(bar, view, text) {
@@ -62,16 +72,18 @@ class CodeDiagram {
         return tab;
     }
 
-    /** The diagram's plate: what it says while there is no drawing, then the drawing. */
-    _plate(into) {
-        var plate = this._branch.createElement("plate", "div");
-        css.addClass(plate, dw_plate);
-        plate.setAttribute("role", "tabpanel");
+    /** The diagram's panel: a plate that says what there is while there is no drawing, then the drawing. */
+    _diagram(into) {
+        var panel = this._branch.createElement("diagram", "div");
+        panel.setAttribute("role", "tabpanel");
+        this._plate = this._branch.createElement("plate", "div");
+        css.addClass(this._plate, dw_plate);
         this._note = this._branch.createElement("drawing", "p");
         css.addClass(this._note, dw_note);
-        plate.appendChild(this._note);
-        into.appendChild(plate);
-        return plate;
+        this._plate.appendChild(this._note);
+        panel.appendChild(this._plate);
+        into.appendChild(panel);
+        return panel;
     }
 
     _source(source, into) {
@@ -87,6 +99,7 @@ class CodeDiagram {
         return panel;
     }
 
+    /** Drawn: the drawing in a view that zooms and pans, on the plate's ground; its bar in the head. */
     _drawn(markup) {
         if (this._state === "drawn") return;
         try {
@@ -94,7 +107,15 @@ class CodeDiagram {
             css.addClass(svg, dw_diagram);
             svg.setAttribute("role", "img");
             svg.setAttribute("aria-label", "A " + this._language + " diagram");
-            this._panels.diagram.appendChild(svg);
+            this.zoom = new SvgPanZoom(this._branch.createBranch("zoom"), { svg: svg, label: "The " + this._language + " diagram" });
+            css.addClass(this.zoom.root, dw_drawing);
+            this._panels.diagram.appendChild(this.zoom.root);
+            this._slot = this._branch.createElement("zoomSlot", "div");
+            css.addClass(this._slot, dw_push);
+            this._slot.appendChild(new PanZoomBar(this._branch.createBranch("zoomBar"), this.zoom).root);
+            this._head.appendChild(this._slot);
+            css.toggleClass(this._slot, dw_hidden, this._view !== "diagram");
+            css.toggleClass(this._plate, dw_hidden, true);
             this._at("drawn", "");
         } catch (e) {
             this._at("failed", "The diagram could not be shown: " + String(e && e.message || e));
@@ -105,6 +126,6 @@ class CodeDiagram {
         this._state = state;
         this._panels.diagram.setAttribute("data-diagram", state);
         this._note.textContent = text;
-        css.toggleClass(this._note, dw_hidden, !text);
+        if (state !== "drawn") css.toggleClass(this._plate, dw_hidden, false);
     }
 }

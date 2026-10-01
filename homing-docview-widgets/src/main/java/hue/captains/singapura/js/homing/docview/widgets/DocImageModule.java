@@ -4,6 +4,8 @@ import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
+import hue.captains.singapura.js.homing.ui.panzoom.PanZoomBarModule;
+import hue.captains.singapura.js.homing.ui.panzoom.SvgPanZoomModule;
 import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 
 import java.util.List;
@@ -23,7 +25,10 @@ public record DocImageModule() implements DomModule<DocImageModule> {
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ImageContentModule.IMAGE()), ImageContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new SvgMarkupModule.SvgMarkup()), SvgMarkupModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_figure(), new DocWidgetStyles.dw_svg(), new DocWidgetStyles.dw_caption()),
+                .add(new ModuleImports<>(List.of(new SvgPanZoomModule.SvgPanZoom()), SvgPanZoomModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new PanZoomBarModule.PanZoomBar()), PanZoomBarModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_figure(), new DocWidgetStyles.dw_svg(), new DocWidgetStyles.dw_caption(),
+                        new DocWidgetStyles.dw_drawing(), new DocWidgetStyles.dw_figure_bar()),
                         DocWidgetStyles.INSTANCE))
                 .build();
     }
