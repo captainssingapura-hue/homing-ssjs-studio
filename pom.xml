@@ -54,6 +54,9 @@
         <module>homing-planview-widgets</module>
         <!-- PlanView, the app: the page every plan is read on - DocView's desk, with a plan's widgets. -->
         <module>homing-planview-app</module>
+        <!-- The conformance studio on the new stack: its workbench, and the studios parked here. -->
+        <module>homing-conformance-workbench</module>
+        <module>homing-conformance-studio-core</module>
     </modules>
 
     <properties>
