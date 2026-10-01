@@ -52,6 +52,7 @@ public final class Citations {
             case Part.Prose p -> List.of(p.text());
             case Part.Code c -> List.of();
             case Part.Image i -> List.of(i.caption());
+            case Part.Held h -> List.of(h.caption());
             case Part.Table t -> {
                 var texts = new ArrayList<String>();
                 texts.add(t.caption());

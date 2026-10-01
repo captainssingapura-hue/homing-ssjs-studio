@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -119,7 +120,7 @@ class ReferenceTreesTest {
                 titled-markdown  P C(mermaid) P T2x2
                 figures-and-tables  P T2x2 I(svg)
                 a-titled-code-segment  C(bash)
-                a-doc-inside-a-doc  P P""", Outlines.of(t));
+                a-doc-inside-a-doc  P H""", Outlines.of(t));
         assertEquals("- an untitled list\n- belongs to the node before it", ((Part.Prose) part(t, "titled-markdown:2")).text(), "a list of prose, a markdown list");
         var relation = (Part.Table) part(t, "titled-markdown:3");
         assertEquals("Composed constructs", relation.caption());
@@ -131,7 +132,7 @@ class ReferenceTreesTest {
         var spanning = kinds.rows().get(1).cells().get(0);
         assertEquals(List.of(2, 1), List.of(spanning.colSpan(), spanning.rowSpan()));
         assertEquals("center", spanning.align());
-        assertTrue(((Part.Prose) part(t, "a-doc-inside-a-doc:1")).text().contains("not shown in this view yet"), "an open question, said");
+        assertSame(ReferenceDocs.INNER, ((Part.Held) part(t, "a-doc-inside-a-doc:1")).doc(), "a doc held: a part of its own, the doc as it is - the payload writes its card");
     }
 
     @Test

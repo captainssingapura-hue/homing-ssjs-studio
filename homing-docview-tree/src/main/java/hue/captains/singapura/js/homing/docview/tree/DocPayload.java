@@ -1,5 +1,6 @@
 package hue.captains.singapura.js.homing.docview.tree;
 
+import hue.captains.singapura.js.homing.studio.base.Doc;
 import hue.captains.singapura.js.homing.workspace.groups.core.models.ArrangedWidget;
 import hue.captains.singapura.js.homing.workspace.groups.core.models.Arrangement;
 import hue.captains.singapura.js.homing.workspace.groups.core.models.TreePlacement;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * A doc as a page loads it, in one: its tree - every heading, its name and label, and the parts
@@ -38,15 +40,21 @@ public final class DocPayload {
     /** How a raster's address is made from the doc's address and the part's key: the route that serves it. */
     public static final BiFunction<String, String, String> NO_RASTERS = (doc, key) -> "";
 
+    /** Where the site reads a doc: nowhere - a held doc's card then names it, and says so. */
+    public static final Function<Doc, Optional<String>> NO_PLACES = d -> Optional.empty();
+
     /** The payload of a doc's tree, at its address: no references. */
     public static String json(DocTree tree, String doc) { return json(tree, doc, List.of()); }
 
     /** The payload of a doc's tree, at its address, with its references as the site resolved them. */
-    public static String json(DocTree tree, String doc, List<DocRef> references) {
+    public static String json(DocTree tree, String doc, List<DocRef> references) { return json(tree, doc, references, NO_PLACES); }
+
+    /** The payload, a held doc's card linking where the site reads the doc - {@code places} says where. */
+    public static String json(DocTree tree, String doc, List<DocRef> references, Function<Doc, Optional<String>> places) {
         var items = new ArrayList<String>();
         for (DocTree.Spot s : tree.spots()) {
             if (s.part() instanceof Part.Image) continue;
-            items.add(Json.obj(ordered("type", Json.str(s.part().type()), "params", params(doc, s.key()), "content", content(s.part(), doc, s.key(), NO_RASTERS))));
+            items.add(Json.obj(ordered("type", Json.str(s.part().type()), "params", params(doc, s.key()), "content", content(s.part(), doc, s.key(), NO_RASTERS, places))));
         }
         return Json.obj(ordered("doc", Json.str(doc), "tree", tree(tree.root(), ""), "items", "[" + String.join(",", items) + "]",
                 "references", Json.arr(references, DocPayload::reference)));
@@ -115,9 +123,12 @@ public final class DocPayload {
     }
 
     /** A part's content, of its type's shape. */
-    static String content(Part part, String doc, String key, BiFunction<String, String, String> src) {
+    static String content(Part part, String doc, String key, BiFunction<String, String, String> src) { return content(part, doc, key, src, NO_PLACES); }
+
+    static String content(Part part, String doc, String key, BiFunction<String, String, String> src, Function<Doc, Optional<String>> places) {
         return switch (part) {
             case Part.Prose p -> Json.obj(ordered("text", Json.str(p.text())));
+            case Part.Held h -> Json.obj(ordered("text", Json.str(card(h, places))));
             case Part.Code c -> Json.obj(ordered("language", Json.str(c.language()), "source", Json.str(c.source())));
             case Part.Table t -> Json.obj(ordered(
                     "columns", Json.arr(t.columns(), c -> Json.obj(ordered("title", Json.str(c.title()), "align", Json.str(c.align())))),
@@ -126,6 +137,20 @@ public final class DocPayload {
             case Part.Image i -> Json.obj(ordered("svg", Json.str(i.svg()), "src", Json.str(i.raster() ? src.apply(doc, key) : ""),
                     "alt", Json.str(i.alt()), "caption", Json.str(i.caption())));
         };
+    }
+
+    /**
+     * A held doc's card, as markdown: what the holder calls it, when that is not the doc's title;
+     * then its title - a link where the site reads the doc, or said to be read nowhere - and its summary.
+     */
+    static String card(Part.Held h, Function<Doc, Optional<String>> places) {
+        Doc held = h.doc();
+        String title = held.title().replace("[", "\\[").replace("]", "\\]");
+        Optional<String> at = places.apply(held);
+        String named = at.map(p -> "[" + title + "](" + p + ")").orElse("*" + title + "*");
+        String summary = held.summary() == null || held.summary().isBlank() ? "" : " — " + held.summary().strip();
+        String head = h.caption().strip().equalsIgnoreCase(held.title().strip()) ? "" : "> **" + h.caption().strip() + "**\n>\n";
+        return head + "> " + named + summary + (at.isPresent() ? "" : " It is read nowhere on this site.");
     }
 
     private static String row(Part.Row r) { return Json.obj(ordered("cells", Json.arr(r.cells(), DocPayload::cell))); }

@@ -27,6 +27,7 @@ final class Outlines {
             case Part.Code c -> "C" + (c.language().isEmpty() ? "" : "(" + c.language() + ")");
             case Part.Table t -> "T" + t.columns().size() + "x" + t.rows().size();
             case Part.Image i -> i.raster() ? "I(raster)" : "I(svg)";
+            case Part.Held h -> "H";
         };
     }
 }

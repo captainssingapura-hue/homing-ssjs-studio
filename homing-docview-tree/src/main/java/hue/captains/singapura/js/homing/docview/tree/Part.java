@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.docview.tree;
 
+import hue.captains.singapura.js.homing.studio.base.Doc;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,7 +10,7 @@ import java.util.Objects;
  * Plain parts - prose, code, a table - travel in the doc's payload; an image is fetched when
  * it is wanted. Each is its own type, and its content is itself.
  */
-public sealed interface Part permits Part.Prose, Part.Code, Part.Table, Part.Image {
+public sealed interface Part permits Part.Prose, Part.Code, Part.Table, Part.Image, Part.Held {
 
     /** The widget type that shows it, and the content type it is asked of. */
     String type();
@@ -107,5 +109,21 @@ public sealed interface Part permits Part.Prose, Part.Code, Part.Table, Part.Ima
 
         /** Whether it is fetched when wanted, a raster, rather than drawn from its markup. */
         public boolean raster() { return svg.isEmpty(); }
+    }
+
+    /**
+     * A doc held in this one - a composed doc's {@code ComposedSegment}: shown as a card, its title
+     * a link to where the site reads the doc, with its summary. Prose, as it is written; where the
+     * held doc is read is the site's to say, so the payload writes the card ({@link DocPayload}).
+     *
+     * @param doc     the doc it holds
+     * @param caption what the holder calls it, here
+     */
+    record Held(Doc doc, String caption) implements Part {
+        public Held {
+            Objects.requireNonNull(doc, "Held.doc");
+            Objects.requireNonNull(caption, "Held.caption");
+        }
+        @Override public String type() { return "prose"; }
     }
 }

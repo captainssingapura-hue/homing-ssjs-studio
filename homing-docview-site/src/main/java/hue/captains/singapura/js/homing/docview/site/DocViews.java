@@ -71,7 +71,7 @@ public final class DocViews {
     private Built build(String at, Doc doc) {
         return attempt(at, () -> {
             DocTree tree = DocTrees.of(doc);
-            return new Built(at, tree, DocPayload.json(tree, at, DocReferences.of(doc, tree, places())), "");
+            return new Built(at, tree, DocPayload.json(tree, at, DocReferences.of(doc, tree, places()), places()::pathOf), "");
         });
     }
 

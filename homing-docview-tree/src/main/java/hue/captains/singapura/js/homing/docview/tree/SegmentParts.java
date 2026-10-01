@@ -39,7 +39,7 @@ import java.util.Optional;
  *   <tr><td>ImageSegment</td><td>an image, a raster</td></tr>
  *   <tr><td>a list whose items are all prose</td><td>prose, written as a markdown list</td></tr>
  *   <tr><td>a list holding other items</td><td>its items, as parts in order</td></tr>
- *   <tr><td>ComposedSegment</td><td>prose naming the doc it holds: shown as a link, or grafted in, is an open question</td></tr>
+ *   <tr><td>ComposedSegment</td><td>a doc held: a card, its title a link to where the site reads it (grafting its tree in is still an open question)</td></tr>
  *   <tr><td>EmbeddedSegment</td><td>prose naming what is embedded: not shown yet, an open question</td></tr>
  * </table>
  */
@@ -68,7 +68,7 @@ public final class SegmentParts {
             case ImageSegment i -> List.of(new Part.Image("", i.doc().resourcePath(), i.doc().mimeType(), i.doc().alt(), i.resolvedCaption()));
             case UnorderedListSegment u -> list(u.items(), false);
             case OrderedListSegment o -> list(o.items(), true);
-            case ComposedSegment c -> prose("*" + c.resolvedCaption() + "* - a doc of its own, held here; it is not shown in this view yet.");
+            case ComposedSegment c -> List.of(new Part.Held(c.doc(), c.resolvedCaption()));
             case EmbeddedSegment e -> prose("*" + e.resolvedCaption() + "* - an app embedded here; it is not shown in this view yet.");
         };
     }

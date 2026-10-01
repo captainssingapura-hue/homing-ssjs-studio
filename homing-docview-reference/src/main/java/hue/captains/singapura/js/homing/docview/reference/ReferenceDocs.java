@@ -88,7 +88,8 @@ public final class ReferenceDocs {
                     List.of(new TableData.Cell("A rigid doc and a composed one: their nodes, and their titled segments", 2, 1, null, TableData.Align.CENTER)))));
 
     /** A composed doc held inside the composed reference. */
-    static final ComposedDoc INNER = ComposedDoc.of(UUID.fromString("5d2b8f2e-6a41-4c3e-9f0b-1d7e3c9a4b07"), "A doc inside a doc", "", "DOC",
+    /** The doc the composed reference holds in itself. */
+    public static final ComposedDoc INNER = ComposedDoc.of(UUID.fromString("5d2b8f2e-6a41-4c3e-9f0b-1d7e3c9a4b07"), "A doc inside a doc", "", "DOC",
             List.of(new MarkdownSegment("Held by the composed reference.")));
 
     /** A composed doc: titled segments start nodes, untitled ones belong to the node before them. */
