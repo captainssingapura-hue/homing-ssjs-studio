@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.captainssingapura-hue.homing.js.studio</groupId>
+        <artifactId>homing.js.studio</artifactId>
+        <version>LOCAL-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>homing-docview-reference</artifactId>
+
+    <description>
+        DocView's reference docs: a few docs crafted to hold every construct the view reads -
+        a markdown doc, a rigid doc, a rigid doc by names, a composed doc - each saying, in
+        its own text, what it exercises. What the view is demonstrated with and validated
+        against; the docs of any site are its downstream consumers. Docs as data, nothing more.
+        And its reference plan: DocView's own phases, every pillar of a plan filled.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-doc-model</artifactId>
+            <version>${homing.core.version}</version>
+        </dependency>
+        <!-- The plans, as data. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-plan-model</artifactId>
+            <version>${homing.core.version}</version>
+        </dependency>
+    </dependencies>
+</project>
