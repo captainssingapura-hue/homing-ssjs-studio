@@ -18,12 +18,19 @@
 // The keys: the tree's own - ↑ ↓ Home End walk it, ← → fold and unfold, Enter
 // opens. Given the keys by any road but the browser's focus arriving in a row,
 // it hands them on into the tree; Escape the tree did not take gives them back.
+// It leads the keys of the view it is in: told the reader is reading an entry
+// (Reading) - a press beside it, in a widget with no keys of its own - it moves
+// the cursor there and takes the keys, or keeps them, into the tree.
 //
 //   new CatalogueTree(container, params)   params: { at } - a catalogue's address, "/" by default
 //   tree.picked()   the entry the cursor was last put on, or told of; or null
 // =============================================================================
 
 class CatalogueTree extends CatalogueWidget {
+
+    /** Keys of its own: a member, and the view's lead. */
+    static KEYS = true;
+
     constructor(container, params) {
         super(container, "catalogueTree", "Catalogue tree");
         var self = this;
@@ -60,12 +67,19 @@ class CatalogueTree extends CatalogueWidget {
 
     hears() {
         var self = this;
-        return { Picked: function (m) { if (m.to !== self._picked) self._follow(m.to); } };   // its own pick, echoed, is where it is already
+        return {
+            Picked: function (m) { if (m.to !== self._picked) self._follow(m.to); },   // its own pick, echoed, is where it is already
+            // the reader is reading an entry, pressed beside: the cursor there, and the keys - kept, or had back - into the tree
+            Reading: function (m) { if (m.to !== self._picked) self._follow(m.to); self.activate(); }
+        };
     }
 
     joined() { this.tell({ kind: "CurrentRequested" }); }
 
     picked() { return this._picked; }
+
+    /** Asked for the keys: claimed - nothing, when it holds them already - and into the tree either way. */
+    activate() { Keys.claim(this.focus); this._tree.focus(); }
 
     /** Given the keys: into the tree - unless the browser's focus arriving in a row is what gave them. */
     granted(by) { if (by !== "native") this._tree.focus(); }

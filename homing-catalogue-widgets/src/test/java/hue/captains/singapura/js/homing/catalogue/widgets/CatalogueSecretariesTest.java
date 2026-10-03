@@ -55,6 +55,15 @@ class CatalogueSecretariesTest extends SecretaryTestBase {
         assertEquals("BroadcastToMembers:Opening SendToParent:Open", kinds(twice), "opening twice is asking twice");
     }
 
+    /** Where the reader is reading is the scope's own: told to its members, for its lead to take the reader there; never up. */
+    @Test
+    void aReadIsToldToTheScope_neverUp() {
+        Value step = dispatch(pickedSoups(), envelope("Read", Map.of("to", "/kitchen/soups"), "details"));
+        assertEquals("BroadcastToMembers:Reading", kinds(step));
+        assertEquals("/kitchen/soups", action(step, 0).getMember("message").getMember("to").asString());
+        assertEquals("/kitchen/soups", picked(step), "reading is not picking");
+    }
+
     @Test
     void aQuestionIsAnsweredInTheScope_neverUp() {
         Value step = dispatch(pickedSoups(), envelope("CurrentRequested", Map.of(), "details"));

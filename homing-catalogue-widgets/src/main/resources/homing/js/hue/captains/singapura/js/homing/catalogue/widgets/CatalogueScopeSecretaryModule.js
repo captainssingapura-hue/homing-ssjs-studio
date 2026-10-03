@@ -8,7 +8,8 @@
 //
 // What goes up is declared, kind by kind (BUBBLES): a pick made in the scope,
 // when it changed what is picked; an asking to open, always - opening is the
-// host's, and the host is above. A question is answered here. From above, a
+// host's, and the host is above. A question is answered here, and where the
+// reader is reading is the scope's own: its lead takes the reader there. From above, a
 // pick is taken as the scope's own: told to every member of the scope when it
 // changes, never sent back up. Anything else from above - the host's opening
 // among it - is the scope's to pass over. Diligent: how often it sent up, kept
@@ -24,7 +25,7 @@ var CatalogueScopeSecretary = {
     initial: { choice: CatalogueChoiceSecretary.initial, bubbled: 0, kept: 0, adopted: 0 },
 
     /** What a member's word does at the scope's edge: up when it says so - a pick only when it changed what is picked. */
-    BUBBLES: Object.freeze({ Pick: "changed", Open: "always", CurrentRequested: "never" }),
+    BUBBLES: Object.freeze({ Pick: "changed", Open: "always", CurrentRequested: "never", Read: "never" }),
 
     behavior: function (state, envelope) {
         if (envelope.from === "upstream") return CatalogueScopeSecretary.fromAbove(state, envelope);

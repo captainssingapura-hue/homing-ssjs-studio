@@ -10,8 +10,8 @@ import java.util.List;
  * that meet in it are about, and the asking to open one. An entry travels as its
  * authentic path - the address it is reached at - so {@code to} is always one.
  *
- * <p>A member does - {@link Pick}, {@link CurrentRequested}, {@link Open}; the party
- * says - {@link Picked}, {@link Opening}. How an entry opens is its app's to say
+ * <p>A member does - {@link Pick}, {@link CurrentRequested}, {@link Open}, {@link Read};
+ * the party says - {@link Picked}, {@link Opening}, {@link Reading}. How an entry opens is its app's to say
  * ({@code opens}: {@code in-place} or {@code new-tab}, as its leaf states); what
  * opening means is the host's - a site navigates, a workspace opens a tab.</p>
  */
@@ -25,6 +25,15 @@ public sealed interface CatalogueChoice {
 
     /** A person asked to open this entry, which opens as its app says. */
     record Open(String to, String opens) implements CatalogueChoice {}
+
+    /**
+     * The reader is reading this entry: pressed in a widget that has no keys of its own - the keys
+     * of a catalogue view are its lead's, its tree's, unless a widget has a designed use for them.
+     */
+    record Read(String to) implements CatalogueChoice {}
+
+    /** The party says: the reader is reading this entry - the widget that leads the keys takes the reader there, and keeps them. */
+    record Reading(String to) implements CatalogueChoice {}
 
     /** The party says: this entry is picked. */
     record Picked(String to) implements CatalogueChoice {}

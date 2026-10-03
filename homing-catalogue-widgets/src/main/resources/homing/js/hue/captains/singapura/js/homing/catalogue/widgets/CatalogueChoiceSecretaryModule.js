@@ -16,8 +16,11 @@
 //   CurrentRequested       Picked to the member that asked, alone - when one is picked
 //   Open { to, opens }     Opening { to, opens } to every member: the host acts on it, as the
 //                          entry's app says it opens
-//   anything else          kept in recentUnknown, nothing done: Picked and Opening are the
-//                          party's own words, never a member's
+//   Read { to }            Reading { to } to every member: the reader is reading this entry,
+//                          pressed in a widget with no keys of its own - the one that leads the
+//                          keys takes the reader there
+//   anything else          kept in recentUnknown, nothing done: Picked, Opening and Reading are
+//                          the party's own words, never a member's
 //
 // Pure: no DOM, no clock, no console; the state handed in is never changed.
 // =============================================================================
@@ -41,6 +44,9 @@ var CatalogueChoiceSecretary = {
             case "CurrentRequested":
                 if (state.picked === "") return { newState: state, actions: [] };
                 return { newState: state, actions: [{ kind: "SendToMember", to: envelope.from, message: { kind: "Picked", to: state.picked } }] };
+
+            case "Read":
+                return { newState: state, actions: [{ kind: "BroadcastToMembers", message: { kind: "Reading", to: m.to } }] };
 
             case "Open":
                 return { newState: Object.assign({}, state, { opened: state.opened + 1 }),

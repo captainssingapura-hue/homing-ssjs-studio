@@ -5,6 +5,7 @@ import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueChoiceModule;
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueChoiceSecretaryModule;
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule;
 import hue.captains.singapura.js.homing.component.keyboard.FocusPartyModule;
+import hue.captains.singapura.js.homing.component.keyboard.KeysModule;
 import hue.captains.singapura.js.homing.component.keyboard.focusParty;
 import hue.captains.singapura.js.homing.core.AppModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
@@ -56,6 +57,7 @@ public record CatalogueListingApp() implements AppModule<CatalogueListingApp.Par
                 // the page's parties: where the widget's are grafted
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new focusParty()), FocusPartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new KeysModule.Keys()), KeysModule.INSTANCE))
                 // the catalogue party the page is the substrate of, and what opening is on a page
                 .add(new ModuleImports<>(List.of(new MessagingPartyModule.MessagingParty()), MessagingPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueChoiceModule.CATALOGUE()), CatalogueChoiceModule.INSTANCE))

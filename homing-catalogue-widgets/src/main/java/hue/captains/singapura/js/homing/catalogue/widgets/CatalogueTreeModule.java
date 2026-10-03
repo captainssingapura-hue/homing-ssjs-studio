@@ -2,6 +2,7 @@ package hue.captains.singapura.js.homing.catalogue.widgets;
 
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule.CatalogueWidget;
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
+import hue.captains.singapura.js.homing.component.keyboard.KeysModule;
 import hue.captains.singapura.js.homing.component.keyboard.NeedKeyboard;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
@@ -32,6 +33,7 @@ public record CatalogueTreeModule() implements DomModule<CatalogueTreeModule> {
     public ImportsFor<CatalogueTreeModule> imports() {
         return ImportsFor.<CatalogueTreeModule>builder()
                 .add(new ModuleImports<>(List.of(new CatalogueWidget()), CatalogueWidgetModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new KeysModule.Keys()), KeysModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueEntriesModule.CatalogueEntries()), CatalogueEntriesModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueRowCellModule.CatalogueRowCell()), CatalogueRowCellModule.INSTANCE))
                 // the relation tree and its questions
