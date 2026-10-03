@@ -11,7 +11,12 @@
 // shown; a section folded there is folded here; the section in view is
 // followed there. The address's fragment is the section in view - a section's
 // address opens at it, and the fragment follows the reader. The keys: the
-// contents lead; a widget that takes them gives them back to the contents.
+// contents and the doc are both grafted at the root of the page's focus party,
+// and the contents are the root's default - the home, named once the desk is
+// laid out, so they hold from the start: entering the page is the reader's own
+// act. Every widget in the doc is a member; a press in it claims the keys, and
+// whatever it gives up, or a control inside it lets go of, goes up to the root
+// and so to the contents, into their tree.
 // The references, when the payload brings any: the last section, a list of
 // them, in the contents as any section is; a citation pressed shows its
 // reference there, marked - or, with Ctrl or ⌘, opens what it names in a tab of
@@ -69,9 +74,10 @@ class DocDesk {
         place.graft("contents", this.contents.roots.dom);
         place.graft("doc", this.layout.roots.dom);
         focusParty.root.graft("contents", this.contents.roots.focus);
-        this.contents.graft("doc", this.layout.roots.focus);
+        focusParty.root.graft("doc", this.layout.roots.focus);
         docBox.addEventListener("click", function (ev) { self._clicked(ev); });
         this.contents.follow(this.layout.shown());
+        Keys.home(this.contents.focus);   // the root's default allocation: the contents, from the start
         this._off = HrefManagerInstance.onHashChange(function (h) { self._go(h); });
         if (at) requestAnimationFrame(function () { self._go(at); });
     }

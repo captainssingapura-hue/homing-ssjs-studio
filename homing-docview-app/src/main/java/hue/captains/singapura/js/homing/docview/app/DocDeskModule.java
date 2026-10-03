@@ -1,6 +1,7 @@
 package hue.captains.singapura.js.homing.docview.app;
 
 import hue.captains.singapura.js.homing.component.keyboard.FocusPartyModule;
+import hue.captains.singapura.js.homing.component.keyboard.KeysModule;
 import hue.captains.singapura.js.homing.component.keyboard.focusParty;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
@@ -91,6 +92,7 @@ public record DocDeskModule() implements DomModule<DocDeskModule> {
                 .add(new ModuleImports<>(List.of(new HrefManager.HrefManagerInstance()), HrefManager.INSTANCE))
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new focusParty()), FocusPartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new KeysModule.Keys()), KeysModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocViewStyles.dv_page(), new DocViewStyles.dv_shell(), new DocViewStyles.dv_cell(),
                         new DocViewStyles.dv_status(), new DocViewStyles.dv_hidden()), DocViewStyles.INSTANCE))
                 .build();

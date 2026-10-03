@@ -13,6 +13,7 @@
 //   DocCode.register(language, draw)    draw(content, branch, into, host) - the renderer for a language;
 //                                       host.ask(type, { Content(content), Unavailable(why) })
 //                                       host.offerStage(branch) → a button's element, or null: no stage here
+//                                       host.keysInto(control) - the control the keys go into when the widget is given them
 //   DocCode.source(content, branch, into)   the source as it is: what every language falls back to
 // =============================================================================
 
@@ -33,7 +34,8 @@ class DocCode extends ContentWidget {
         if (!draw) { DocCode.source(content, branch, into); return; }
         var host = Object.freeze({
             ask: function (type, on) { self._ask(type, on); },
-            offerStage: function (at) { return self._offerStage(at); }
+            offerStage: function (at) { return self._offerStage(at); },
+            keysInto: function (control) { self._keysInto(control); }
         });
         try { draw(content, branch, into, host); }
         catch (e) {

@@ -1,6 +1,7 @@
 package hue.captains.singapura.js.homing.docview.widgets;
 
 import hue.captains.singapura.js.homing.component.keyboard.FocusPartyModule;
+import hue.captains.singapura.js.homing.component.keyboard.KeysModule;
 import hue.captains.singapura.js.homing.component.keyboard.focusParties;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
@@ -31,6 +32,7 @@ public record ContentWidgetModule() implements DomModule<ContentWidgetModule> {
         return ImportsFor.<ContentWidgetModule>builder()
                 .add(new ModuleImports<>(List.of(new domOpsParties()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new focusParties()), FocusPartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new KeysModule.Keys()), KeysModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentParamsModule.ContentParams()), ContentParamsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StagePartyModule.STAGE()), StagePartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StageButtonModule.StageButton()), StageButtonModule.INSTANCE))
