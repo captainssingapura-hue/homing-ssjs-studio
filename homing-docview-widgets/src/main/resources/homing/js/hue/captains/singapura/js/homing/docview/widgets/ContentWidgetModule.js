@@ -14,16 +14,18 @@
 // Self-contained: its DomOps party and its focus party are its own, offered as
 // roots for its host to graft. It flows: as tall as its content.
 //
-// The keys: a widget, as any - a member of its own focus party, never focused
-// itself (RFC 0066 E3, keyboard §15.1, §17). A press in it claims the keys; the
-// browser's focus arriving in a control inside it - a link, a button, a drawing
-// that zooms and pans - makes it the holder, lent. Its Escape yields. A control
-// inside it letting go of the keys - an Escape it had no use for - is a yield
-// from the control: the widget, asked first, has nothing designed for holding
-// the keys then, says nothing, and is passed by, so the keys go on up the tree
-// to the first that would hold them - in a doc, the root's default, the
-// contents. A primitive with a control that takes keys says which (_keysInto):
-// given the keys by a press or a call, the widget puts the browser's focus there.
+// The keys: in a doc reader they are the contents', unless a widget has a
+// designed use for them. A primitive with one - a drawing that zooms and pans -
+// says which control the keys go into (_keysInto), and is from then a member of
+// its own focus party, never focused itself (RFC 0066 E3, keyboard §15.1, §17):
+// a press in it claims the keys, the browser's focus in a control inside it
+// makes it the holder, its Escape yields; a control inside it letting go of the
+// keys is a yield from the control - the widget, asked first, says nothing and
+// is passed by, so the keys go up to the root's default, the contents. Any
+// other primitive takes no keys: a press in it - not on a link or a button
+// inside it, and not one that made a selection - says where the reader is
+// reading to the reading party (ReadHere, by its own name), whose steward takes
+// the reader to its section in the contents, which keep the keys.
 //
 //   class X extends ContentWidget { constructor(container, params) { super(container, params, TYPE, "x"); }
 //                                   _draw(content, branch, into) { … } }
@@ -31,11 +33,13 @@
 //   w._ask(type, { Content(content), Unavailable(why) })   - for a primitive's own use, once joined
 //   w._offerStage(branch) → the button's element, or null: no stage given
 //   w._keysInto(control)  - control: the element the keys go into when given, or a function answering it now
-//   w.focus  its membership   w.activate()
+//   w.focus  its membership, once it has keys of its own, else null   w.activate()
 //   w.state() → "alone" | "waiting" | "shown" | "unavailable" - on the root as data-state too
 // =============================================================================
 
 var _contentWidgets = 0;
+/** What a press on is the control's, not the reader's place: a link, a button, a field, anything focusable. */
+var _CONTROLS = "a, button, input, select, textarea, summary, label, [tabindex], [contenteditable]";
 
 class ContentWidget {
 
@@ -52,7 +56,7 @@ class ContentWidget {
         this._dom.activate(this);
         this._focusParty = focusParties.mobile(this._name);
         this._control = null;
-        var root = this._dom.createElement("root", "div");
+        var root = this._dom.createElement("root", "div"), self = this;
         css.addClass(root, dw_widget);
         this._note = this._dom.createElement("note", "p");
         css.addClass(this._note, dw_note);
@@ -60,8 +64,10 @@ class ContentWidget {
         container.appendChild(root);
         this.root = root;
         this.roots = Object.freeze({ dom: this._dom, focus: this._focusParty });
-        this.focus = this._focusParty.root.join("widget", this);
-        this._offKeys = Keys.claimOn(root, this.focus);
+        this.focus = null;        // its membership of its own focus party: only once it has keys of its own
+        this._offKeys = null;
+        this._reader = null;      // its membership of the reading party, when the page gave one
+        root.addEventListener("click", function (ev) { self._read(ev); });
         this._member = null;
         this._given = null;
         this._also = [];
@@ -73,7 +79,8 @@ class ContentWidget {
     /** Joined: its content asked for, with its params. */
     join(given) {
         if (this._member) throw new Error("[" + this._name + "] joined already: leave first");
-        var party = given && given[this._type.name], self = this;
+        var party = given && given[this._type.name], reading = given && given[READING.name], self = this;
+        if (reading && !this._reader) this._reader = reading.join(this._name, {});
         if (!party) return;
         this._given = given;
         this._member = party.join(this._name, {
@@ -85,6 +92,7 @@ class ContentWidget {
     }
 
     leave() {
+        if (this._reader) { this._reader.leave(); this._reader = null; }
         this._also.forEach(function (m) { m.leave(); });
         this._also = [];
         this._given = null;
@@ -114,11 +122,34 @@ class ContentWidget {
         return new StageButton(branch.createBranch("toStage"), { party: stage, widget: this._name }).root;
     }
 
-    /** The control the keys go into when the widget is given them by a press or a call: an element, or a function answering it now. */
-    _keysInto(control) { this._control = control || null; }
+    /**
+     * Keys of its own: the control they go into when the widget is given them by a press or a call - an element, or
+     * a function answering it now. Said once, the widget joins its focus party and a press in it claims; said again,
+     * the control changes.
+     */
+    _keysInto(control) {
+        this._control = control || null;
+        if (this.focus) return;
+        this.focus = this._focusParty.root.join("widget", this);
+        this._offKeys = Keys.claimOn(this.root, this.focus);
+    }
 
-    /** Asked for the keys: a claim, what a press in it does. */
-    activate() { Keys.claim(this.focus); }
+    /** Asked for the keys: a claim, what a press in it does. Nothing, for a primitive with no keys of its own. */
+    activate() { if (this.focus) Keys.claim(this.focus); }
+
+    /**
+     * A press in a primitive with no keys of its own: the reader is reading here, said to the reading party by its own
+     * name. Not a press on a link, a button or another control inside it - that is the control's - and not one that
+     * made a selection: the reader is taking text.
+     */
+    _read(ev) {
+        if (this.focus || !this._reader) return;
+        var t = ev.target, c = t && typeof t.closest === "function" ? t.closest(_CONTROLS) : null;
+        if (c && this.root.contains(c)) return;
+        var selection = document.getSelection ? document.getSelection() : null;
+        if (selection && !selection.isCollapsed) return;
+        this._reader.tell({ kind: "ReadHere", widget: this._name });
+    }
 
     /** Given the keys by a press or a call: into its control, when it has one - not when the browser's focus arriving is what gave them. */
     granted(by) {
@@ -137,7 +168,7 @@ class ContentWidget {
 
     dispose() {
         this.leave();
-        this._offKeys();
+        if (this._offKeys) { this._offKeys(); this._offKeys = null; }
         this._focusParty.dissolve();
         this._dom.dissolve();
     }

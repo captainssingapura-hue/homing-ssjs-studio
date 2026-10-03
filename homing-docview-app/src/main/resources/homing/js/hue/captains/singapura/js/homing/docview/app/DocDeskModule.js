@@ -14,9 +14,12 @@
 // contents and the doc are both grafted at the root of the page's focus party,
 // and the contents are the root's default - the home, named once the desk is
 // laid out, so they hold from the start: entering the page is the reader's own
-// act. Every widget in the doc is a member; a press in it claims the keys, and
-// whatever it gives up, or a control inside it lets go of, goes up to the root
-// and so to the contents, into their tree.
+// act. The keys are the contents', unless a widget has a designed use for them:
+// such a widget is a member, a press in it claims the keys, and whatever it
+// gives up, or a control inside it lets go of, goes up to the root and so to the
+// contents. Any other widget, pressed, says where the reader is reading to the
+// reading party; its steward takes the reader to that section's entry in the
+// contents, which keep the keys - nothing moves under the reader.
 // The references, when the payload brings any: the last section, a list of
 // them, in the contents as any section is; a citation pressed shows its
 // reference there, marked - or, with Ctrl or ⌘, opens what it names in a tab of
@@ -62,6 +65,9 @@ class DocDesk {
         given[DIAGRAM.name] = new MessagingParty(DIAGRAM, ContentSecretary, DiagramSteward);
         given[REFERENCES.name] = new MessagingParty(REFERENCES, ContentSecretary, ReferencesSteward);
         // the stage: one, modal; its steward swaps a widget the layout keeps with the stage, asking the layout alone
+        // reading: a widget with no keys of its own, pressed, takes the reader to its section in the contents
+        given[READING.name] = new MessagingParty(READING, ReadingSecretary,
+            ReadingSteward.over({ placement: function () { return self.layout; }, contents: function () { return self.contents; } }));
         given[STAGE.name] = new MessagingParty(STAGE, StageSecretary,
             StageSteward.over({ placement: function () { return self.layout; }, branch: place.createBranch("stage") }));
         if (typeof more.parties === "function") more.parties(given);

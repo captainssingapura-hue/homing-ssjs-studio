@@ -12,6 +12,8 @@ import hue.captains.singapura.js.homing.core.js.DomOpsPartyModule;
 import hue.captains.singapura.js.homing.core.js.domOpsParty;
 import hue.captains.singapura.js.homing.docview.site.DocArrangementModule;
 import hue.captains.singapura.js.homing.docview.widgets.CodeContentModule;
+import hue.captains.singapura.js.homing.docview.widgets.ReadingPartyModule;
+import hue.captains.singapura.js.homing.docview.widgets.ReadingSecretaryModule;
 import hue.captains.singapura.js.homing.docview.widgets.CodeStewardModule;
 import hue.captains.singapura.js.homing.docview.widgets.DiagramContentModule;
 import hue.captains.singapura.js.homing.docview.widgets.DiagramStewardModule;
@@ -76,6 +78,9 @@ public record DocDeskModule() implements DomModule<DocDeskModule> {
                 .add(new ModuleImports<>(List.of(new ReferencesStewardModule.ReferencesSteward()), ReferencesStewardModule.INSTANCE))
                 // the stage: its party, its secretary, its steward
                 .add(new ModuleImports<>(List.of(new StagePartyModule.STAGE()), StagePartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ReadingPartyModule.READING()), ReadingPartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ReadingSecretaryModule.ReadingSecretary()), ReadingSecretaryModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ReadingStewardModule.ReadingSteward()), ReadingStewardModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StageSecretaryModule.StageSecretary()), StageSecretaryModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StageStewardModule.StageSteward()), StageStewardModule.INSTANCE))
                 // a doc's primitives, and the list of its references

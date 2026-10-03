@@ -35,6 +35,7 @@ public record ContentWidgetModule() implements DomModule<ContentWidgetModule> {
                 .add(new ModuleImports<>(List.of(new KeysModule.Keys()), KeysModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentParamsModule.ContentParams()), ContentParamsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StagePartyModule.STAGE()), StagePartyModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ReadingPartyModule.READING()), ReadingPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StageButtonModule.StageButton()), StageButtonModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_widget(), new DocWidgetStyles.dw_note(), new DocWidgetStyles.dw_hidden()),
                         DocWidgetStyles.INSTANCE))
