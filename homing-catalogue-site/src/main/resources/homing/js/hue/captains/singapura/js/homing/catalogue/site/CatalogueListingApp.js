@@ -13,6 +13,11 @@
 // catalogue, the tree's root row, so the cursor and the details open on it -
 // then the widget, made, grafted and joined. Opening is the page's: on Opening
 // it goes where the entry's app says - in place, or beside.
+//
+// The keys: the catalogue tree leads them, and is the root's default - the
+// home, named once the widget is laid out, so it holds from the start:
+// entering the page is the reader's own act. A press in the details, which have
+// no keys of their own, takes the reader to their entry in the tree.
 // =============================================================================
 
 const _listingOwner = Object.freeze({ toString: () => "catalogueListing" });
@@ -34,4 +39,5 @@ function appMain(el, params) {
     place.graft("widget", widget.roots.dom);
     focusParty.root.graft("widget", widget.roots.focus);
     widget.join(given);
+    Keys.home(widget.focus);   // the root's default allocation: the tree, from the start
 }

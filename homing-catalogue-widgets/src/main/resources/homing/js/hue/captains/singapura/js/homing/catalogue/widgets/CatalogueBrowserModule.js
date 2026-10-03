@@ -24,6 +24,7 @@
 //   browser.root  browser.roots   { dom, focus }: its own, its subordinates' grafted in them
 //   browser.join(given)   given: { [type name]: party }; a second join without a leave is refused
 //   browser.leave()   browser.scope()   browser.activate()   browser.dispose()
+//   browser.focus     the membership that leads its keys: its tree's - what a host names its home
 // =============================================================================
 
 const _catalogueBrowserOwner = Object.freeze({ toString: () => "catalogueBrowser" });
@@ -96,6 +97,9 @@ class CatalogueBrowser {
     }
 
     scope() { return this._scope; }
+
+    /** The membership that leads its keys: its tree's. */
+    get focus() { return this._tree.focus; }
 
     /** Asked for the keys: its tree is asked. A host never claims for what it holds. */
     activate() { this._tree.activate(); }

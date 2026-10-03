@@ -2,7 +2,6 @@ package hue.captains.singapura.js.homing.catalogue.widgets;
 
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule.CatalogueWidget;
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
-import hue.captains.singapura.js.homing.component.keyboard.NeedKeyboard;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -18,9 +17,9 @@ public record CatalogueDetailsModule() implements DomModule<CatalogueDetailsModu
 
     public static final CatalogueDetailsModule INSTANCE = new CatalogueDetailsModule();
 
-    public record CatalogueDetails() implements SelfContainedWidget<CatalogueDetailsModule>, NeedKeyboard {
+    /** No keys of its own: a press in it says the reader is reading the entry shown. */
+    public record CatalogueDetails() implements SelfContainedWidget<CatalogueDetailsModule> {
         @Override public String summary() { return "The entry that is picked, flat on the sheet it lies on: its badge, its name, its summary, and the way to it."; }
-        @Override public List<KeyBinding> keys() { return List.of(CatalogueKeys.GIVE_BACK); }
     }
 
     @Override

@@ -7,7 +7,9 @@
 //
 // It follows the catalogue party it joins: what the party says is picked, it
 // reads from the site and shows. A press on its link asks the party for the
-// entry to open, and the host opens it as its app says. Not joined, it shows
+// entry to open, and the host opens it as its app says. It has no keys of its
+// own: a press anywhere else in it says the reader is reading the entry shown,
+// and the view's lead takes the reader there. Not joined, it shows
 // nothing - there is nothing to follow - and its link is an ordinary one.
 //
 //   new CatalogueDetails(container, params)   params: { here? } - the address of the page it lies
@@ -41,6 +43,9 @@ class CatalogueDetails extends CatalogueWidget {
     joined() { this.tell({ kind: "CurrentRequested" }); }
 
     shown() { return this._shown; }
+
+    /** The entry it is about: the one shown. */
+    readingAt() { return this._shown ? this._shown.to : null; }
 
     _show(to) {
         var self = this;

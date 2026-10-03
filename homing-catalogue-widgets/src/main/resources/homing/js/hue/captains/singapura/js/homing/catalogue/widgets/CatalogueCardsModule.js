@@ -7,7 +7,8 @@
 // Joined to a catalogue party, the cards follow a picked catalogue - they show
 // it, so a tree picking beside them browses through them; a press on any tile
 // asks for its entry to open, and the host opens it as its app says (a
-// catalogue in place: its own listing). Not joined, every tile is an ordinary
+// catalogue in place: its own listing). It has no keys of its own: a press on
+// its head says the reader is reading the catalogue shown. Not joined, every tile is an ordinary
 // link - but a page its app opens beside is opened beside.
 //
 //   new CatalogueCards(container, params)   params: { at } - the catalogue shown first, "/" by default
@@ -37,6 +38,9 @@ class CatalogueCards extends CatalogueWidget {
     }
 
     shown() { return this._shown; }
+
+    /** The entry it is about: the catalogue shown. */
+    readingAt() { return this._shown ? this._shown.to : null; }
 
     /** The catalogue at `to`, shown - a page picked is not a catalogue, and is passed over. */
     _show(to, followed) {

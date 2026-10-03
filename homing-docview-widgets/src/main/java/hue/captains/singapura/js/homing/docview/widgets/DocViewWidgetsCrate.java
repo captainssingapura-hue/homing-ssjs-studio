@@ -55,6 +55,8 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(ImageContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DiagramContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(ReferencesContentModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                CrateEntry.of(ReadingPartyModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
+                CrateEntry.of(ReadingSecretaryModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 // the doc they read from, and their stewards
                 CrateEntry.of(DocSourcesModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DocPartStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),

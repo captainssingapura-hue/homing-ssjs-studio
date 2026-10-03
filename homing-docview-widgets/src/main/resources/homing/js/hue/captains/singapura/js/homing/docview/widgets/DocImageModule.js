@@ -38,6 +38,7 @@ class DocImage extends ContentWidget {
             if (offer) tools.appendChild(offer);
             figure.appendChild(tools);
             figure.appendChild(this.zoom.root);
+            this._keysInto(this.zoom.root);
         } else if (img.src) {
             var pic = branch.createElement("picture", "img");
             pic.setAttribute("src", img.src);

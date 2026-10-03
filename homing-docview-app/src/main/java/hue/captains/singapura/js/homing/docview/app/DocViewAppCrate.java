@@ -46,6 +46,7 @@ public final class DocViewAppCrate implements Crate {
         return List.of(
                 CrateEntry.of(DocViewStyles.INSTANCE),
                 // the desk a doc - or any tree a payload brings - is read on, and the app that opens it for a doc
+                CrateEntry.of(ReadingStewardModule.INSTANCE, StandardJsModuleType.PURE_LOGIC),
                 CrateEntry.of(DocDeskModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DocViewApp.INSTANCE, StandardJsModuleType.CONSUMER));
     }

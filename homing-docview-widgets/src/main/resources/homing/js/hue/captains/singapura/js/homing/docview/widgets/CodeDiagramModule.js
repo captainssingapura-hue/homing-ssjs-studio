@@ -10,7 +10,7 @@
 // fills the box it is in: its content's height in the flow of a doc, all of a
 // box its host sizes - the stage's.
 //
-//   CodeDiagram.draw(content, branch, into, host)   DocCode's renderer contract: host.ask, host.offerStage
+//   CodeDiagram.draw(content, branch, into, host)   DocCode's renderer contract: host.ask, host.offerStage, host.keysInto
 //   d.view() → "diagram" | "source"   d.pick(view)   d.state() → "drawing" | "drawn" | "failed"
 //   d.zoom → the SvgPanZoom, once drawn
 // =============================================================================
@@ -46,6 +46,8 @@ class CodeDiagram {
         this._head = head;
         this._panels = { diagram: this._diagram(into), source: this._source(content.source, into) };
         this.pick("diagram");
+        // given the keys: into the drawing while it is the view picked and drawn, else into the tab picked
+        host.keysInto(function () { return self._view === "diagram" && self.zoom ? self.zoom.root : self._tabs[self._view]; });
         this._at("drawing", "Drawing the diagram…");
         host.ask(DIAGRAM, {
             Content: function (diagram) { self._drawn(diagram.svg); },

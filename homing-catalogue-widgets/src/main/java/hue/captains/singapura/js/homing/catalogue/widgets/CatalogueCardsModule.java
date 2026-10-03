@@ -2,7 +2,6 @@ package hue.captains.singapura.js.homing.catalogue.widgets;
 
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule.CatalogueWidget;
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
-import hue.captains.singapura.js.homing.component.keyboard.NeedKeyboard;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -21,9 +20,9 @@ public record CatalogueCardsModule() implements DomModule<CatalogueCardsModule> 
 
     public static final CatalogueCardsModule INSTANCE = new CatalogueCardsModule();
 
-    public record CatalogueCards() implements SelfContainedWidget<CatalogueCardsModule>, NeedKeyboard {
+    /** No keys of its own: a press on its head says the reader is reading the catalogue shown. */
+    public record CatalogueCards() implements SelfContainedWidget<CatalogueCardsModule> {
         @Override public String summary() { return "One catalogue as cards: its head, then its catalogues and pages as tiles, each opened as its app says."; }
-        @Override public List<KeyBinding> keys() { return List.of(CatalogueKeys.GIVE_BACK); }
     }
 
     @Override
