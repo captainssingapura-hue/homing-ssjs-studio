@@ -66,7 +66,7 @@ public final class CatalogueGate {
     /** The CSS graph laws, for the crate's own modules. */
     public static void cssLaws(Crate crate) {
         Set<String> own = own(crate);
-        List<Finding> css = CssConformance.check(new ArrayList<>(CrateClosure.of(List.of(crate))), HomingDesigns.REGISTRY.palettes())
+        List<Finding> css = CssConformance.check(new ArrayList<>(CrateClosure.of(List.of(crate))))
                 .stream().filter(f -> own.contains(f.moduleClass())).toList();
         assertEquals(List.of(), css.stream().map(CatalogueGate::describe).toList());
     }
