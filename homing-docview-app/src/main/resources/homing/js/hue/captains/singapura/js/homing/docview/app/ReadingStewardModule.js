@@ -1,8 +1,9 @@
 // =============================================================================
 // ReadingSteward — the steward of a doc reader's reading party: where the
 // keyboard goes when the reader presses a widget that has no keys of its own.
-// Told ReadHere, it asks the placement which section the widget sits in, and
-// takes the reader there in the contents: the cursor on that section's entry,
+// Told ReadHere, it asks the placement which section the widget sits in, tells
+// the placement the reader is there - its mark on that section, the doc not
+// moved - and takes the reader there in the contents: the cursor on its entry,
 // the sections holding it unfolded, telling no one - so the doc does not move
 // under the reader - and the contents given the keys there, into their tree.
 // The contents never lose the keys to such a widget: they keep them, or have
@@ -10,7 +11,8 @@
 // sits, nor what the contents are.
 //
 //   ReadingSteward.over({ placement, contents }) → the class a reading party hires:
-//     placement   function () → the placement: pathOf(name) → the path of the section a widget sits in, or null
+//     placement   function () → the placement: pathOf(name) → the path of the section a widget sits in, or null;
+//                 readAt(path) - the reader is there: marked, the doc not moved
 //     contents    function () → the contents: follow(path) - the cursor there, quietly; activate() - the keys, into it
 //   steward.reactors { ReadHere }
 // =============================================================================
@@ -38,6 +40,7 @@ class ReadingSteward {
         var placement = this._at.placement(), contents = this._at.contents();
         var path = placement && typeof placement.pathOf === "function" ? placement.pathOf(widget) : null;
         if (path === null || !contents) return;
+        if (typeof placement.readAt === "function") placement.readAt(path);   // the doc's mark where the reader is, as the contents' cursor
         contents.follow(path);
         contents.activate();
     }
