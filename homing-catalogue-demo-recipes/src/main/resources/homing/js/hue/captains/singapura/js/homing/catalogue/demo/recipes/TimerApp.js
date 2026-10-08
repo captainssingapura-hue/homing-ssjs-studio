@@ -19,16 +19,15 @@ class KitchenTimer {
         this._note = this._el("note", "p", rc_serves, root);
         var row = this._el("row", "div", rc_row, root);
         var self = this;
-        this._go = this._button("go", "Start", "primary", function () { self._toggle(); }, row);
-        this._reset = this._button("reset", "Reset", "plain", function () { self._stop(); self._left = self._total; self._show(); }, row);
+        this._go = this._button("go", "Start", PrimaryButton, function () { self._toggle(); }, row);
+        this._reset = this._button("reset", "Reset", PlainButton, function () { self._stop(); self._left = self._total; self._show(); }, row);
         this.root = root;
         this._show();
     }
 
-    _button(name, label, colour, fn, parent) {
-        var builder = new ButtonBuilder(), el = this._branch.createElement(name, builder.tag);
-        var b = builder.label(label).colour(colour).onClick(fn).build(el);
-        parent.appendChild(el);
+    _button(name, label, Kind, fn, parent) {
+        var b = new Kind(this._branch.createElement(name, Kind.TAG), { label: label, onClick: fn });
+        parent.appendChild(b.el);
         return b;
     }
 

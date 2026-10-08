@@ -41,7 +41,7 @@ public record CatalogueBrowserModule() implements DomModule<CatalogueBrowserModu
                 .add(new ModuleImports<>(List.of(new CatalogueChoiceModule.CATALOGUE()), CatalogueChoiceModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueScopeSecretaryModule.CatalogueScopeSecretary()), CatalogueScopeSecretaryModule.INSTANCE))
                 // the one sheet it lays its panes on
-                .add(new ModuleImports<>(List.of(new PanelModule.PanelBuilder()), PanelModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new PanelModule.Panel()), PanelModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new WidgetStyles.wg_fill()), WidgetStyles.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueStyles.cw_browser(), new CatalogueStyles.cw_sheet(), new CatalogueStyles.cw_split(), new CatalogueStyles.cw_pane(),
                         new CatalogueStyles.cw_pane_tree(), new CatalogueStyles.cw_pane_details()), CatalogueStyles.INSTANCE))

@@ -48,7 +48,7 @@ class CatalogueBrowser {
         var place = this._dom.createElement("place", "div");
         css.addClass(place, cw_sheet);
         root.appendChild(place);
-        this._sheet = new PanelBuilder().fills().host(place).build(this._dom.createBranch("sheet"));   // the panel activates the branch it is given
+        this._sheet = new Panel(this._dom.createBranch("sheet"), { fills: true, host: place });   // the panel activates the branch it is given
         this._sheet.elevation("elevated");
         var split = this._dom.createElement("split", "div");
         css.addClass(split, cw_split);
