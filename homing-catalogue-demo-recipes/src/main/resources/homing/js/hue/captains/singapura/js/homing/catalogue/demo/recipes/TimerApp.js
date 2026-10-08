@@ -48,7 +48,7 @@ class KitchenTimer {
     _show() {
         var m = Math.floor(this._left / 60), s = this._left % 60;
         this._clock.textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-        this._go.label(this._tick ? "Pause" : (this._left === this._total ? "Start" : (this._left === 0 ? "Again" : "Go on")));
+        this._go.label = this._tick ? "Pause" : (this._left === this._total ? "Start" : (this._left === 0 ? "Again" : "Go on"));
         this._note.textContent = this._left === 0 ? "Done." : (this._tick ? "Counting down." : "Counts " + Math.round(this._total / 60) + " minutes down.");
     }
 
