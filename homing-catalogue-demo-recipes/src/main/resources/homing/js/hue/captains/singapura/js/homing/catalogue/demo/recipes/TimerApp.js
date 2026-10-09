@@ -6,6 +6,13 @@
 
 const _timerOwner = Object.freeze({ toString: () => "timer" });
 
+/** A press on one of the timer's buttons: the timer told which. */
+class KitchenTimerPress {
+    constructor(timer, act) { this._timer = timer; this._act = act; }
+    canHandle(type) { return type === EVENT.CLICK; }
+    handle() { this._timer._pressed(this._act); }
+}
+
 class KitchenTimer {
     constructor(branch, params) {
         branch.activate(_timerOwner);
@@ -19,16 +26,22 @@ class KitchenTimer {
         this._note = this._el("note", "p", rc_serves, root);
         var row = this._el("row", "div", rc_row, root);
         var self = this;
-        this._go = this._button("go", "Start", PrimaryButton, function () { self._toggle(); }, row);
-        this._reset = this._button("reset", "Reset", PlainButton, function () { self._stop(); self._left = self._total; self._show(); }, row);
+        this._go = this._button("go", "Start", new PrimaryButton(PrimaryButtonFactory.create(branch, "go"), { label: "Start" }), row);
+        this._reset = this._button("reset", "Reset", new PlainButton(PlainButtonFactory.create(branch, "reset"), { label: "Reset" }), row);
         this.root = root;
         this._show();
     }
 
-    _button(name, label, Kind, fn, parent) {
-        var b = new Kind(this._branch.createElement(name, Kind.TAG), { label: label, onClick: fn });
+    _button(name, label, b, parent) {
+        b.setOnClick(new KitchenTimerPress(this, name));
         parent.appendChild(b.el);
         return b;
+    }
+
+    /** One of its buttons pressed, by its name: go starts or stops it, reset sets it back. */
+    _pressed(act) {
+        if (act === "go") this._toggle();
+        else if (act === "reset") { this._stop(); this._left = this._total; this._show(); }
     }
 
     _toggle() {

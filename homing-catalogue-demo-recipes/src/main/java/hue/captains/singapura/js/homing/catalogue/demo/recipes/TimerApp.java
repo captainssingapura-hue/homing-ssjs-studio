@@ -8,6 +8,7 @@ import hue.captains.singapura.js.homing.core.ParamCodec;
 import hue.captains.singapura.js.homing.core.QueryString;
 import hue.captains.singapura.js.homing.core.js.DomOpsPartyModule;
 import hue.captains.singapura.js.homing.core.js.domOpsParty;
+import hue.captains.singapura.js.homing.ui.elements.StatesAndEventsModule;
 import hue.captains.singapura.js.homing.ui.elements.PlainButtonModule;
 import hue.captains.singapura.js.homing.ui.elements.PrimaryButtonModule;
 
@@ -56,9 +57,10 @@ public record TimerApp() implements AppModule<TimerApp.Params, TimerApp> {
     @Override
     public ImportsFor<TimerApp> imports() {
         return ImportsFor.<TimerApp>builder()
+                .add(new ModuleImports<>(List.of(new StatesAndEventsModule.EVENT()), StatesAndEventsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new PrimaryButtonModule.PrimaryButton()), PrimaryButtonModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new PlainButtonModule.PlainButton()), PlainButtonModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new PrimaryButtonModule.PrimaryButton(), new PrimaryButtonModule.PrimaryButtonFactory()), PrimaryButtonModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new PlainButtonModule.PlainButton(), new PlainButtonModule.PlainButtonFactory()), PlainButtonModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new RecipeStyles.rc_root(), new RecipeStyles.rc_title(), new RecipeStyles.rc_serves(),
                         new RecipeStyles.rc_clock(), new RecipeStyles.rc_row()), RecipeStyles.INSTANCE))
                 .build();
