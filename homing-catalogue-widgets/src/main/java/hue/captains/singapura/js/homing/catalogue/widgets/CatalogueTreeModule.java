@@ -4,6 +4,8 @@ import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule.
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
 import hue.captains.singapura.js.homing.component.keyboard.KeysModule;
 import hue.captains.singapura.js.homing.component.keyboard.NeedKeyboard;
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -20,6 +22,8 @@ import java.util.List;
  * catalogue down, its catalogues and pages as rows, read from the site as they are
  * unfolded; the cursor the pick, Enter the asking to open.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+        reason = "It makes its own elements, places elements and wears classes of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CatalogueTreeModule() implements DomModule<CatalogueTreeModule> {
 
     public static final CatalogueTreeModule INSTANCE = new CatalogueTreeModule();

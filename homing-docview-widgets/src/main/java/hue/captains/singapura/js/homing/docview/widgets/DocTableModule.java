@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.docview.widgets;
 
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -9,6 +11,8 @@ import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import java.util.List;
 
 /** A doc's table part: {@code new DocTable(container, params)} - columns and rows, every cell markdown text. */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+        reason = "It makes its own elements, places elements and wears classes of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record DocTableModule() implements DomModule<DocTableModule> {
 
     public static final DocTableModule INSTANCE = new DocTableModule();

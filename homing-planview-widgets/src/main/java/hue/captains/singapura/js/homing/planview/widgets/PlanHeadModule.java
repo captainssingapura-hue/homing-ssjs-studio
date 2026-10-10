@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.planview.widgets;
 
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -16,6 +18,8 @@ import java.util.List;
  * A plan's head: {@code new PlanHead(container, params)} - what the plan is and its lede; its
  * progress, a bar; its counts; the docs it names, each where the site reads it.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+        reason = "It makes its own elements, places elements, wears classes of its own and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record PlanHeadModule() implements DomModule<PlanHeadModule> {
 
     public static final PlanHeadModule INSTANCE = new PlanHeadModule();

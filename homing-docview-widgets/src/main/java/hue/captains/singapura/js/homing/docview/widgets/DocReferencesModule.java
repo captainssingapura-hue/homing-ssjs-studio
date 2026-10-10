@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.docview.widgets;
 
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -14,6 +16,8 @@ import java.util.List;
  * section shows it: each reference its title, a link where it goes; what it is; its summary; where
  * it goes, and the sections that cite it.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+        reason = "It makes its own elements, places elements, wears classes of its own, writes attributes and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record DocReferencesModule() implements DomModule<DocReferencesModule> {
 
     public static final DocReferencesModule INSTANCE = new DocReferencesModule();

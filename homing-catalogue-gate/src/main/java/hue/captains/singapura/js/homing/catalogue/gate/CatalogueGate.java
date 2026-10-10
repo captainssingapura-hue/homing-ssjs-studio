@@ -6,12 +6,11 @@ import hue.captains.singapura.js.homing.conformance.engine.ServedModuleRenderer;
 import hue.captains.singapura.js.homing.conformance.rules.CrateClosure;
 import hue.captains.singapura.js.homing.conformance.rules.CrateConformance;
 import hue.captains.singapura.js.homing.conformance.rules.CssConformance;
+import hue.captains.singapura.js.homing.conformance.rules.DeclaredDebts;
 import hue.captains.singapura.js.homing.conformance.rules.DefaultJsRulePolicy;
 import hue.captains.singapura.js.homing.conformance.rules.Finding;
 import hue.captains.singapura.js.homing.conformance.rules.FindingGrader;
 import hue.captains.singapura.js.homing.conformance.rules.GradedFinding;
-import hue.captains.singapura.js.homing.conformance.rules.RuleLedger;
-import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.CssGroup;
@@ -48,9 +47,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public final class CatalogueGate {
 
-    /** The widgets' debt under widget-draws-only-components, recorded when the rule came: only shrinks. */
-    private static final RuleLedger WIDGETS = new RuleLedger(WidgetDrawsOnlyComponentsRule.INSTANCE.id(), "widget-ledger.txt");
-
     private CatalogueGate() {}
 
     /** Every served module declared; every cross-crate import in requires(). */
@@ -61,17 +57,16 @@ public final class CatalogueGate {
     }
 
     /**
-     * Every served module of the crate's closure, graded strictly: the desk carries no debt here. The
-     * one exception is the widget rule's ledger, recorded when the rule came, so the widgets could be
-     * held to it at once; it only shrinks.
+     * Every served module of the crate's closure, graded strictly: the desk carries no debt here but
+     * what a module declares on its own class ({@code @ConformanceDebt}), with why - and a debt that
+     * is paid is refused, so the debts only shrink.
      */
     public static void strict(Crate crate) {
         List<Finding> raw = new ConformanceEngine(DefaultJsRulePolicy.INSTANCE, new ServedModuleRenderer()).checkCrates(List.of(crate));
-        WIDGETS.recordIfAsked(raw);
-        assertEquals(List.of(), WIDGETS.stale(crate.getClass(), raw), "the widget ledger names debt that is paid: strike these lines");
-        List<GradedFinding> errors = WIDGETS.grader(crate.getClass()).grade(raw).stream().filter(GradedFinding::isError).toList();
+        assertEquals(List.of(), DeclaredDebts.INSTANCE.paid(List.of(crate), raw), "a debt that is paid: remove its @ConformanceDebt");
+        List<GradedFinding> errors = FindingGrader.STRICT.grade(raw).stream().filter(GradedFinding::isError).toList();
         assertEquals(List.of(), errors.stream().map(g -> describe(g.finding())).toList(),
-                "the studio on the site stack carries no debt - fix these; the one ledger is the widget rule's, and it only shrinks");
+                "the studio on the site stack carries no debt but what its modules declare - fix these");
     }
 
     /** The CSS graph laws, for the crate's own modules. */

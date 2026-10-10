@@ -73,6 +73,13 @@
             <version>${homing.core.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- The rules its widgets owe a debt to, declared on their classes: compile-time only. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-conformance-rules</artifactId>
+            <version>${homing.core.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

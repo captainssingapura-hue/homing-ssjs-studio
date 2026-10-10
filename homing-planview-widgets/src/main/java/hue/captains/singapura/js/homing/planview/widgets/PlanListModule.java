@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.planview.widgets;
 
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -14,6 +16,8 @@ import java.util.List;
  * A list of a plan's: {@code new PlanList(container, params)} - its objectives, its decisions or its
  * acceptance, a row each: its mark, its id and title, its text, more about it.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+        reason = "It makes its own elements, places elements, wears classes of its own and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record PlanListModule() implements DomModule<PlanListModule> {
 
     public static final PlanListModule INSTANCE = new PlanListModule();

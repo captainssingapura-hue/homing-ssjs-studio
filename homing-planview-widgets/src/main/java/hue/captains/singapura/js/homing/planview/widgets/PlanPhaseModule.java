@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.planview.widgets;
 
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -17,6 +19,8 @@ import java.util.List;
  * summary; its details - description, tasks, metrics, what it depends on, verification, rollback,
  * notes - folded until they are asked for.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+        reason = "It makes its own elements, places elements, wears classes of its own, writes attributes and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record PlanPhaseModule() implements DomModule<PlanPhaseModule> {
 
     public static final PlanPhaseModule INSTANCE = new PlanPhaseModule();
