@@ -19,6 +19,8 @@
 //       row(node) → { icon, name, badge }: the row the node is drawn as
 //   }
 //   navigator.picked()   the key the cursor was last put on, or told of; or null
+//   navigator.keep(keeps)  only the leaves keeps(node) answers true for, and the
+//                        nodes that hold them; every node again with null
 // =============================================================================
 
 class WorkbenchNavigator extends WorkbenchWidget {
@@ -34,6 +36,8 @@ class WorkbenchNavigator extends WorkbenchWidget {
         this._cellsBranch.activate(this);
         this._picked = null;
         this._pending = null;
+        this._keeps = null;
+        this._shown = null;     // the keys kept by keeps, with those that hold them; null when all are
         var box = this.branch.createElement("box", "div");
         css.addClass(box, wg_scroll);
         this.root.appendChild(box);
@@ -49,6 +53,7 @@ class WorkbenchNavigator extends WorkbenchWidget {
             if (!self.alive) return;
             self._take(root, 0, [], self._roots);
             self._open.add(root.key);
+            if (self._keeps) self._shown = self._kept(self._keeps);
             self._tree.tell(new RelTreeViewChanged());
             if (self._pending) self._follow(self._pending);
         }, function (err) { console.error("[" + name + "] the tree could not be read: " + err.message); });
@@ -69,6 +74,14 @@ class WorkbenchNavigator extends WorkbenchWidget {
 
     picked() { return this._picked; }
 
+    /** Only the leaves keeps(node) is true for, and the nodes that hold them - the roots always; every node again with null. */
+    keep(keeps) {
+        this._keeps = keeps || null;
+        if (!this._roots.length) return;
+        this._shown = this._keeps ? this._kept(this._keeps) : null;
+        this._tree.tell(new RelTreeViewChanged());
+    }
+
     /** Given the keys: into the tree - unless the browser's focus arriving in a row is what gave them. */
     granted(by) { if (by !== "native") this._tree.focus(); }
 
@@ -80,16 +93,31 @@ class WorkbenchNavigator extends WorkbenchWidget {
         (node.children || []).forEach(function (c) { self._take(c, depth + 1, holders.concat([node.key]), kids); });
     }
 
-    /** What the tree presents now: every node, those under a folded one left out. */
+    /** What the tree presents now: every node kept, those under a folded one left out. */
     _places() {
-        var out = [], open = this._open, nodes = this._nodes;
+        var out = [], open = this._open, nodes = this._nodes, shown = this._shown;
         (function place(keys) {
             keys.forEach(function (key) {
-                var n = nodes.get(key);
-                out.push({ key: key, depth: n.depth, fold: n.kids.length ? (open.has(key) ? "open" : "closed") : "leaf" });
-                if (n.kids.length && open.has(key)) place(n.kids);
+                if (shown && !shown.has(key)) return;
+                var n = nodes.get(key), kids = shown ? n.kids.filter(function (k) { return shown.has(k); }) : n.kids;
+                out.push({ key: key, depth: n.depth, fold: kids.length ? (open.has(key) ? "open" : "closed") : "leaf" });
+                if (kids.length && open.has(key)) place(kids);
             });
         })(this._roots);
+        return out;
+    }
+
+    /** The keys a filter keeps: each leaf it is true for, each node holding one, and the roots. */
+    _kept(keeps) {
+        var nodes = this._nodes, out = new Set();
+        function visit(key) {
+            var n = nodes.get(key), any = false;
+            n.kids.forEach(function (k) { if (visit(k)) any = true; });
+            var kept = n.kids.length ? any : !!keeps(n.node);
+            if (kept) out.add(key);
+            return kept;
+        }
+        this._roots.forEach(function (key) { visit(key); out.add(key); });
         return out;
     }
 

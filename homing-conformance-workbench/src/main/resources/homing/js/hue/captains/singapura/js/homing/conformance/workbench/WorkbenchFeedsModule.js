@@ -9,6 +9,8 @@
 //   WorkbenchFeeds.crateNodes()       → Promise of a Map: a crate node by its key - the
 //                                       crates, their packages, their modules - each with
 //                                       the key of what holds it (up), the root "crates"
+//                                       - its modules counted by kind (types) - a module
+//                                       with its kind (type, typeLabel)
 //   WorkbenchFeeds.source(fqcn)       → Promise of a module's source, as it is served
 // =============================================================================
 
@@ -23,7 +25,7 @@ class WorkbenchFeeds {
     static crateNodes() {
         return WorkbenchFeeds.json("crates").then(function (tree) {
             var nodes = new Map();
-            var root = { key: "crates", label: "Crates", kind: "crates", crates: tree.crates, modules: tree.modules, children: tree.children, up: null };
+            var root = { key: "crates", label: "Crates", kind: "crates", crates: tree.crates, modules: tree.modules, types: tree.types || [], children: tree.children, up: null };
             nodes.set(root.key, root);
             (function walk(children, up) {
                 children.forEach(function (n) {

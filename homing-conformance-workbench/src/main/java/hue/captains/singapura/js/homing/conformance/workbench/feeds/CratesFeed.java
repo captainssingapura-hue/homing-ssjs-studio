@@ -16,14 +16,15 @@ import java.util.Objects;
  * shows them and the summary reads them: crate, then the crate's packages - its common package
  * prefix stripped, single-child chains collapsed into one node, so a large crate stays navigable
  * - then the module leaves. Only the crates the studio was given: the crates they require are
- * the graph's, not the navigator's.
+ * the graph's, not the navigator's. Every module says its kind ({@link ModuleKind}): a widget, a
+ * component simple or composed, other UI, non-UI, styles, infrastructure - and the root counts them.
  *
  * <pre>
- *   { crates: n, modules: n, children: [node] }
+ *   { crates: n, modules: n, types: [{ type, label, modules }], children: [node] }
  *   node   { key, label, kind: "crate" | "package" | "module", children: [node], ... }
  *   crate  key "crate:&lt;name&gt;"           modules, prefix, requires: [name]
  *   package key "package:&lt;crate&gt;/&lt;path&gt;"  crate, modules
- *   module key "module:&lt;fqcn&gt;"           crate, form, fqcn
+ *   module key "module:&lt;fqcn&gt;"           crate, form, fqcn, type, typeLabel
  * </pre>
  */
 public final class CratesFeed extends WorkbenchFeed {
@@ -51,8 +52,16 @@ public final class CratesFeed extends WorkbenchFeed {
     public JsonObject json() {
         var crates = new JsonArray();
         int modules = 0;
-        for (Crate c : topLevel) { crates.add(crate(c)); modules += c.entries().size(); }
-        return new JsonObject().put("crates", topLevel.size()).put("modules", modules).put("children", crates);
+        var counts = new java.util.EnumMap<ModuleKind, Integer>(ModuleKind.class);
+        for (Crate c : topLevel) {
+            crates.add(crate(c));
+            modules += c.entries().size();
+            for (CrateEntry e : c.entries()) counts.merge(ModuleKinds.INSTANCE.of(e), 1, Integer::sum);
+        }
+        var types = new JsonArray();
+        for (ModuleKind k : ModuleKind.values())
+            types.add(new JsonObject().put("type", k.slug()).put("label", k.label()).put("modules", counts.getOrDefault(k, 0)));
+        return new JsonObject().put("crates", topLevel.size()).put("modules", modules).put("types", types).put("children", crates);
     }
 
     private static JsonObject crate(Crate crate) {
@@ -115,8 +124,10 @@ public final class CratesFeed extends WorkbenchFeed {
                         .put("crate", crate).put("modules", t.modules()).put("children", t.nodes(crate, path)));
             }
             for (CrateEntry e : entries) {
+                ModuleKind kind = ModuleKinds.INSTANCE.of(e);
                 out.add(node("module:" + e.moduleClass(), e.module().getClass().getSimpleName(), "module")
-                        .put("crate", crate).put("form", e.form().name()).put("fqcn", e.moduleClass()).put("children", new JsonArray()));
+                        .put("crate", crate).put("form", e.form().name()).put("fqcn", e.moduleClass())
+                        .put("type", kind.slug()).put("typeLabel", kind.label()).put("children", new JsonArray()));
             }
             return out;
         }

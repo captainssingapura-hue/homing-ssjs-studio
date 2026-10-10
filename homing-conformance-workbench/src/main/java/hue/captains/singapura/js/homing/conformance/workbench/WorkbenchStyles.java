@@ -35,6 +35,22 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     // ── the pane ────────────────────────────────────────────────────────────
 
+    /** Which nodes a navigator shows, chosen above its tree: in the body's face and ink, on the surface, a hairline round it. */
+    public record wb_filter() implements CssClass<WorkbenchStyles> {
+        @Override public List<? extends Wearable> wears() {
+            return List.of(of(Body.class, Type.Face.class), of(Label.class, Type.Scale.class), of(Body.class, Color.Ink.class),
+                           of(Base.class, Color.Surface.class), of(Hairline.class, Color.Edge.class), of(Code.class, Shape.Corner.class));
+        }
+        @Override public String body() { return """
+            flex: 0 0 auto;
+            margin: 8px 12px 4px;
+            padding: 4px 6px;
+            border-width: 1px;
+            border-style: solid;
+            """;
+        }
+    }
+
     /** A pane: the box a widget fills, scrolling on its own, in the body's face and ink. */
     public record wb_pane() implements CssClass<WorkbenchStyles> {
         @Override public List<? extends Wearable> wears() { return List.of(of(Body.class, Type.Face.class), of(Body.class, Color.Ink.class)); }
@@ -243,7 +259,7 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     @Override
     public List<CssClass<WorkbenchStyles>> cssClasses() {
-        return List.of(new wb_pane(), new wb_card(), new wb_kicker(), new wb_title(), new wb_code(), new wb_hint(), new wb_failed(),
+        return List.of(new wb_filter(), new wb_pane(), new wb_card(), new wb_kicker(), new wb_title(), new wb_code(), new wb_hint(), new wb_failed(),
                 new wb_facts(), new wb_key(), new wb_value(), new wb_verdict(), new wb_section(), new wb_line(), new wb_finding(),
                 new wb_danger(), new wb_warning(), new wb_info(), new wb_success(), new wb_type(), new wb_rules(), new wb_rule(),
                 new wb_source(), new wb_graph(), new wb_graph_bar(), new wb_graph_view(), new wb_hidden());

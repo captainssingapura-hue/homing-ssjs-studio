@@ -73,6 +73,29 @@ class WorkbenchFeedsTest {
         assertEquals(WorkbenchApp.class.getName(), app.getString("fqcn"));
     }
 
+    /**
+     * Every module says its kind, read off the module - a widget, a component simple or composed, other
+     * UI, non-UI, styles, infrastructure - and the root counts them, every kind, for the navigator to
+     * show which modules it lists.
+     */
+    @Test
+    void everyModuleSaysItsKind_andTheRootCountsThem() throws Exception {
+        var tree = new JsonObject(body(new CratesFeed(CRATES), null));
+        var leaves = new ArrayList<JsonObject>();
+        tree.getJsonArray("children").forEach(c -> collect((JsonObject) c, leaves));
+        java.util.function.Function<String, String> typeOf = label -> leaves.stream().filter(l -> l.getString("label").equals(label))
+                .findFirst().orElseThrow().getString("type");
+        assertEquals("widget", typeOf.apply("CrateNavigatorModule"), "a module that exports a widget");
+        assertEquals("styles", typeOf.apply("WorkbenchStyles"), "a CSS group");
+        assertEquals("non-ui", typeOf.apply("WorkbenchFeedsModule"), "a module that touches no DOM");
+        assertEquals("ui", typeOf.apply("WorkbenchNavigatorModule"), "a DOM module that exports no component: the navigators' base");
+        JsonArray types = tree.getJsonArray("types");
+        assertEquals(List.of("widget", "component-simple", "component-composed", "ui", "non-ui", "styles", "infrastructure"),
+                types.stream().map(o -> ((JsonObject) o).getString("type")).toList(), "every kind, in its order");
+        assertEquals(tree.getInteger("modules"), types.stream().mapToInt(o -> ((JsonObject) o).getInteger("modules")).sum(), "each module counted once");
+        for (JsonObject leaf : leaves) assertTrue(leaf.getString("typeLabel") != null && !leaf.getString("typeLabel").isBlank(), leaf.getString("label"));
+    }
+
     private static void collect(JsonObject node, List<JsonObject> leaves) {
         if ("module".equals(node.getString("kind"))) { leaves.add(node); return; }
         node.getJsonArray("children").forEach(c -> collect((JsonObject) c, leaves));
