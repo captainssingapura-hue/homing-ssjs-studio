@@ -22,7 +22,7 @@ import java.util.List;
  * and the details of what is picked, composed: each lent a box and grafted, meeting in a
  * catalogue party of the browser's own, linked to the one it is given.
  */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 21,
         reason = "It makes its own elements, places elements, wears classes of its own and writes attributes: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CatalogueBrowserModule() implements DomModule<CatalogueBrowserModule> {
 

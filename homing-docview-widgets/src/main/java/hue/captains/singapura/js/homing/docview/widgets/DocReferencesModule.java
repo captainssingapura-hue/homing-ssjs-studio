@@ -16,7 +16,7 @@ import java.util.List;
  * section shows it: each reference its title, a link where it goes; what it is; its summary; where
  * it goes, and the sections that cite it.
  */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 45,
         reason = "It makes its own elements, places elements, wears classes of its own, writes attributes and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record DocReferencesModule() implements DomModule<DocReferencesModule> {
 

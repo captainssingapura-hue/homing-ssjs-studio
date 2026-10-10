@@ -17,7 +17,7 @@ import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import java.util.List;
 
 /** {@code CrateGraph}: the crates and what each requires, drawn by DocView's mermaid engine, in a view that zooms and pans. */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 5,
         reason = "It places elements, wears classes of its own and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CrateGraphModule() implements DomModule<CrateGraphModule> {
 

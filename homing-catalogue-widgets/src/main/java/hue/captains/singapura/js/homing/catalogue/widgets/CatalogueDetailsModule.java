@@ -15,7 +15,7 @@ import hue.captains.singapura.js.homing.workspace.widgets.WidgetStyles;
 import java.util.List;
 
 /** The entry that is picked, flat on the sheet it lies on: {@code new CatalogueDetails(container, params)} - its badge, name, summary, and the way to it. */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 19,
         reason = "It makes its own elements, places elements, wears classes of its own and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CatalogueDetailsModule() implements DomModule<CatalogueDetailsModule> {
 

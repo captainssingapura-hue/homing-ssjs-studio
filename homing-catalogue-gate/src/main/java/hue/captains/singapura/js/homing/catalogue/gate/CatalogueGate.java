@@ -63,7 +63,7 @@ public final class CatalogueGate {
      */
     public static void strict(Crate crate) {
         List<Finding> raw = new ConformanceEngine(DefaultJsRulePolicy.INSTANCE, new ServedModuleRenderer()).checkCrates(List.of(crate));
-        assertEquals(List.of(), DeclaredDebts.INSTANCE.paid(List.of(crate), raw), "a debt that is paid: remove its @ConformanceDebt");
+        assertEquals(List.of(), DeclaredDebts.INSTANCE.unbalanced(List.of(crate), raw), "a debt not as declared - owed exactly, never more");
         List<GradedFinding> errors = FindingGrader.STRICT.grade(raw).stream().filter(GradedFinding::isError).toList();
         assertEquals(List.of(), errors.stream().map(g -> describe(g.finding())).toList(),
                 "the studio on the site stack carries no debt but what its modules declare - fix these");

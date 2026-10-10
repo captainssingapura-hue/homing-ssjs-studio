@@ -13,7 +13,7 @@ import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import java.util.List;
 
 /** {@code ConformanceReportPane}: the report the build exported, decoded, a section per module type. */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 5,
         reason = "It wears classes of its own and writes attributes: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record ConformanceReportPaneModule() implements DomModule<ConformanceReportPaneModule> {
 

@@ -22,7 +22,7 @@ import java.util.List;
  * catalogue down, its catalogues and pages as rows, read from the site as they are
  * unfolded; the cursor the pick, Enter the asking to open.
  */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 3,
         reason = "It makes its own elements, places elements and wears classes of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CatalogueTreeModule() implements DomModule<CatalogueTreeModule> {
 

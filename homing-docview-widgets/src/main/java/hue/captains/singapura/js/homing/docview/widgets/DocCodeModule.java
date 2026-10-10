@@ -11,7 +11,7 @@ import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import java.util.List;
 
 /** A doc's code part: {@code new DocCode(container, params)} - one widget for every language, its renderer by the language. */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 10,
         reason = "It makes its own elements, places elements, wears classes of its own and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record DocCodeModule() implements DomModule<DocCodeModule> {
 
