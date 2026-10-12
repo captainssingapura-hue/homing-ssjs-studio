@@ -2,15 +2,9 @@ package hue.captains.singapura.js.homing.docview.app;
 
 import hue.captains.singapura.js.homing.core.CssClass;
 import hue.captains.singapura.js.homing.core.CssGroup;
-import hue.captains.singapura.js.homing.core.Wearable;
 
 import java.util.List;
 
-import static hue.captains.singapura.js.homing.design.DesignClass.of;
-import static hue.captains.singapura.js.homing.design.Emphasis.Muted;
-import static hue.captains.singapura.js.homing.design.Target.Color;
-import static hue.captains.singapura.js.homing.design.Target.Type;
-import static hue.captains.singapura.js.homing.design.Text.Body;
 
 /**
  * DocView's sheet: its page - the whole of what the chrome leaves it, for the split grid of the
@@ -25,7 +19,6 @@ public record DocViewStyles() implements CssGroup<DocViewStyles> {
      * outranks the column the slot wears in the MPA's layout layer; it does not scroll - the doc does.
      */
     public record dv_page() implements CssClass<DocViewStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Body.class, Type.Face.class), of(Body.class, Color.Ink.class)); }
         @Override public String body() { return """
             position: relative;
             flex: 1 1 auto;
@@ -55,7 +48,6 @@ public record DocViewStyles() implements CssGroup<DocViewStyles> {
 
     /** What it says while it reads the doc, or why it cannot. */
     public record dv_status() implements CssClass<DocViewStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Muted.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 0;\n"; }
     }
 

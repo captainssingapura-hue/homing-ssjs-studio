@@ -1,12 +1,12 @@
 package hue.captains.singapura.js.homing.catalogue.demo;
 
 import hue.captains.singapura.js.homing.catalogue.site.AppListing;
-import hue.captains.singapura.js.homing.designs.HomingDesigns;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Router;
 import hue.captains.singapura.js.homing.site.Site;
 import hue.captains.singapura.js.homing.site.catalogue.CatalogueRouter;
 import hue.captains.singapura.js.homing.site.mpa.Brand;
+import hue.captains.singapura.js.homing.site.mpa.HouseThemes;
 import hue.captains.singapura.js.homing.site.mpa.StandardMpa;
 
 /**
@@ -20,7 +20,7 @@ public record DemoSite() implements Site {
     public static final DemoSite INSTANCE = new DemoSite();
 
     /** The site's one MPA: its brand, the designs it offers, the crate it serves. */
-    public static final StandardMpa MPA = StandardMpa.of(Brand.of("Catalogue demo"), HomingDesigns.REGISTRY, DemoSiteCrate.INSTANCE);
+    public static final StandardMpa MPA = StandardMpa.of(Brand.of("Catalogue demo"), HouseThemes.INSTANCE, DemoSiteCrate.INSTANCE);
 
     /** Read once: the composed tree is checked when the site is made, not when a request arrives. */
     public static final CatalogueRouter ROUTER = CatalogueRouter.at(Path.ROOT, DemoCatalogue.INSTANCE, MPA).listing(AppListing.INSTANCE);

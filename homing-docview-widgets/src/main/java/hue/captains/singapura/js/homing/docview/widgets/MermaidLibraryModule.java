@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * served at, so the engine imports it lazily by an address the server knows; the proxy is the one
  * seam that reaches the network, and a deployment points it elsewhere with
  * {@code ExternalModuleUrlRegistry}. {@code MERMAID_PALETTE}: each of mermaid's theme variables, and
- * the design's variable it takes its value from ({@link MermaidPalette}).
+ * the CSS variable on the page it takes its value from ({@link MermaidPalette}).
  */
 public record MermaidLibraryModule() implements EsModule<MermaidLibraryModule>, SelfContent {
 

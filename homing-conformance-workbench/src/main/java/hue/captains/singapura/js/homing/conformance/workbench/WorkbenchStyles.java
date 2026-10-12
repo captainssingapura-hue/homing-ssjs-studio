@@ -2,26 +2,9 @@ package hue.captains.singapura.js.homing.conformance.workbench;
 
 import hue.captains.singapura.js.homing.core.CssClass;
 import hue.captains.singapura.js.homing.core.CssGroup;
-import hue.captains.singapura.js.homing.core.Wearable;
 
 import java.util.List;
 
-import static hue.captains.singapura.js.homing.design.DesignClass.of;
-import static hue.captains.singapura.js.homing.design.Emphasis.Muted;
-import static hue.captains.singapura.js.homing.design.Feedback.Danger;
-import static hue.captains.singapura.js.homing.design.Feedback.Info;
-import static hue.captains.singapura.js.homing.design.Feedback.Success;
-import static hue.captains.singapura.js.homing.design.Feedback.Warning;
-import static hue.captains.singapura.js.homing.design.Layer.Base;
-import static hue.captains.singapura.js.homing.design.Structure.Hairline;
-import static hue.captains.singapura.js.homing.design.Target.Color;
-import static hue.captains.singapura.js.homing.design.Target.Shape;
-import static hue.captains.singapura.js.homing.design.Target.Type;
-import static hue.captains.singapura.js.homing.design.Text.Body;
-import static hue.captains.singapura.js.homing.design.Text.Code;
-import static hue.captains.singapura.js.homing.design.Text.Heading;
-import static hue.captains.singapura.js.homing.design.Text.Kicker;
-import static hue.captains.singapura.js.homing.design.Text.Label;
 
 /**
  * The workbench's sheet: the bodies lay out, the design's words colour, set and shape. A pane
@@ -37,10 +20,6 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** Which nodes a navigator shows, chosen above its tree: in the body's face and ink, on the surface, a hairline round it. */
     public record wb_filter() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() {
-            return List.of(of(Body.class, Type.Face.class), of(Label.class, Type.Scale.class), of(Body.class, Color.Ink.class),
-                           of(Base.class, Color.Surface.class), of(Hairline.class, Color.Edge.class), of(Code.class, Shape.Corner.class));
-        }
         @Override public String body() { return """
             flex: 0 0 auto;
             margin: 8px 12px 4px;
@@ -53,7 +32,6 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** A pane: the box a widget fills, scrolling on its own, in the body's face and ink. */
     public record wb_pane() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Body.class, Type.Face.class), of(Body.class, Color.Ink.class)); }
         @Override public String body() { return """
             height: 100%;
             overflow: auto;
@@ -77,36 +55,26 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** What a node is, above its name: crate, package, its form. */
     public record wb_kicker() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() {
-            return List.of(of(Kicker.class, Type.Face.class), of(Kicker.class, Type.Scale.class), of(Kicker.class, Type.Weight.class),
-                           of(Kicker.class, Type.Treatment.class), of(Kicker.class, Color.Ink.class));
-        }
         @Override public String body() { return "margin: 0;\n"; }
     }
 
     /** A node's name. */
     public record wb_title() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() {
-            return List.of(of(Heading.class, Type.Face.class), of(Heading.class, Type.Scale.class), of(Heading.class, Type.Weight.class), of(Heading.class, Color.Ink.class));
-        }
         @Override public String body() { return "margin: 0;\nword-break: break-word;\n"; }
     }
 
     /** A name as code: a module's class, quietly. */
     public record wb_code() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Code.class, Type.Face.class), of(Label.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 0;\nword-break: break-all;\n"; }
     }
 
     /** Nothing picked yet, or nothing to say - said quietly. */
     public record wb_hint() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Muted.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 0;\n"; }
     }
 
     /** What could not be read, said where it would have been. */
     public record wb_failed() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Danger.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 0;\n"; }
     }
 
@@ -123,13 +91,11 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** A fact's key. */
     public record wb_key() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Label.class, Type.Scale.class), of(Label.class, Type.Weight.class), of(Muted.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 0;\n"; }
     }
 
     /** A fact's value. */
     public record wb_value() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Code.class, Type.Face.class), of(Label.class, Type.Scale.class)); }
         @Override public String body() { return "margin: 0;\nword-break: break-all;\n"; }
     }
 
@@ -137,19 +103,16 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** A verdict, at the head of a pane: the crate's or the module's, the whole report's. */
     public record wb_verdict() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Heading.class, Type.Face.class), of(Heading.class, Type.Weight.class)); }
         @Override public String body() { return "margin: 0;\nword-break: break-word;\n"; }
     }
 
     /** A section's heading: Orphan modules, Findings. */
     public record wb_section() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Label.class, Type.Scale.class), of(Label.class, Type.Weight.class), of(Muted.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 12px 0 2px;\n"; }
     }
 
     /** One finding, or one module of the report: a line of code. */
     public record wb_line() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Code.class, Type.Face.class), of(Label.class, Type.Scale.class)); }
         @Override public String body() { return "margin: 1px 0;\nline-height: 1.45;\nword-break: break-word;\n"; }
     }
 
@@ -160,31 +123,26 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** An error: what fails the gate. */
     public record wb_danger() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Danger.class, Color.Ink.class)); }
         @Override public String body() { return ""; }
     }
 
     /** A debt: what the baseline lets pass, for now. */
     public record wb_warning() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Warning.class, Color.Ink.class)); }
         @Override public String body() { return ""; }
     }
 
     /** An allowance: what is let pass on purpose. */
     public record wb_info() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Info.class, Color.Ink.class)); }
         @Override public String body() { return ""; }
     }
 
     /** Clean. */
     public record wb_success() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Success.class, Color.Ink.class)); }
         @Override public String body() { return ""; }
     }
 
     /** A module type's section of the report: a rule at its side, the modules of that type in it. */
     public record wb_type() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Hairline.class, Color.Edge.class)); }
         @Override public String body() { return """
             margin-top: 14px;
             padding-left: 12px;
@@ -196,7 +154,6 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** The rules a type's modules are held to, folded until asked for. */
     public record wb_rules() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Label.class, Type.Scale.class), of(Muted.class, Color.Ink.class)); }
         @Override public String body() { return "margin: 2px 0 4px;\n"; }
     }
 
@@ -209,10 +166,6 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** The module as it is served: verbatim, on the plate code is set on. */
     public record wb_source() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() {
-            return List.of(of(Code.class, Type.Face.class), of(Code.class, Color.Ink.class), of(Base.class, Color.Surface.class), of(Hairline.class, Color.Edge.class),
-                    of(Code.class, Shape.Corner.class));
-        }
         @Override public String body() { return """
             margin: 4px 0 0;
             padding: 10px 12px;
@@ -230,7 +183,6 @@ public record WorkbenchStyles() implements CssGroup<WorkbenchStyles> {
 
     /** The graph's pane: its zoom bar, then the view, which takes the rest. */
     public record wb_graph() implements CssClass<WorkbenchStyles> {
-        @Override public List<? extends Wearable> wears() { return List.of(of(Body.class, Type.Face.class), of(Body.class, Color.Ink.class)); }
         @Override public String body() { return """
             height: 100%;
             display: flex;

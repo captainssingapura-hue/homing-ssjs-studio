@@ -15,9 +15,6 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.CssGroup;
 import hue.captains.singapura.js.homing.core.DomModule;
-import hue.captains.singapura.js.homing.design.Deployment;
-import hue.captains.singapura.js.homing.design.Design;
-import hue.captains.singapura.js.homing.designs.HomingDesigns;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,18 +72,6 @@ public final class CatalogueGate {
         List<Finding> css = CssConformance.check(new ArrayList<>(CrateClosure.of(List.of(crate))))
                 .stream().filter(f -> own.contains(f.moduleClass())).toList();
         assertEquals(List.of(), css.stream().map(CatalogueGate::describe).toList());
-    }
-
-    /** Every design binds every pair the crate's sheets wear. */
-    public static void designsBind(Crate crate) {
-        var groups = new ArrayList<CssGroup<?>>();
-        for (var e : crate.entries()) if (e.module() instanceof CssGroup<?> g) groups.add(g);
-        if (groups.isEmpty()) return;
-        var worn = Deployment.wornBy(groups);
-        for (var t : HomingDesigns.REGISTRY.themes()) {
-            var r = Deployment.of(worn, Deployment.scaledBy(groups), Deployment.grownBy(groups), (Design) t).resolve();
-            assertEquals(List.of(), r.findings(), () -> ((Design) t).slug() + ": " + r.findings());
-        }
     }
 
     /** The crate's modules take their keys through the party: none listens undeclared, none captures on the document. */

@@ -25,7 +25,6 @@ class GalleryTest {
     @Test void theCrateIsStructurallyComplete()             { CatalogueGate.structurallyComplete(CRATE); }
     @Test void everyServedModuleKeepsItsLane_strictly()      { CatalogueGate.strict(CRATE); }
     @Test void theCssGraphKeepsItsLaws()                     { CatalogueGate.cssLaws(CRATE); }
-    @Test void everyDesignBindsEveryPairTheSheetWears()      { CatalogueGate.designsBind(CRATE); }
     @Test void keysComeThroughTheParty()                     { CatalogueGate.keysThroughTheParty(CRATE); }
     @Test void everyNameTakenIsImported() throws IOException { CatalogueGate.everyNameTakenIsImported(CRATE); }
     @Test void noPlainModuleImportsADomModule()              { CatalogueGate.noPlainModuleImportsADomModule(CRATE); }
