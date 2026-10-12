@@ -5,7 +5,6 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.docview.widgets.DocViewWidgetsCrate;
 import hue.captains.singapura.js.homing.relgrid.protocol.RelGridProtocolCrate;
 import hue.captains.singapura.js.homing.reltree.RelTreeCrate;
@@ -33,8 +32,7 @@ public final class ConformanceWorkbenchCrate implements Crate {
     @Override public List<Crate> requires() {
         return List.of(
                 // the DomOpsParty a widget mints its root from; the focus party, the keys, the css manager; the design words
-                CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, DesignCrate.INSTANCE,
-                // the navigators' tree and its questions, and the row a catalogue tree draws
+                CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, // the navigators' tree and its questions, and the row a catalogue tree draws
                 RelTreeCrate.INSTANCE, RelGridProtocolCrate.INSTANCE, CatalogueWidgetsCrate.INSTANCE,
                 // the graph: DocView's mermaid engine and SVG reader, the pan-zoom view
                 DocViewWidgetsCrate.INSTANCE, UiPanZoomCrate.INSTANCE,

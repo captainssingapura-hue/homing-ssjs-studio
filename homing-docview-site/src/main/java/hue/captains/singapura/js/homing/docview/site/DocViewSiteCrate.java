@@ -4,7 +4,6 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 
 import java.util.List;
@@ -23,9 +22,7 @@ public final class DocViewSiteCrate implements Crate {
                 // the page's party the inspector mints its elements from
                 CoreJsCrate.INSTANCE,
                 // the css manager
-                ServerCrate.INSTANCE,
-                // the design words the sheet wears
-                DesignCrate.INSTANCE);
+                ServerCrate.INSTANCE);
     }
 
     @Override

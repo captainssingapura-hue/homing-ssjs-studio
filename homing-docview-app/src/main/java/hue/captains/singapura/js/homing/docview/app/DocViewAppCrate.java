@@ -4,7 +4,6 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.docview.site.DocViewSiteCrate;
 import hue.captains.singapura.js.homing.docview.widgets.DocViewWidgetsCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
@@ -38,7 +37,7 @@ public final class DocViewAppCrate implements Crate {
                 // the stage: its party, its secretary, its steward
                 WorkspaceStageCrate.INSTANCE,
                 // the page's party, the css and href managers, the design words its sheet wears
-                CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, DesignCrate.INSTANCE);
+                CoreJsCrate.INSTANCE, ServerCrate.INSTANCE);
     }
 
     @Override

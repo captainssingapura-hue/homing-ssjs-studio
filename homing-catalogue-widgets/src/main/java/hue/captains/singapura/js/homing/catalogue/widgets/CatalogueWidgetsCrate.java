@@ -4,7 +4,6 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.relgrid.protocol.RelGridProtocolCrate;
 import hue.captains.singapura.js.homing.reltree.RelTreeCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
@@ -33,8 +32,6 @@ public final class CatalogueWidgetsCrate implements Crate {
                 CoreJsCrate.INSTANCE,
                 // the focus party, the keys' convention, the css and href managers
                 ServerCrate.INSTANCE,
-                // the design words the sheet wears
-                DesignCrate.INSTANCE,
                 // the tree's relation tree, and its questions
                 RelTreeCrate.INSTANCE, RelGridProtocolCrate.INSTANCE,
                 // the details' card
