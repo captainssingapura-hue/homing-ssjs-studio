@@ -1,5 +1,6 @@
 package hue.captains.singapura.js.homing.planview.widgets;
 
+import hue.captains.singapura.js.homing.docview.widgets.DocLooksModule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.Exportable;
@@ -23,6 +24,8 @@ public record PlanMarksModule() implements DomModule<PlanMarksModule> {
     @Override
     public ImportsFor<PlanMarksModule> imports() {
         return ImportsFor.<PlanMarksModule>builder()
+                // a status's badge, the house's of its tone
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_badge(), new DocWidgetStyles.dw_success(), new DocWidgetStyles.dw_warning(),
                         new DocWidgetStyles.dw_danger()), DocWidgetStyles.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PlanStyles.pl_quiet(), new PlanStyles.pl_check(), new PlanStyles.pl_check_done(),

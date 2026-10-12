@@ -24,6 +24,8 @@ public record DocCodeModule() implements DomModule<DocCodeModule> {
     @Override
     public ImportsFor<DocCodeModule> imports() {
         return ImportsFor.<DocCodeModule>builder()
+                // its block of code, and its language as a caption
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CodeContentModule.CODE()), CodeContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CodeDiagramModule.CodeDiagram()), CodeDiagramModule.INSTANCE))

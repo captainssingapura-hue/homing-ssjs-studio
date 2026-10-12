@@ -70,6 +70,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(MermaidEngineModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DiagramStewardModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 // markdown made into elements, the base of every primitive, and the primitives
+                CrateEntry.of(DocLooksModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(MarkdownDomModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(SvgMarkupModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(CodeDiagramModule.INSTANCE, StandardJsModuleType.CONSUMER),

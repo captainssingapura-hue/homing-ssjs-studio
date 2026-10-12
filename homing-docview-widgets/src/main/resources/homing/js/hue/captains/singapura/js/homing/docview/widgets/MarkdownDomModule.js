@@ -45,11 +45,11 @@ class MarkdownDom {
             case "paragraph": this._inline(t.tokens, this._el("p", dw_para, into)); return;
             case "heading": this._heading(t, into); return;
             case "text": this._inline(t.tokens || [{ type: "text", text: t.text }], this._el("span", null, into)); return;
-            case "blockquote": this._blocks(t.tokens, this._el("blockquote", dw_quote, into)); return;
+            case "blockquote": this._blocks(t.tokens, DocLooks.wear(this._el("blockquote", dw_quote, into), "quote")); return;
             case "list": this._list(t, into); return;
-            case "code": this._el("pre", dw_pre, into).textContent = t.text; return;
+            case "code": DocLooks.wear(this._el("pre", dw_pre, into), "code-block").textContent = t.text; return;
             case "table": this._table(t, into); return;
-            case "hr": this._el("hr", dw_rule, into); return;
+            case "hr": DocLooks.wear(this._el("hr", dw_rule, into), "separator"); return;
             case "html": this._el("p", dw_para, into).textContent = t.raw; return;
             default: this._el("p", dw_para, into).textContent = t.raw || "";
         }
@@ -73,13 +73,13 @@ class MarkdownDom {
     }
 
     _table(t, into) {
-        var box = this._el("div", dw_table_box, into), table = this._el("table", dw_table, box), self = this;
+        var box = this._el("div", dw_table_box, into), table = DocLooks.wear(this._el("table", dw_table, box), "table"), self = this;
         var head = this._el("tr", null, this._el("thead", null, table));
-        t.header.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(self._el("th", dw_th, head), t.align[c])); });
+        t.header.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(DocLooks.wear(self._el("th", dw_th, head), "header-cell"), t.align[c])); });
         var body = this._el("tbody", null, table);
         t.rows.forEach(function (row) {
             var tr = self._el("tr", null, body);
-            row.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(self._el("td", dw_td, tr), t.align[c])); });
+            row.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(DocLooks.wear(self._el("td", dw_td, tr), "data-cell"), t.align[c])); });
         });
     }
 
@@ -104,7 +104,7 @@ class MarkdownDom {
             case "strong": this._inline(t.tokens, this._el("strong", null, into)); return;
             case "em": this._inline(t.tokens, this._el("em", null, into)); return;
             case "del": this._inline(t.tokens, this._el("del", null, into)); return;
-            case "codespan": this._el("code", dw_code_span, into).textContent = MarkdownDom._unescaped(t.text); return;
+            case "codespan": DocLooks.wear(this._el("code", dw_code_span, into), "code").textContent = MarkdownDom._unescaped(t.text); return;
             case "br": this._el("br", null, into); return;
             case "link": this._link(t, into); return;
             case "image": into.append(t.text || ""); return;
@@ -121,13 +121,13 @@ class MarkdownDom {
     _link(t, into) {
         var { href: target } = t;   // the token's own field: the address the link was written with
         if (String(target).indexOf("#ref:") === 0) {
-            var cite = this._el("a", dw_cite, into);
+            var cite = DocLooks.wear(this._el("a", dw_cite, into), "link");
             HrefManagerInstance.set(cite, target);
             cite.setAttribute("data-ref", String(target).slice(5));
             this._inline(t.tokens, cite);
             return;
         }
-        var a = this._el("a", dw_link, into);
+        var a = DocLooks.wear(this._el("a", dw_link, into), "link");
         HrefManagerInstance.set(a, target);
         if (t.title) a.setAttribute("title", t.title);
         this._inline(t.tokens, a);

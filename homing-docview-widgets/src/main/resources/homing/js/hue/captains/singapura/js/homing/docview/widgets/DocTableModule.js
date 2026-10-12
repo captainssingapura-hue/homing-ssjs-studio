@@ -21,15 +21,15 @@ class DocTable extends ContentWidget {
             parent.appendChild(e);
             return e;
         };
-        var table = el("table", dw_table, el("div", dw_table_box, into));
-        if (t.caption) md.inline(t.caption, el("caption", dw_caption, table));
+        var table = DocLooks.wear(el("table", dw_table, el("div", dw_table_box, into)), "table");
+        if (t.caption) md.inline(t.caption, DocLooks.wear(el("caption", dw_caption, table), "caption"));
         var head = el("tr", null, el("thead", null, table));
-        t.columns.forEach(function (c) { md.inline(c.title, DocTable._aligned(el("th", dw_th, head), c.align)); });
+        t.columns.forEach(function (c) { md.inline(c.title, DocTable._aligned(DocLooks.wear(el("th", dw_th, head), "header-cell"), c.align)); });
         var body = el("tbody", null, table);
         t.rows.forEach(function (row) {
             var tr = el("tr", null, body);
             row.cells.forEach(function (cell, i) {
-                var td = DocTable._aligned(el("td", dw_td, tr), cell.align || (t.columns[i] ? t.columns[i].align : ""));
+                var td = DocTable._aligned(DocLooks.wear(el("td", dw_td, tr), "data-cell"), cell.align || (t.columns[i] ? t.columns[i].align : ""));
                 if (cell.colSpan > 1) td.colSpan = cell.colSpan;
                 if (cell.rowSpan > 1) td.rowSpan = cell.rowSpan;
                 if (cell.emphasis === "strong") css.addClass(td, dw_strong);
@@ -45,7 +45,7 @@ class DocTable extends ContentWidget {
         if (!status) return td;
         var b = el("span", dw_badge, td);
         css.addClass(b, status === "success" ? dw_success : status === "warning" ? dw_warning : dw_danger);
-        return b;
+        return DocLooks.wear(b, status + "-badge");   // the house's badge of its tone: success, warning, danger
     }
 
     static _aligned(cell, align) {

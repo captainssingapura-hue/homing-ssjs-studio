@@ -24,6 +24,8 @@ public record DocTableModule() implements DomModule<DocTableModule> {
     @Override
     public ImportsFor<DocTableModule> imports() {
         return ImportsFor.<DocTableModule>builder()
+                // its table, its cells, its caption and its badges, each in its leaf's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new MarkdownDomModule.MarkdownDom()), MarkdownDomModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new TableContentModule.TABLE()), TableContentModule.INSTANCE))

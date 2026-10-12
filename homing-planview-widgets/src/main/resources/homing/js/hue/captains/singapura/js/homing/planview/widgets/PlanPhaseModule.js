@@ -90,12 +90,13 @@ class PlanPhase extends ContentWidget {
         var box = branch.createElement("metricsBox", "div"), table = branch.createElement("metricsTable", "table");
         css.addClass(box, dw_table_box);
         css.addClass(table, dw_table);
+        DocLooks.wear(table, "table");
         var head = branch.createElement("metricsColumns", "tr");
-        ["Metric", "Before", "After", "Change"].forEach(function (t, j) { PlanPhase._text(branch, "th" + j, "th", dw_th, t, head); });
+        ["Metric", "Before", "After", "Change"].forEach(function (t, j) { DocLooks.wear(PlanPhase._text(branch, "th" + j, "th", dw_th, t, head), "header-cell"); });
         table.appendChild(head);
         metrics.forEach(function (m, i) {
             var row = branch.createElement("metric" + i, "tr");
-            [m.label, m.before, m.after, m.delta].forEach(function (t, j) { PlanPhase._text(branch, "td" + i + "_" + j, "td", dw_td, t, row); });
+            [m.label, m.before, m.after, m.delta].forEach(function (t, j) { DocLooks.wear(PlanPhase._text(branch, "td" + i + "_" + j, "td", dw_td, t, row), "data-cell"); });
             table.appendChild(row);
         });
         box.appendChild(table);
@@ -111,7 +112,7 @@ class PlanPhase extends ContentWidget {
             var text = branch.createElement("afterText" + i, "span");
             var name = "Phase " + a.phase + (a.label ? " — " + a.label : "");
             if (a.path) {
-                var link = PlanPhase._text(branch, "afterLink" + i, "a", dw_link, name, text);
+                var link = DocLooks.wear(PlanPhase._text(branch, "afterLink" + i, "a", dw_link, name, text), "link");
                 HrefManagerInstance.set(link, "#" + a.path);
             } else {
                 text.append(name + " (not in this plan)");

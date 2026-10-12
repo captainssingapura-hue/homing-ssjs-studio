@@ -26,6 +26,8 @@ public record MarkdownDomModule() implements DomModule<MarkdownDomModule> {
     @Override
     public ImportsFor<MarkdownDomModule> imports() {
         return ImportsFor.<MarkdownDomModule>builder()
+                // its quotes, code, tables, rules and links, each in its leaf's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 // its headings, each in its level's look
                 .add(new ModuleImports<>(List.of(new LookModule.Look()), LookModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))

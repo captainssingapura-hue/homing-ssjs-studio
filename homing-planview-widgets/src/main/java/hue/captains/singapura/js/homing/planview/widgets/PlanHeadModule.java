@@ -1,5 +1,6 @@
 package hue.captains.singapura.js.homing.planview.widgets;
 
+import hue.captains.singapura.js.homing.docview.widgets.DocLooksModule;
 import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
 import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
@@ -31,6 +32,8 @@ public record PlanHeadModule() implements DomModule<PlanHeadModule> {
     @Override
     public ImportsFor<PlanHeadModule> imports() {
         return ImportsFor.<PlanHeadModule>builder()
+                // its links and its warning, each in its leaf's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new MarkdownDomModule.MarkdownDom()), MarkdownDomModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PlanHeadContentModule.PLAN_HEAD()), PlanHeadContentModule.INSTANCE))

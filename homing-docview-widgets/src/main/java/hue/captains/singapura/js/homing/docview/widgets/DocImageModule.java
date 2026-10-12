@@ -26,6 +26,8 @@ public record DocImageModule() implements DomModule<DocImageModule> {
     @Override
     public ImportsFor<DocImageModule> imports() {
         return ImportsFor.<DocImageModule>builder()
+                // its caption in the caption's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ImageContentModule.IMAGE()), ImageContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new SvgMarkupModule.SvgMarkup()), SvgMarkupModule.INSTANCE))

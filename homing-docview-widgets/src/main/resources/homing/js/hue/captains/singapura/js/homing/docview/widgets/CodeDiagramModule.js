@@ -36,6 +36,7 @@ class CodeDiagram {
         head.appendChild(tabs);
         var lang = branch.createElement("lang", "span");
         css.addClass(lang, dw_lang);
+        DocLooks.wear(lang, "caption");
         lang.textContent = content.language;
         head.appendChild(lang);
         this._tools = branch.createElement("tools", "div");
@@ -73,6 +74,7 @@ class CodeDiagram {
     _tab(bar, view, text) {
         var self = this, tab = this._branch.createElement(view + "Tab", "button");
         css.addClass(tab, dw_view);
+        DocLooks.wear(tab, "tab");   // a view to pick: the chosen one aria-selected
         tab.setAttribute("type", "button");
         tab.setAttribute("role", "tab");
         tab.textContent = text;
@@ -102,6 +104,7 @@ class CodeDiagram {
         panel.setAttribute("role", "tabpanel");
         var pre = this._branch.createElement("pre", "pre");
         css.addClass(pre, dw_pre);
+        DocLooks.wear(pre, "code-block");
         var code = this._branch.createElement("code", "code");
         code.textContent = source;
         pre.appendChild(code);

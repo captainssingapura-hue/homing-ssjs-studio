@@ -29,6 +29,8 @@ public record DocReferencesModule() implements DomModule<DocReferencesModule> {
     @Override
     public ImportsFor<DocReferencesModule> imports() {
         return ImportsFor.<DocReferencesModule>builder()
+                // its rows, links, badges and captions, each in its leaf's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ReferencesContentModule.REFERENCES()), ReferencesContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new HrefManager.HrefManagerInstance()), HrefManager.INSTANCE))
