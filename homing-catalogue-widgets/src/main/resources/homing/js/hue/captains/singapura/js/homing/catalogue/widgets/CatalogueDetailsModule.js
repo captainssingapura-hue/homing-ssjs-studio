@@ -68,7 +68,7 @@ class CatalogueDetails extends CatalogueWidget {
         var entry = branch.createElement("entry", "article");
         css.addClass(entry, cw_entry);
         if (e.badge) CatalogueDetails._placed(new Kicker(KickerFactory.create(branch, "kicker"), { text: e.badge }, ROLE.STANDALONE), cw_kicker, entry);
-        CatalogueDetails._placed(new Heading(HeadingFactory.create(branch, "title"), { text: (e.icon ? e.icon + " " : "") + e.name, level: 2 }, ROLE.TITLE), cw_title, entry);
+        CatalogueDetails._placed(new Heading4(Heading4Factory.create(branch, "title"), { text: (e.icon ? e.icon + " " : "") + e.name }, ROLE.TITLE), cw_title, entry);
         if (e.summary) CatalogueDetails._placed(new Lede(LedeFactory.create(branch, "summary"), { text: e.summary }, ROLE.STANDALONE), cw_summary, entry);
         if (e.to !== this._here) {   // the page's own entry: one is there already
             var way = new Link(LinkFactory.create(branch, "way"),

@@ -42,6 +42,12 @@
             <version>${homing.core.version}</version>
         </dependency>
         <!-- Zoom and pan: a drawing that zooms and pans in place, and its bar. -->
+        <!-- its headings in the house's look, each its level's -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-ui-elements</artifactId>
+            <version>${homing.components.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-ui-panzoom</artifactId>

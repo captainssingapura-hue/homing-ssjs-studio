@@ -5,13 +5,17 @@
 // =============================================================================
 
 const _recipeOwner = Object.freeze({ toString: () => "recipe" });
+/** Its title: a page's own name - the house's first heading - on its own tag. */
+const _TITLE_HEADING = Object.freeze({ LEAF: "heading1" });
 
 class RecipeCard {
     constructor(branch, recipe) {
         branch.activate(_recipeOwner);
         this._branch = branch;
         var root = this._el("root", "article", rc_root);
-        this._el("title", "h1", rc_title, root).textContent = recipe.name;
+        var heading = this._el("title", "h1", rc_title, root);
+        new Look(_TITLE_HEADING, ROLE.STANDALONE).wear(heading);
+        heading.textContent = recipe.name;
         this._el("serves", "p", rc_serves, root).textContent = "Serves " + recipe.serves;
         this._list("ingredients", "What goes in", "ul", RecipeCard._many(recipe.ingredient), root);
         this._list("steps", "How", "ol", RecipeCard._many(recipe.step), root);

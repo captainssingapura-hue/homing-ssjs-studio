@@ -10,7 +10,7 @@ import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
 import hue.captains.singapura.js.homing.ui.elements.CaptionModule;
 import hue.captains.singapura.js.homing.ui.elements.CastingsModule;
-import hue.captains.singapura.js.homing.ui.elements.HeadingModule;
+import hue.captains.singapura.js.homing.ui.elements.Heading4Module;
 import hue.captains.singapura.js.homing.ui.elements.KickerModule;
 import hue.captains.singapura.js.homing.ui.elements.LedeModule;
 import hue.captains.singapura.js.homing.ui.elements.LinkModule;
@@ -37,7 +37,7 @@ public record CatalogueDetailsModule() implements DomModule<CatalogueDetailsModu
                 .add(new ModuleImports<>(List.of(new CatalogueWidget()), CatalogueWidgetModule.INSTANCE))
                 // what it says is the house's: a kicker, a heading, a lede, a link - and a caption for the hint
                 .add(new ModuleImports<>(List.of(new KickerModule.Kicker(), new KickerModule.KickerFactory()), KickerModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new HeadingModule.Heading(), new HeadingModule.HeadingFactory()), HeadingModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new Heading4Module.Heading4(), new Heading4Module.Heading4Factory()), Heading4Module.INSTANCE))
                 .add(new ModuleImports<>(List.of(new LedeModule.Lede(), new LedeModule.LedeFactory()), LedeModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new LinkModule.Link(), new LinkModule.LinkFactory()), LinkModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CaptionModule.Caption(), new CaptionModule.CaptionFactory()), CaptionModule.INSTANCE))

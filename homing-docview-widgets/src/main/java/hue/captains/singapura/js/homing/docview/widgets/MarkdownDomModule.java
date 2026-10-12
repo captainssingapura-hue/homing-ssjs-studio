@@ -5,6 +5,8 @@ import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.Exportable;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
+import hue.captains.singapura.js.homing.ui.elements.CastingsModule;
+import hue.captains.singapura.js.homing.ui.elements.LookModule;
 import hue.captains.singapura.js.homing.libs.MarkedJs;
 import hue.captains.singapura.js.homing.server.HrefManager;
 
@@ -24,6 +26,9 @@ public record MarkdownDomModule() implements DomModule<MarkdownDomModule> {
     @Override
     public ImportsFor<MarkdownDomModule> imports() {
         return ImportsFor.<MarkdownDomModule>builder()
+                // its headings, each in its level's look
+                .add(new ModuleImports<>(List.of(new LookModule.Look()), LookModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new MarkedJs.marked()), MarkedJs.INSTANCE))
                 .add(new ModuleImports<>(List.of(new HrefManager.HrefManagerInstance()), HrefManager.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_para(), new DocWidgetStyles.dw_heading(), new DocWidgetStyles.dw_list(),

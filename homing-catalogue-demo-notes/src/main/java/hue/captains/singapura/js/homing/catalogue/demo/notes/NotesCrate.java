@@ -1,5 +1,6 @@
 package hue.captains.singapura.js.homing.catalogue.demo.notes;
 
+import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
@@ -17,7 +18,7 @@ public final class NotesCrate implements Crate {
 
     @Override public String name() { return "homing-catalogue-demo-notes"; }
 
-    @Override public List<Crate> requires() { return List.of(CoreJsCrate.INSTANCE, ServerCrate.INSTANCE); }
+    @Override public List<Crate> requires() { return List.of(CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, UiElementsCrate.INSTANCE); }
 
     @Override
     public List<CrateEntry> entries() {

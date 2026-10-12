@@ -5,12 +5,16 @@
 // =============================================================================
 
 const _noteOwner = Object.freeze({ toString: () => "note" });
+/** Its title: a page's own name - the house's first heading - on its own tag. */
+const _TITLE_HEADING = Object.freeze({ LEAF: "heading1" });
 
 class NoteView {
     constructor(branch, note) {
         branch.activate(_noteOwner);
         var root = NoteView._el(branch, "root", "article", nt_root);
-        NoteView._el(branch, "title", "h1", nt_title, root).textContent = note.title;
+        var heading = NoteView._el(branch, "title", "h1", nt_title, root);
+        new Look(_TITLE_HEADING, ROLE.STANDALONE).wear(heading);
+        heading.textContent = note.title;
         if (note.when) NoteView._el(branch, "when", "p", nt_when, root).textContent = note.when;
         String(note.text || "").split(/\n\s*\n/).forEach(function (para, i) {
             if (para.trim()) NoteView._el(branch, "para" + i, "p", nt_para, root).textContent = para.trim();

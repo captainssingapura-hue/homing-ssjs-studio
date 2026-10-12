@@ -5,6 +5,8 @@
 // =============================================================================
 
 const _timerOwner = Object.freeze({ toString: () => "timer" });
+/** Its title: a page's own name - the house's first heading - on its own tag. */
+const _TITLE_HEADING = Object.freeze({ LEAF: "heading1" });
 
 /** A press on one of the timer's buttons: the timer told which. */
 class KitchenTimerPress {
@@ -21,7 +23,9 @@ class KitchenTimer {
         this._left = this._total;
         this._tick = null;
         var root = this._el("root", "article", rc_root);
-        this._el("title", "h1", rc_title, root).textContent = params.label || "Timer";
+        var heading = this._el("title", "h1", rc_title, root);
+        new Look(_TITLE_HEADING, ROLE.STANDALONE).wear(heading);
+        heading.textContent = params.label || "Timer";
         this._clock = this._el("clock", "p", rc_clock, root);
         this._note = this._el("note", "p", rc_serves, root);
         var row = this._el("row", "div", rc_row, root);

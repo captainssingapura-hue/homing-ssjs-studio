@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.catalogue.demo.recipes;
 
+import hue.captains.singapura.js.homing.ui.elements.LookModule;
+import hue.captains.singapura.js.homing.ui.elements.CastingsModule;
 import hue.captains.singapura.js.homing.core.AppModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -57,6 +59,9 @@ public record TimerApp() implements AppModule<TimerApp.Params, TimerApp> {
     @Override
     public ImportsFor<TimerApp> imports() {
         return ImportsFor.<TimerApp>builder()
+                // its title, the house's heading of its level
+                .add(new ModuleImports<>(List.of(new LookModule.Look()), LookModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new StatesAndEventsModule.EVENT()), StatesAndEventsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PrimaryButtonModule.PrimaryButton(), new PrimaryButtonModule.PrimaryButtonFactory()), PrimaryButtonModule.INSTANCE))

@@ -13,6 +13,9 @@
 //   md.inline(text, into)     a line's inline markdown - a table cell's - appended to `into`
 // =============================================================================
 
+/** The house's headings, a leaf a level. */
+const _MD_HEADINGS = Object.freeze([1, 2, 3, 4, 5, 6].map(function (n) { return Object.freeze({ LEAF: "heading" + n }); }));
+
 class MarkdownDom {
     constructor(branch) {
         if (!branch) throw new Error("[MarkdownDom] a branch is required: the one it makes its elements in");
@@ -40,7 +43,7 @@ class MarkdownDom {
         switch (t.type) {
             case "space": case "def": return;
             case "paragraph": this._inline(t.tokens, this._el("p", dw_para, into)); return;
-            case "heading": this._inline(t.tokens, this._el("h" + Math.min(t.depth + 2, 6), dw_heading, into)); return;
+            case "heading": this._heading(t, into); return;
             case "text": this._inline(t.tokens || [{ type: "text", text: t.text }], this._el("span", null, into)); return;
             case "blockquote": this._blocks(t.tokens, this._el("blockquote", dw_quote, into)); return;
             case "list": this._list(t, into); return;
@@ -50,6 +53,13 @@ class MarkdownDom {
             case "html": this._el("p", dw_para, into).textContent = t.raw; return;
             default: this._el("p", dw_para, into).textContent = t.raw || "";
         }
+    }
+
+    /** A heading, two levels under its doc's sections: the native one, in the house's look of its level - it holds links and code. */
+    _heading(t, into) {
+        var level = Math.min(t.depth + 2, 6), h = this._el("h" + level, dw_heading, into);
+        new Look(_MD_HEADINGS[level - 1], ROLE.STANDALONE).wear(h);
+        this._inline(t.tokens, h);
     }
 
     _list(t, into) {
