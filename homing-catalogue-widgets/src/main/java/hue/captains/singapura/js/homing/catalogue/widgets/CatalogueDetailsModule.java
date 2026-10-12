@@ -9,7 +9,7 @@ import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
 import hue.captains.singapura.js.homing.ui.elements.CaptionModule;
-import hue.captains.singapura.js.homing.ui.elements.CastingsModule;
+import hue.captains.singapura.js.homing.ui.look.CastingsModule;
 import hue.captains.singapura.js.homing.ui.elements.Heading4Module;
 import hue.captains.singapura.js.homing.ui.elements.KickerModule;
 import hue.captains.singapura.js.homing.ui.elements.LedeModule;

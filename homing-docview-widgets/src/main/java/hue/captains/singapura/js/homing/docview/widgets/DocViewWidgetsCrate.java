@@ -7,6 +7,7 @@ import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
 import hue.captains.singapura.js.homing.libs.LibsCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
+import hue.captains.singapura.js.homing.ui.look.UiLookCrate;
 import hue.captains.singapura.js.homing.ui.panzoom.UiPanZoomCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
 import hue.captains.singapura.js.homing.workspace.stage.WorkspaceStageCrate;
@@ -39,6 +40,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 // zoom and pan, for a drawing in place
                 UiPanZoomCrate.INSTANCE,
                 // its headings in the house's look
+                UiLookCrate.INSTANCE,
                 UiElementsCrate.INSTANCE,
                 // the stage: the button a widget offers itself by
                 WorkspaceStageCrate.INSTANCE);
