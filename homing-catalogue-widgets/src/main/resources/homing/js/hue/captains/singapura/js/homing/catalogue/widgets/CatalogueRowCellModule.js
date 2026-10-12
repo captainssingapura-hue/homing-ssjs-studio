@@ -1,6 +1,6 @@
 // =============================================================================
 // CatalogueRowCell — a catalogue tree's row, as the domain draws it: the
-// entry's icon and name, then its badge. A cell of the relation tree's
+// entry's icon and name, then its badge - the house's, as what sorts it. A cell of the relation tree's
 // contract (as its stock text cell is): minted once on the branch it was
 // handed, told its selection mode, disposed by its owner. The tree never reads
 // what it shows.
@@ -29,11 +29,12 @@ class CatalogueRowCell {
         var name = this._branch.createElement("name", "span");
         css.addClass(name, cw_row_name);
         name.textContent = (e.icon ? e.icon + " " : "") + e.name;
-        var badge = this._branch.createElement("badge", "span");
-        css.addClass(badge, cw_row_badge);
-        badge.textContent = e.badge;
         el.appendChild(name);
-        el.appendChild(badge);
+        if (e.badge) {
+            var badge = new Badge(BadgeFactory.create(this._branch, "badge"), { text: e.badge }, ROLE.TAG);
+            css.addClass(badge.el, cw_row_badge);
+            el.appendChild(badge.el);
+        }
         this._el = el;
         return el;
     }

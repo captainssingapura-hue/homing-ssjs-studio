@@ -36,12 +36,26 @@
 //   widget.pick(to)     a pick, told when joined
 //   widget.open(entry)  Open told when joined; opened as its app says when not
 //   widget.takes(a, entry)   a link it drew: a plain press on it opened through open()
+//   widget.takesLink(link, entry)   the same for the house's link (Link): told through its handler
 //   widget.alive        true until it is disposed
 //   widget.activate()   widget.keyDown(ev)   widget.dispose()
 //   CatalogueWidget.go(entry)   what a host does on Opening: in place, or beside
 // =============================================================================
 
 var _catalogueWidgets = 0;
+
+/** A press on the house's link to an entry, which a widget drew: a plain one opened through the widget; a middle or modified one left to the browser. */
+class CatalogueEntryPress {
+    constructor(widget, entry) { this._widget = widget; this._entry = entry; }
+    canHandle(type) { return type === EVENT.CLICK; }
+    handle(event) {
+        var ev = event.raw;
+        if (!ev || ev.button !== 0 || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey) return;
+        if (!this._widget.member && this._entry.opens !== "new-tab") return;
+        ev.preventDefault();
+        this._widget.open(this._entry);
+    }
+}
 /** What a press on is the control's, not the reader's place: a link, a button, a field, anything focusable. */
 var _CATALOGUE_CONTROLS = "a, button, input, select, textarea, summary, label, [tabindex], [contenteditable]";
 
@@ -118,6 +132,9 @@ class CatalogueWidget {
             self.open(entry);
         });
     }
+
+    /** The house's link to an entry, which the widget made: a plain press on it opened through open(), as takes() does for a link drawn by hand. */
+    takesLink(link, entry) { link.setOnClick(new CatalogueEntryPress(this, entry)); }
 
     /** What opening an entry means on a page: in place, or beside - as its app says. */
     static go(entry) {

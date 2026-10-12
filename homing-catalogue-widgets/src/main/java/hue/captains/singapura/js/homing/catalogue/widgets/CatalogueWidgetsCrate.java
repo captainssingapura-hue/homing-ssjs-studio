@@ -8,6 +8,7 @@ import hue.captains.singapura.js.homing.relgrid.protocol.RelGridProtocolCrate;
 import hue.captains.singapura.js.homing.reltree.RelTreeCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
+import hue.captains.singapura.js.homing.ui.splitgrid.UiSplitGridCrate;
 import hue.captains.singapura.js.homing.workspace.parties.WorkspacePartiesCrate;
 import hue.captains.singapura.js.homing.workspace.widgets.WorkspaceWidgetsCrate;
 
@@ -34,8 +35,8 @@ public final class CatalogueWidgetsCrate implements Crate {
                 ServerCrate.INSTANCE,
                 // the tree's relation tree, and its questions
                 RelTreeCrate.INSTANCE, RelGridProtocolCrate.INSTANCE,
-                // the details' card
-                UiElementsCrate.INSTANCE,
+                // the details' texts and the panel the browser lays them on; the split grid its panes are laid out by
+                UiElementsCrate.INSTANCE, UiSplitGridCrate.INSTANCE,
                 // the messaging parties' runtime: the browser's own scope
                 WorkspacePartiesCrate.INSTANCE,
                 // what a widget is: the sheet it fills its container by

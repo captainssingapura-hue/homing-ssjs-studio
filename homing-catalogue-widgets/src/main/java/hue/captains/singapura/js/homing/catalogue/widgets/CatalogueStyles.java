@@ -50,23 +50,10 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
         }
     }
 
-    /**
-     * The sheet's two panes, side by side in a golden split: the tree the lesser part, the details
-     * the greater - 1 to 1.618 - the tree never narrower than its names can bear.
-     */
-    public record cw_split() implements CssClass<CatalogueStyles> {
-        @Override public String body() { return """
-            display: grid;
-            grid-template-columns: minmax(180px, 1fr) minmax(0, 1.618fr);
-            flex: 1 1 auto;
-            min-height: 0;
-            """;
-        }
-    }
-
-    /** A pane the browser lends a subordinate: a box it fills, scrolling on its own. */
+    /** A pane the browser lends a subordinate: a box it fills - the whole of its cell of the split - scrolling on its own. */
     public record cw_pane() implements CssClass<CatalogueStyles> {
         @Override public String body() { return """
+            flex: 1 1 auto;
             position: relative;
             box-sizing: border-box;
             min-width: 0;
@@ -76,11 +63,10 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
         }
     }
 
-    /** The tree's pane: the lesser part, a hairline at its end - the one line on the sheet. */
+    /** The tree's pane: the lesser part. */
     public record cw_pane_tree() implements CssClass<CatalogueStyles> {
-        @Override public String body() { return "padding: 12px 8px;\nborder-inline-end-width: 1px;\nborder-inline-end-style: solid;\n"; }
+        @Override public String body() { return "padding: 12px 8px;\n"; }
     }
-
     /** The details' pane: the greater part, the entry set in it with room to read. */
     public record cw_pane_details() implements CssClass<CatalogueStyles> {
         @Override public String body() { return "padding: 28px 36px;\n"; }
@@ -228,7 +214,7 @@ public record CatalogueStyles() implements CssGroup<CatalogueStyles> {
 
     @Override
     public List<CssClass<CatalogueStyles>> cssClasses() {
-        return List.of(new cw_browser(), new cw_sheet(), new cw_split(), new cw_pane(), new cw_pane_tree(), new cw_pane_details(),
+        return List.of(new cw_browser(), new cw_sheet(), new cw_pane(), new cw_pane_tree(), new cw_pane_details(),
                 new cw_row(), new cw_row_name(), new cw_row_badge(),
                 new cw_details(), new cw_entry(), new cw_way(), new cw_hint(), new cw_failed(), new cw_hidden(),
                 new cw_cards(), new cw_kicker(), new cw_title(), new cw_summary(), new cw_section_title(), new cw_grid(),

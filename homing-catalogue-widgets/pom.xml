@@ -39,6 +39,12 @@
             <artifactId>homing-ui-elements</artifactId>
             <version>${homing.components.version}</version>
         </dependency>
+        <!-- The browser's two panes: the house's split grid, fixed. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.js</groupId>
+            <artifactId>homing-ui-splitgrid</artifactId>
+            <version>${homing.components.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js</groupId>
             <artifactId>homing-core-js</artifactId>

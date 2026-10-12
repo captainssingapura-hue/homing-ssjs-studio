@@ -5,6 +5,8 @@ import hue.captains.singapura.js.homing.core.Exportable;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
+import hue.captains.singapura.js.homing.ui.elements.BadgeModule;
+import hue.captains.singapura.js.homing.ui.elements.CastingsModule;
 
 import java.util.List;
 
@@ -18,6 +20,9 @@ public record CatalogueRowCellModule() implements DomModule<CatalogueRowCellModu
     @Override
     public ImportsFor<CatalogueRowCellModule> imports() {
         return ImportsFor.<CatalogueRowCellModule>builder()
+                // its badge the house's, cast as what sorts the entry
+                .add(new ModuleImports<>(List.of(new BadgeModule.Badge(), new BadgeModule.BadgeFactory()), BadgeModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueStyles.cw_row(), new CatalogueStyles.cw_row_name(),
                         new CatalogueStyles.cw_row_badge()), CatalogueStyles.INSTANCE))
                 .build();
