@@ -5,6 +5,7 @@ import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
 import hue.captains.singapura.js.homing.libs.LibsCrate;
+import hue.captains.singapura.js.homing.relgrid.prose.RelGridProseCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
 import hue.captains.singapura.js.homing.ui.look.UiLookCrate;
@@ -43,7 +44,9 @@ public final class DocViewWidgetsCrate implements Crate {
                 UiLookCrate.INSTANCE,
                 UiElementsCrate.INSTANCE,
                 // the stage: the button a widget offers itself by
-                WorkspaceStageCrate.INSTANCE);
+                WorkspaceStageCrate.INSTANCE,
+                // a doc's tables: a document's table on the grid
+                RelGridProseCrate.INSTANCE);
     }
 
     @Override

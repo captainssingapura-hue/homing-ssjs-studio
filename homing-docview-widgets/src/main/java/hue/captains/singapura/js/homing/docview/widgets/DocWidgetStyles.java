@@ -90,35 +90,6 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return "margin: 0;\n"; }
     }
 
-    /** A table's box: it scrolls across when the table is wider than the column. */
-    public record dw_table_box() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "overflow-x: auto;\nmin-width: 0;\n"; }
-    }
-
-    /** A table. */
-    public record dw_table() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "border-collapse: collapse;\n"; }
-    }
-
-    /** A column's title. */
-    public record dw_th() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "padding: 4px 12px 4px 0;\nborder-width: 0 0 2px;\nborder-style: solid;\ntext-align: left;\nvertical-align: bottom;\n"; }
-    }
-
-    /** A cell. */
-    public record dw_td() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "padding: 4px 12px 4px 0;\nborder-width: 0 0 1px;\nborder-style: solid;\nvertical-align: top;\nline-height: 1.5;\n"; }
-    }
-
-    public record dw_left() implements CssClass<DocWidgetStyles> { @Override public String body() { return "text-align: left;\n"; } }
-    public record dw_center() implements CssClass<DocWidgetStyles> { @Override public String body() { return "text-align: center;\n"; } }
-    public record dw_right() implements CssClass<DocWidgetStyles> { @Override public String body() { return "text-align: right;\n"; } }
-
-    /** A cell's text, set strong. */
-    public record dw_strong() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return ""; }
-    }
-
     /** A cell's text, set back. */
     public record dw_dim() implements CssClass<DocWidgetStyles> {
         @Override public String body() { return ""; }
@@ -237,8 +208,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
     @Override
     public List<CssClass<DocWidgetStyles>> cssClasses() {
         return List.of(new dw_widget(), new dw_note(), new dw_para(), new dw_heading(), new dw_list(), new dw_quote(), new dw_code_span(),
-                new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_table_box(), new dw_table(), new dw_th(), new dw_td(),
-                new dw_left(), new dw_center(), new dw_right(), new dw_strong(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
+                new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
                 new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_drawing(), new dw_diagram(), new dw_push(),
                 new dw_figure_bar(), new dw_fill(), new dw_refs(), new dw_ref(), new dw_ref_current(), new dw_ref_head(), new dw_ref_title(), new dw_ref_summary(), new dw_ref_meta(), new dw_ref_where(),
                 new dw_caption(),

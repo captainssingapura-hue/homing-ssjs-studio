@@ -5,6 +5,8 @@ import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.Exportable;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
+import hue.captains.singapura.js.homing.relgrid.prose.DocTableRelationModule;
+import hue.captains.singapura.js.homing.relgrid.prose.ProseTableModule;
 import hue.captains.singapura.js.homing.ui.look.CastingsModule;
 import hue.captains.singapura.js.homing.ui.look.LookModule;
 import hue.captains.singapura.js.homing.libs.MarkedJs;
@@ -33,10 +35,11 @@ public record MarkdownDomModule() implements DomModule<MarkdownDomModule> {
                 .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new MarkedJs.marked()), MarkedJs.INSTANCE))
                 .add(new ModuleImports<>(List.of(new HrefManager.HrefManagerInstance()), HrefManager.INSTANCE))
+                // its tables: what each says, and the document's table that draws it
+                .add(new ModuleImports<>(List.of(new DocTableRelationModule.DocTableRelation()), DocTableRelationModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new ProseTableModule.ProseTable()), ProseTableModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_para(), new DocWidgetStyles.dw_heading(), new DocWidgetStyles.dw_list(),
-                        new DocWidgetStyles.dw_quote(), new DocWidgetStyles.dw_pre(), new DocWidgetStyles.dw_table_box(), new DocWidgetStyles.dw_table(),
-                        new DocWidgetStyles.dw_th(), new DocWidgetStyles.dw_td(), new DocWidgetStyles.dw_left(), new DocWidgetStyles.dw_center(),
-                        new DocWidgetStyles.dw_right(), new DocWidgetStyles.dw_rule(), new DocWidgetStyles.dw_code_span(), new DocWidgetStyles.dw_link(),
+                        new DocWidgetStyles.dw_quote(), new DocWidgetStyles.dw_pre(), new DocWidgetStyles.dw_rule(), new DocWidgetStyles.dw_code_span(), new DocWidgetStyles.dw_link(),
                         new DocWidgetStyles.dw_cite()), DocWidgetStyles.INSTANCE))
                 .build();
     }

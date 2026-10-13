@@ -1,56 +1,34 @@
 // =============================================================================
-// DocTable — a doc's table part: its caption, its columns' titles, its rows; every
-// cell markdown text drawn as prose's inline elements are, set to its own or
-// its column's alignment, spanning the columns and rows it says, wearing its
-// badge, strong or set back. A ContentWidget of the type table.
+// DocTable — a doc's table part: its caption, its columns' titles, its rows,
+// said as a DocTableRelation and drawn as a ProseTable - every cell markdown text
+// drawn as prose's inline elements are, set to its own or its column's
+// alignment, spanning the columns it says, wearing its badge, strong or set
+// back. A row span is refused by the relation: the grid spans columns only. A
+// press in it gives it the keys. A ContentWidget of the type table.
 //
 //   new DocTable(container, params)   params: { doc, key }
 // =============================================================================
 
-var _TABLE_ALIGN = Object.freeze({ left: "left", center: "center", right: "right" });
 var _TABLE_BADGE = Object.freeze({ success: "success", warning: "warning", error: "danger", danger: "danger" });
 
 class DocTable extends ContentWidget {
     constructor(container, params) { super(container, params, TABLE, "table"); }
 
+    /** What the doc's table says, as a DocTableRelation - judged when made - drawn as a ProseTable. */
     _draw(t, branch, into) {
-        var md = new MarkdownDom(branch), n = 0;
-        var el = function (tag, cls, parent) {
-            var e = branch.createElement("t" + (n++), tag);
-            if (cls) css.addClass(e, cls);
-            parent.appendChild(e);
-            return e;
-        };
-        var table = DocLooks.wear(el("table", dw_table, el("div", dw_table_box, into)), "table");
-        if (t.caption) md.inline(t.caption, DocLooks.wear(el("caption", dw_caption, table), "caption"));
-        var head = el("tr", null, el("thead", null, table));
-        t.columns.forEach(function (c) { md.inline(c.title, DocTable._aligned(DocLooks.wear(el("th", dw_th, head), "header-cell"), c.align)); });
-        var body = el("tbody", null, table);
-        t.rows.forEach(function (row) {
-            var tr = el("tr", null, body);
-            row.cells.forEach(function (cell, i) {
-                var td = DocTable._aligned(DocLooks.wear(el("td", dw_td, tr), "data-cell"), cell.align || (t.columns[i] ? t.columns[i].align : ""));
-                if (cell.colSpan > 1) td.colSpan = cell.colSpan;
-                if (cell.rowSpan > 1) td.rowSpan = cell.rowSpan;
-                if (cell.emphasis === "strong") css.addClass(td, dw_strong);
-                else if (cell.emphasis === "muted") css.addClass(td, dw_dim);
-                md.inline(cell.text, DocTable._badged(el, cell.badge, td));
-            });
-        });
+        var md = this._md = new MarkdownDom(branch);
+        var table = md.table(new DocTableRelation({
+            caption: t.caption || null,
+            columns: t.columns.map(function (c) { return { title: c.title, align: c.align || null }; }),
+            rows: t.rows.map(function (row) {
+                return row.cells.map(function (cell) {
+                    return { text: cell.text, align: cell.align || null, emphasis: cell.emphasis || null,
+                             badge: _TABLE_BADGE[cell.badge] || null, colSpan: cell.colSpan, rowSpan: cell.rowSpan };
+                });
+            })
+        }), into);
+        this._keysInto(table.grid.el());
     }
 
-    /** What a cell's text goes in: a badge of its status, when it wears one; else the cell. */
-    static _badged(el, badge, td) {
-        var status = _TABLE_BADGE[badge];
-        if (!status) return td;
-        var b = el("span", dw_badge, td);
-        css.addClass(b, status === "success" ? dw_success : status === "warning" ? dw_warning : dw_danger);
-        return DocLooks.wear(b, status + "-badge");   // the house's badge of its tone: success, warning, danger
-    }
-
-    static _aligned(cell, align) {
-        var a = _TABLE_ALIGN[align];
-        if (a) css.addClass(cell, a === "left" ? dw_left : a === "center" ? dw_center : dw_right);
-        return cell;
-    }
+    disposed() { if (this._md) this._md.dispose(); }
 }

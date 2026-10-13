@@ -32,7 +32,7 @@ class PlanPhase extends ContentWidget {
     }
 
     _draw(c, branch, into) {
-        var md = new MarkdownDom(branch), self = this;
+        var md = this._md = new MarkdownDom(branch), self = this;
         var head = branch.createElement("head", "div");
         css.addClass(head, pl_phase_head);
         head.appendChild(PlanMarks.badge(branch, "status", c.status, c.statusLabel));
@@ -45,6 +45,7 @@ class PlanPhase extends ContentWidget {
         into.appendChild(head);
         if (c.summary) md.blocks(c.summary, into);
         var details = this._details(branch, md, c);
+        if (md.tables().length) this._keysInto(function () { return md.keysHost(); });   // a press in a table: its keys
         if (!details) return;
         this._toggle = branch.createElement("toggle", "button");
         css.addClass(this._toggle, dw_view);
@@ -58,6 +59,8 @@ class PlanPhase extends ContentWidget {
         this.unfold(false);
     }
 
+    disposed() { if (this._md) this._md.dispose(); }
+
     /** The details, a block each - or null, when the phase has none. */
     _details(branch, md, c) {
         var details = branch.createElement("details", "div"), any = false;
@@ -65,7 +68,7 @@ class PlanPhase extends ContentWidget {
         var block = function (name, title) { any = true; return PlanPhase._block(branch, name, title, details); };
         if (c.description) { any = true; md.blocks(c.description, details); }
         if (c.tasks.length) PlanPhase._tasks(branch, md, c.tasks, block("tasks", "Tasks"));
-        if (c.metrics.length) PlanPhase._metrics(branch, c.metrics, block("metrics", "Metrics"));
+        if (c.metrics.length) PlanPhase._metrics(md, c.metrics, block("metrics", "Metrics"));
         if (c.after.length) PlanPhase._after(branch, md, c.after, block("after", "Depends on"));
         [["verification", "Verification"], ["rollback", "Rollback"], ["notes", "Notes"]].forEach(function (b) {
             if (c[b[0]]) md.blocks(c[b[0]], block(b[0], b[1]));
@@ -86,21 +89,12 @@ class PlanPhase extends ContentWidget {
         });
     }
 
-    static _metrics(branch, metrics, into) {
-        var box = branch.createElement("metricsBox", "div"), table = branch.createElement("metricsTable", "table");
-        css.addClass(box, dw_table_box);
-        css.addClass(table, dw_table);
-        DocLooks.wear(table, "table");
-        var head = branch.createElement("metricsColumns", "tr");
-        ["Metric", "Before", "After", "Change"].forEach(function (t, j) { DocLooks.wear(PlanPhase._text(branch, "th" + j, "th", dw_th, t, head), "header-cell"); });
-        table.appendChild(head);
-        metrics.forEach(function (m, i) {
-            var row = branch.createElement("metric" + i, "tr");
-            [m.label, m.before, m.after, m.delta].forEach(function (t, j) { DocLooks.wear(PlanPhase._text(branch, "td" + i + "_" + j, "td", dw_td, t, row), "data-cell"); });
-            table.appendChild(row);
-        });
-        box.appendChild(table);
-        into.appendChild(box);
+    /** Its metrics, a table: each metric before, after, and how it changed. */
+    static _metrics(md, metrics, into) {
+        md.table(new DocTableRelation({
+            columns: ["Metric", "Before", "After", "Change"],
+            rows: metrics.map(function (m) { return [m.label, m.before, m.after, m.delta]; })
+        }), into);
     }
 
     /** The phases it depends on: each a link to its section - or, not in the plan, its id alone - and why. */

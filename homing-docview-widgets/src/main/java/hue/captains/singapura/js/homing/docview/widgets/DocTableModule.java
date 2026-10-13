@@ -6,13 +6,14 @@ import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
+import hue.captains.singapura.js.homing.relgrid.prose.DocTableRelationModule;
 import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 
 import java.util.List;
 
 /** A doc's table part: {@code new DocTable(container, params)} - columns and rows, every cell markdown text. */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 7,
-        reason = "It makes its own elements, places elements and wears classes of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 1,
+        reason = "It places its table: it waits for the widget slot to show what it makes.")
 public record DocTableModule() implements DomModule<DocTableModule> {
 
     public static final DocTableModule INSTANCE = new DocTableModule();
@@ -24,15 +25,11 @@ public record DocTableModule() implements DomModule<DocTableModule> {
     @Override
     public ImportsFor<DocTableModule> imports() {
         return ImportsFor.<DocTableModule>builder()
-                // its table, its cells, its caption and its badges, each in its leaf's look
-                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new MarkdownDomModule.MarkdownDom()), MarkdownDomModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new TableContentModule.TABLE()), TableContentModule.INSTANCE))
-                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_table_box(), new DocWidgetStyles.dw_table(), new DocWidgetStyles.dw_caption(),
-                        new DocWidgetStyles.dw_th(), new DocWidgetStyles.dw_td(), new DocWidgetStyles.dw_left(), new DocWidgetStyles.dw_center(),
-                        new DocWidgetStyles.dw_right(), new DocWidgetStyles.dw_strong(), new DocWidgetStyles.dw_dim(), new DocWidgetStyles.dw_badge(),
-                        new DocWidgetStyles.dw_success(), new DocWidgetStyles.dw_warning(), new DocWidgetStyles.dw_danger()), DocWidgetStyles.INSTANCE))
+                // what its table says, judged when made; MarkdownDom draws it as a document's table
+                .add(new ModuleImports<>(List.of(new DocTableRelationModule.DocTableRelation()), DocTableRelationModule.INSTANCE))
                 .build();
     }
 

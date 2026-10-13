@@ -24,6 +24,12 @@
 
     <dependencies>
         <!-- The content parties: their params, their secretary, the pattern their types follow. -->
+        <!-- A doc's tables: a document's table on the grid, made from what it says. -->
+        <dependency>
+            <groupId>io.github.captainssingapura-hue.homing.ssjs</groupId>
+            <artifactId>rel-grid-prose</artifactId>
+            <version>${homing.relgrid.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.github.captainssingapura-hue.homing.js.ws</groupId>
             <artifactId>homing-workspace-content</artifactId>

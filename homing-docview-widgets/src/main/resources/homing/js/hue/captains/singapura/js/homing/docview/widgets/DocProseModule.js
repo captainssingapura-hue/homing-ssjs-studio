@@ -9,5 +9,11 @@
 class DocProse extends ContentWidget {
     constructor(container, params) { super(container, params, PROSE, "prose"); }
 
-    _draw(content, branch, into) { new MarkdownDom(branch).blocks(content.text, into); }
+    _draw(content, branch, into) {
+        var md = this._md = new MarkdownDom(branch);
+        md.blocks(content.text, into);
+        if (md.tables().length) this._keysInto(function () { return md.keysHost(); });   // a press in a table: its keys
+    }
+
+    disposed() { if (this._md) this._md.dispose(); }
 }

@@ -8,9 +8,17 @@
 // A link goes through the page's href manager; a citation, #ref:name, is drawn
 // as one until the references say what it names.
 //
+// A TABLE is a ProseTable made from a DocTableRelation - a grid that reads as a
+// document's table, its cells' text drawn by this inline markdown - and every
+// table made is remembered: where the keys go when the owner is given them,
+// and what goes with the owner.
+//
 //   new MarkdownDom(branch)   the branch is activated by its owner
 //   md.blocks(text, into)     markdown's blocks, appended to `into`
 //   md.inline(text, into)     a line's inline markdown - a table cell's - appended to `into`
+//   md.table(relation, into)  a DocTableRelation as a ProseTable, appended to `into`; → the table
+//   md.tables()               every table made     md.keysHost()   the last pressed table's, else the first
+//   md.dispose()              every table made, taken down: the owner's to call
 // =============================================================================
 
 /** The house's headings, a leaf a level. */
@@ -21,6 +29,8 @@ class MarkdownDom {
         if (!branch) throw new Error("[MarkdownDom] a branch is required: the one it makes its elements in");
         this._branch = branch;
         this._n = 0;
+        this._tables = [];
+        this._pressed = null;
     }
 
     blocks(text, into) { this._blocks(marked.lexer(String(text || "")), into); }
@@ -72,23 +82,37 @@ class MarkdownDom {
         });
     }
 
+    /** A markdown table: its head's and its rows' text, each column set as the table says, as a ProseTable. */
     _table(t, into) {
-        var box = this._el("div", dw_table_box, into), table = DocLooks.wear(this._el("table", dw_table, box), "table"), self = this;
-        var head = this._el("tr", null, this._el("thead", null, table));
-        t.header.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(DocLooks.wear(self._el("th", dw_th, head), "header-cell"), t.align[c])); });
-        var body = this._el("tbody", null, table);
-        t.rows.forEach(function (row) {
-            var tr = self._el("tr", null, body);
-            row.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(DocLooks.wear(self._el("td", dw_td, tr), "data-cell"), t.align[c])); });
-        });
+        this.table(new DocTableRelation({
+            columns: t.header.map(function (cell, c) { return { title: cell.text, align: t.align[c] || null }; }),
+            rows: t.rows.map(function (row) { return row.map(function (cell) { return cell.text; }); })
+        }), into);
     }
 
-    /** A cell set to its column's alignment: left, center or right; none said, as it is. */
-    _aligned(cell, align) {
-        if (align === "left") css.addClass(cell, dw_left);
-        else if (align === "center") css.addClass(cell, dw_center);
-        else if (align === "right") css.addClass(cell, dw_right);
-        return cell;
+    /** A doc's table, from what it says: a ProseTable, its text this inline markdown, remembered. */
+    table(relation, into) {
+        var self = this;
+        var table = new ProseTable(this._branch.createBranch("table" + this._tables.length), relation,
+                                   { inline: function (text, el) { self.inline(text, el); } });
+        table.root.addEventListener("mousedown", function () { self._pressed = table; });
+        into.appendChild(table.root);
+        this._tables.push(table);
+        return table;
+    }
+
+    tables() { return this._tables.slice(); }
+
+    /** Where the keys go when the owner is given them: the table last pressed, else the first. */
+    keysHost() {
+        var table = this._pressed || this._tables[0];
+        return table && table.grid ? table.grid.el() : null;
+    }
+
+    dispose() {
+        this._tables.forEach(function (t) { t.dispose(); });
+        this._tables = [];
+        this._pressed = null;
     }
 
     _inline(tokens, into) {
