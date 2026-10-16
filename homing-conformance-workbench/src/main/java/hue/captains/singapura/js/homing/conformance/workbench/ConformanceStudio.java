@@ -9,6 +9,7 @@ import hue.captains.singapura.js.homing.conformance.workbench.feeds.ReportFeed;
 import hue.captains.singapura.js.homing.conformance.workbench.feeds.WorkbenchFeed;
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
+import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
 import hue.captains.singapura.js.homing.site.Router;
 import hue.captains.singapura.js.homing.site.Site;
 import hue.captains.singapura.js.homing.site.mpa.Brand;
@@ -65,7 +66,7 @@ public final class ConformanceStudio {
         this.brand = Objects.requireNonNull(brand, "ConformanceStudio.brand");
         this.topLevel = List.copyOf(Objects.requireNonNull(topLevel, "ConformanceStudio.topLevel"));
         Objects.requireNonNull(report, "ConformanceStudio.report");
-        this.mpa = StandardMpa.of(Brand.of(brand), HouseStyles.INSTANCE.styling(), new Served(this.topLevel));
+        this.mpa = StandardMpa.of(Brand.of(brand), HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)), new Served(this.topLevel));
         Router router = WorkbenchWorkspaces.SITE.router(mpa, WorkbenchApp.INSTANCE, false);
         this.site = new Named("conformance-studio", router);
         this.feeds = List.of(new CratesFeed(this.topLevel), new CrateConformanceFeed(this.topLevel, report), new CrateGraphFeed(this.topLevel),

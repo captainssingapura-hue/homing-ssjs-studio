@@ -1,6 +1,7 @@
 package hue.captains.singapura.js.homing.catalogue.demo;
 
 import hue.captains.singapura.js.homing.catalogue.site.AppListing;
+import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Router;
 import hue.captains.singapura.js.homing.site.Site;
@@ -8,6 +9,8 @@ import hue.captains.singapura.js.homing.site.catalogue.CatalogueRouter;
 import hue.captains.singapura.js.homing.site.mpa.Brand;
 import hue.captains.singapura.js.homing.site.mpa.StandardMpa;
 import hue.captains.singapura.js.homing.ui.styles.HouseStyles;
+
+import java.util.List;
 
 /**
  * The demo as a site: its router IS the catalogue router, at the root, its tree
@@ -20,7 +23,7 @@ public record DemoSite() implements Site {
     public static final DemoSite INSTANCE = new DemoSite();
 
     /** The site's one MPA: its brand, the designs it offers, the crate it serves. */
-    public static final StandardMpa MPA = StandardMpa.of(Brand.of("Catalogue demo"), HouseStyles.INSTANCE.styling(), DemoSiteCrate.INSTANCE);
+    public static final StandardMpa MPA = StandardMpa.of(Brand.of("Catalogue demo"), HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)), DemoSiteCrate.INSTANCE);
 
     /** Read once: the composed tree is checked when the site is made, not when a request arrives. */
     public static final CatalogueRouter ROUTER = CatalogueRouter.at(Path.ROOT, DemoCatalogue.INSTANCE, MPA).listing(AppListing.INSTANCE);
