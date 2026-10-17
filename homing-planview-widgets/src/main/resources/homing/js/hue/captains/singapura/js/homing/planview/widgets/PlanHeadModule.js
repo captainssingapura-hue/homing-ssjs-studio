@@ -50,11 +50,12 @@ class PlanHead extends ContentWidget {
             var named = branch.createElement("doc" + i, "span");
             PlanHead._text(branch, "role" + i, "span", pl_label, d.role, named);
             if (d.kind === "doc" && d.to) {
-                var link = PlanHead._text(branch, "link" + i, "a", dw_link, d.title || d.to, named);
+                var link = DocLooks.wear(PlanHead._text(branch, "link" + i, "a", dw_link, d.title || d.to, named), "link");
                 HrefManagerInstance.set(link, d.to);
             } else {
                 var nowhere = PlanHead._text(branch, "nowhere" + i, "span", dw_badge, "not placed on this site", named);
                 css.addClass(nowhere, dw_warning);
+                DocLooks.wear(nowhere, "warning-badge");
             }
             line.appendChild(named);
         });

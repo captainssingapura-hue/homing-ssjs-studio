@@ -2,6 +2,8 @@ package hue.captains.singapura.js.homing.conformance.workbench;
 
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
 import hue.captains.singapura.js.homing.component.keyboard.NeedKeyboard;
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -15,6 +17,8 @@ import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import java.util.List;
 
 /** {@code CrateGraph}: the crates and what each requires, drawn by DocView's mermaid engine, in a view that zooms and pans. */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 5,
+        reason = "It places elements, wears classes of its own and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CrateGraphModule() implements DomModule<CrateGraphModule> {
 
     public static final CrateGraphModule INSTANCE = new CrateGraphModule();

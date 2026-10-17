@@ -24,6 +24,8 @@ public record CodeDiagramModule() implements DomModule<CodeDiagramModule> {
     @Override
     public ImportsFor<CodeDiagramModule> imports() {
         return ImportsFor.<CodeDiagramModule>builder()
+                // its code, its language and its views, each in its leaf's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new DiagramContentModule.DIAGRAM()), DiagramContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new SvgMarkupModule.SvgMarkup()), SvgMarkupModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new SvgPanZoomModule.SvgPanZoom()), SvgPanZoomModule.INSTANCE))

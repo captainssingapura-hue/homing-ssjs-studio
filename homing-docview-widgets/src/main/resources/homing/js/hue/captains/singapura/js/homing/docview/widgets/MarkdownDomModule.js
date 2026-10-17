@@ -8,16 +8,29 @@
 // A link goes through the page's href manager; a citation, #ref:name, is drawn
 // as one until the references say what it names.
 //
+// A TABLE is a ProseTable made from a DocTableRelation - a grid that reads as a
+// document's table, its cells' text drawn by this inline markdown - and every
+// table made is remembered: where the keys go when the owner is given them,
+// and what goes with the owner.
+//
 //   new MarkdownDom(branch)   the branch is activated by its owner
 //   md.blocks(text, into)     markdown's blocks, appended to `into`
 //   md.inline(text, into)     a line's inline markdown - a table cell's - appended to `into`
+//   md.table(relation, into)  a DocTableRelation as a ProseTable, appended to `into`; → the table
+//   md.tables()               every table made     md.keysHost()   the last pressed table's, else the first
+//   md.dispose()              every table made, taken down: the owner's to call
 // =============================================================================
+
+/** The house's headings, a leaf a level. */
+const _MD_HEADINGS = Object.freeze([1, 2, 3, 4, 5, 6].map(function (n) { return Object.freeze({ LEAF: "heading" + n }); }));
 
 class MarkdownDom {
     constructor(branch) {
         if (!branch) throw new Error("[MarkdownDom] a branch is required: the one it makes its elements in");
         this._branch = branch;
         this._n = 0;
+        this._tables = [];
+        this._pressed = null;
     }
 
     blocks(text, into) { this._blocks(marked.lexer(String(text || "")), into); }
@@ -40,16 +53,23 @@ class MarkdownDom {
         switch (t.type) {
             case "space": case "def": return;
             case "paragraph": this._inline(t.tokens, this._el("p", dw_para, into)); return;
-            case "heading": this._inline(t.tokens, this._el("h" + Math.min(t.depth + 2, 6), dw_heading, into)); return;
+            case "heading": this._heading(t, into); return;
             case "text": this._inline(t.tokens || [{ type: "text", text: t.text }], this._el("span", null, into)); return;
-            case "blockquote": this._blocks(t.tokens, this._el("blockquote", dw_quote, into)); return;
+            case "blockquote": this._blocks(t.tokens, DocLooks.wear(this._el("blockquote", dw_quote, into), "quote")); return;
             case "list": this._list(t, into); return;
-            case "code": this._el("pre", dw_pre, into).textContent = t.text; return;
+            case "code": DocLooks.wear(this._el("pre", dw_pre, into), "code-block").textContent = t.text; return;
             case "table": this._table(t, into); return;
-            case "hr": this._el("hr", dw_rule, into); return;
+            case "hr": DocLooks.wear(this._el("hr", dw_rule, into), "separator"); return;
             case "html": this._el("p", dw_para, into).textContent = t.raw; return;
             default: this._el("p", dw_para, into).textContent = t.raw || "";
         }
+    }
+
+    /** A heading, two levels under its doc's sections: the native one, in the house's look of its level - it holds links and code. */
+    _heading(t, into) {
+        var level = Math.min(t.depth + 2, 6), h = this._el("h" + level, dw_heading, into);
+        new Look(_MD_HEADINGS[level - 1], ROLE.STANDALONE).wear(h);
+        this._inline(t.tokens, h);
     }
 
     _list(t, into) {
@@ -62,23 +82,37 @@ class MarkdownDom {
         });
     }
 
+    /** A markdown table: its head's and its rows' text, each column set as the table says, as a ProseTable. */
     _table(t, into) {
-        var box = this._el("div", dw_table_box, into), table = this._el("table", dw_table, box), self = this;
-        var head = this._el("tr", null, this._el("thead", null, table));
-        t.header.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(self._el("th", dw_th, head), t.align[c])); });
-        var body = this._el("tbody", null, table);
-        t.rows.forEach(function (row) {
-            var tr = self._el("tr", null, body);
-            row.forEach(function (cell, c) { self._inline(cell.tokens, self._aligned(self._el("td", dw_td, tr), t.align[c])); });
-        });
+        this.table(new DocTableRelation({
+            columns: t.header.map(function (cell, c) { return { title: cell.text, align: t.align[c] || null }; }),
+            rows: t.rows.map(function (row) { return row.map(function (cell) { return cell.text; }); })
+        }), into);
     }
 
-    /** A cell set to its column's alignment: left, center or right; none said, as it is. */
-    _aligned(cell, align) {
-        if (align === "left") css.addClass(cell, dw_left);
-        else if (align === "center") css.addClass(cell, dw_center);
-        else if (align === "right") css.addClass(cell, dw_right);
-        return cell;
+    /** A doc's table, from what it says: a ProseTable, its text this inline markdown, remembered. */
+    table(relation, into) {
+        var self = this;
+        var table = new ProseTable(this._branch.createBranch("table" + this._tables.length), relation,
+                                   { inline: function (text, el) { self.inline(text, el); } });
+        table.root.addEventListener("mousedown", function () { self._pressed = table; });
+        into.appendChild(table.root);
+        this._tables.push(table);
+        return table;
+    }
+
+    tables() { return this._tables.slice(); }
+
+    /** Where the keys go when the owner is given them: the table last pressed, else the first. */
+    keysHost() {
+        var table = this._pressed || this._tables[0];
+        return table && table.grid ? table.grid.el() : null;
+    }
+
+    dispose() {
+        this._tables.forEach(function (t) { t.dispose(); });
+        this._tables = [];
+        this._pressed = null;
     }
 
     _inline(tokens, into) {
@@ -94,7 +128,7 @@ class MarkdownDom {
             case "strong": this._inline(t.tokens, this._el("strong", null, into)); return;
             case "em": this._inline(t.tokens, this._el("em", null, into)); return;
             case "del": this._inline(t.tokens, this._el("del", null, into)); return;
-            case "codespan": this._el("code", dw_code_span, into).textContent = MarkdownDom._unescaped(t.text); return;
+            case "codespan": DocLooks.wear(this._el("code", dw_code_span, into), "code").textContent = MarkdownDom._unescaped(t.text); return;
             case "br": this._el("br", null, into); return;
             case "link": this._link(t, into); return;
             case "image": into.append(t.text || ""); return;
@@ -111,13 +145,13 @@ class MarkdownDom {
     _link(t, into) {
         var { href: target } = t;   // the token's own field: the address the link was written with
         if (String(target).indexOf("#ref:") === 0) {
-            var cite = this._el("a", dw_cite, into);
+            var cite = DocLooks.wear(this._el("a", dw_cite, into), "link");
             HrefManagerInstance.set(cite, target);
             cite.setAttribute("data-ref", String(target).slice(5));
             this._inline(t.tokens, cite);
             return;
         }
-        var a = this._el("a", dw_link, into);
+        var a = DocLooks.wear(this._el("a", dw_link, into), "link");
         HrefManagerInstance.set(a, target);
         if (t.title) a.setAttribute("title", t.title);
         this._inline(t.tokens, a);

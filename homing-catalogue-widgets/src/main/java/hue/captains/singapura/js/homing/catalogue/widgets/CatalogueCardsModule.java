@@ -2,6 +2,8 @@ package hue.captains.singapura.js.homing.catalogue.widgets;
 
 import hue.captains.singapura.js.homing.catalogue.widgets.CatalogueWidgetModule.CatalogueWidget;
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -16,6 +18,8 @@ import java.util.List;
  * One catalogue as cards: {@code new CatalogueCards(container, params)} - its head, then
  * its catalogues and its pages as tiles, each a real link to its authentic path.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 23,
+        reason = "It makes its own elements, places elements, wears classes of its own, writes attributes and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CatalogueCardsModule() implements DomModule<CatalogueCardsModule> {
 
     public static final CatalogueCardsModule INSTANCE = new CatalogueCardsModule();

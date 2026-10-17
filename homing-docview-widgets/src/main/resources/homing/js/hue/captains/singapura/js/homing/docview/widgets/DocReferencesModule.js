@@ -28,8 +28,9 @@ class DocReferences extends ContentWidget {
         if (!this._drawn) { this._pending = name; return false; }   // not drawn yet: shown once it is
         var entry = this._entries.get(name);
         if (!entry) return false;
-        if (this._marked) css.toggleClass(this._marked, dw_ref_current, false);
+        if (this._marked) { css.toggleClass(this._marked, dw_ref_current, false); DocLooks.current(this._marked, false); }
         css.toggleClass(entry, dw_ref_current, true);
+        DocLooks.current(entry, true);   // the row's look draws the current one
         this._marked = entry;
         entry.scrollIntoView({ block: "center" });
         return true;
@@ -60,6 +61,7 @@ class DocReferences extends ContentWidget {
     _entry(branch, ref, i) {
         var entry = branch.createElement("ref" + i, "li");
         css.addClass(entry, dw_ref);
+        DocLooks.wear(entry, "list-row", { only: ["color-background", "color-border", "shape-border", "shape-corner"] });
         var head = branch.createElement("head" + i, "div");
         css.addClass(head, dw_ref_head);
         var goes = (ref.kind === "doc" || ref.kind === "external") && ref.to;
@@ -68,6 +70,7 @@ class DocReferences extends ContentWidget {
         title.textContent = ref.title || ref.name;
         if (goes) {
             css.addClass(title, dw_link);
+            DocLooks.wear(title, "link");
             HrefManagerInstance.set(title, ref.to);
             if (ref.kind === "external") { title.setAttribute("target", "_blank"); title.setAttribute("rel", "noopener noreferrer"); }
         }
@@ -77,6 +80,7 @@ class DocReferences extends ContentWidget {
             var badge = branch.createElement("kind" + i, "span");
             css.addClass(badge, dw_badge);
             css.addClass(badge, ref.kind === "unplaced" ? dw_warning : dw_dim);
+            DocLooks.wear(badge, ref.kind === "unplaced" ? "warning-badge" : "badge");
             badge.textContent = kind;
             head.appendChild(badge);
         }
@@ -84,6 +88,7 @@ class DocReferences extends ContentWidget {
         if (ref.summary) {
             var summary = branch.createElement("summary" + i, "p");
             css.addClass(summary, dw_ref_summary);
+            DocLooks.wear(summary, "caption");
             summary.textContent = ref.summary;
             entry.appendChild(summary);
         }
@@ -95,10 +100,12 @@ class DocReferences extends ContentWidget {
     _meta(branch, ref, i) {
         var meta = branch.createElement("meta" + i, "p");
         css.addClass(meta, dw_ref_meta);
+        DocLooks.wear(meta, "caption");
         var where = ref.kind === "unplaced" ? "placed nowhere on this site" : ref.to;
         if (where) {
             var at = branch.createElement("where" + i, "span");
             css.addClass(at, ref.kind === "unplaced" ? dw_dim : dw_ref_where);
+            if (ref.kind !== "unplaced") DocLooks.wear(at, "code");   // where it is, in the code's face
             at.textContent = where;
             meta.appendChild(at);
             meta.append(" · ");
@@ -109,6 +116,7 @@ class DocReferences extends ContentWidget {
             if (j) meta.append(", ");
             var back = branch.createElement("cite" + i + "_" + j, "a");
             css.addClass(back, dw_link);
+            DocLooks.wear(back, "link");
             HrefManagerInstance.set(back, "#" + c.path);
             back.textContent = c.label;
             meta.appendChild(back);

@@ -3,7 +3,8 @@
 // on - flat, nothing raised off it: its badge as a kicker, its name, its
 // summary, and the way to it - Browse for a catalogue, Open for a page - a real
 // link to its authentic path - but for the entry the page it lies on is: there
-// is no way to where one is. Until something is picked, a hint.
+// is no way to where one is. Until something is picked, a hint. Each is the
+// house's text, or its link, placed by the details and looking as it is.
 //
 // It follows the catalogue party it joins: what the party says is picked, it
 // reads from the site and shows. A press on its link asks the party for the
@@ -24,10 +25,9 @@ class CatalogueDetails extends CatalogueWidget {
         this._box = this.branch.createElement("box", "div");
         css.addClass(this._box, cw_details);
         css.addClass(this._box, wg_scroll);
-        this._hint = this.branch.createElement("hint", "p");
-        css.addClass(this._hint, cw_hint);
-        this._hint.textContent = "Pick an entry to see it here.";
-        this._box.appendChild(this._hint);
+        this._hint = new Caption(CaptionFactory.create(this.branch, "hint"), { text: "Pick an entry to see it here." }, ROLE.STANDALONE);
+        css.addClass(this._hint.el, cw_hint);
+        this._box.appendChild(this._hint.el);
         this.root.appendChild(this._box);
         this._entry = null;
         this._shown = null;
@@ -55,9 +55,8 @@ class CatalogueDetails extends CatalogueWidget {
             self._put(e);
         }, function (err) {
             if (!self.alive || self._asked !== to) return;
-            self._hint.textContent = "The entry at " + to + " could not be read: " + err.message;
-            css.setClass(self._hint, cw_failed);
-            css.toggleClass(self._hint, cw_hidden, false);
+            self._hint.text = "The entry at " + to + " could not be read: " + err.message;
+            css.toggleClass(self._hint.el, cw_hidden, false);
         });
     }
 
@@ -68,27 +67,26 @@ class CatalogueDetails extends CatalogueWidget {
         branch.activate(this);
         var entry = branch.createElement("entry", "article");
         css.addClass(entry, cw_entry);
-        if (e.badge) CatalogueDetails._text(branch, "kicker", "p", cw_kicker, e.badge, entry);
-        CatalogueDetails._text(branch, "title", "h2", cw_title, (e.icon ? e.icon + " " : "") + e.name, entry);
-        if (e.summary) CatalogueDetails._text(branch, "summary", "p", cw_summary, e.summary, entry);
+        if (e.badge) CatalogueDetails._placed(new Kicker(KickerFactory.create(branch, "kicker"), { text: e.badge }, ROLE.STANDALONE), cw_kicker, entry);
+        CatalogueDetails._placed(new Heading4(Heading4Factory.create(branch, "title"), { text: (e.icon ? e.icon + " " : "") + e.name }, ROLE.TITLE), cw_title, entry);
+        if (e.summary) CatalogueDetails._placed(new Lede(LedeFactory.create(branch, "summary"), { text: e.summary }, ROLE.STANDALONE), cw_summary, entry);
         if (e.to !== this._here) {   // the page's own entry: one is there already
-            var way = CatalogueDetails._text(branch, "way", "a", cw_way,
-                    e.kind === "catalogue" ? "Browse →" : (e.opens === "new-tab" ? "Open beside ↗" : "Open →"), entry);
-            HrefManagerInstance.set(way, e.to);
-            this.takes(way, e);
+            var way = new Link(LinkFactory.create(branch, "way"),
+                    { text: e.kind === "catalogue" ? "Browse →" : (e.opens === "new-tab" ? "Open beside ↗" : "Open →"), to: e.to }, ROLE.OPEN);
+            CatalogueDetails._placed(way, cw_way, entry);
+            this.takesLink(way, e);
         }
         this._box.appendChild(entry);
         this._entry = branch;
         this._shown = Object.freeze(e);
-        css.toggleClass(this._hint, cw_hidden, true);
+        css.toggleClass(this._hint.el, cw_hidden, true);
     }
 
-    static _text(branch, name, tag, cls, text, into) {
-        var el = branch.createElement(name, tag);
-        css.addClass(el, cls);
-        el.textContent = text;
-        into.appendChild(el);
-        return el;
+    /** A text or a link of the house's, placed in the entry: where it sits is the details', how it looks its own. */
+    static _placed(component, cls, into) {
+        css.addClass(component.el, cls);
+        into.appendChild(component.el);
+        return component;
     }
 
     disposed() { if (this._entry) { this._entry.dissolve(); this._entry = null; } }

@@ -5,9 +5,9 @@
 // warnings, or clean - then a section per module type, as the policy gives each
 // type a rule set: the rules every module of the type is held to, folded until
 // asked for, and every module, clean ones too, its findings under it. A finding
-// is said in the word its state is: an error danger, a debt (pre-existing,
-// baselined) warning, an allowance info; a module that passes with findings is
-// a warning too, never clean. It follows no pick: the report is the whole.
+// is said in the word its state is: an error danger, a debt (baselined, or
+// declared on its class) warning, an allowance info; a module that passes with
+// findings is a warning too, never clean. It follows no pick: the report is the whole.
 //
 //   new ConformanceReportPane(container, params)   params: none
 // =============================================================================
@@ -78,7 +78,7 @@ class ConformanceReportPane extends WorkbenchPane {
             var fl = self.text(name + "-f" + i, "p", wb_line, (f.severity === "ERROR" ? "✗" : "⚠") + " [" + f.rule + "] " + f.message
                     + "  · " + String(f.disposition).toLowerCase().replace("_", "-"), into, b);
             css.addClass(fl, wb_finding);
-            css.addClass(fl, f.severity === "ERROR" ? wb_danger : f.disposition === "ALLOWED" ? wb_info : f.disposition === "PRE_EXISTING" ? wb_warning : wb_danger);
+            css.addClass(fl, f.severity === "ERROR" ? wb_danger : f.disposition === "ALLOWED" ? wb_info : f.disposition === "PRE_EXISTING" || f.disposition === "DEBT" ? wb_warning : wb_danger);
         });
     }
 }

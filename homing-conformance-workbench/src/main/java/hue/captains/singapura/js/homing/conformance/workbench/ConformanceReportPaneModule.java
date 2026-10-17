@@ -2,6 +2,8 @@ package hue.captains.singapura.js.homing.conformance.workbench;
 
 import hue.captains.singapura.js.homing.component.keyboard.KeyBinding;
 import hue.captains.singapura.js.homing.component.keyboard.NeedKeyboard;
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -11,6 +13,8 @@ import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import java.util.List;
 
 /** {@code ConformanceReportPane}: the report the build exported, decoded, a section per module type. */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 5,
+        reason = "It wears classes of its own and writes attributes: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record ConformanceReportPaneModule() implements DomModule<ConformanceReportPaneModule> {
 
     public static final ConformanceReportPaneModule INSTANCE = new ConformanceReportPaneModule();

@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.catalogue.demo.notes;
 
+import hue.captains.singapura.js.homing.ui.look.LookModule;
+import hue.captains.singapura.js.homing.ui.look.CastingsModule;
 import hue.captains.singapura.js.homing.core.AppModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -55,6 +57,9 @@ public record NoteApp() implements AppModule<NoteApp.Params, NoteApp> {
     @Override
     public ImportsFor<NoteApp> imports() {
         return ImportsFor.<NoteApp>builder()
+                // its title, the house's heading of its level
+                .add(new ModuleImports<>(List.of(new LookModule.Look()), LookModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new NoteStyles.nt_root(), new NoteStyles.nt_title(), new NoteStyles.nt_when(),
                         new NoteStyles.nt_para()), NoteStyles.INSTANCE))

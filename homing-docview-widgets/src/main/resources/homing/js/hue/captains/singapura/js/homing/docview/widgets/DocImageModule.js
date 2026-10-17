@@ -50,6 +50,7 @@ class DocImage extends ContentWidget {
         if (img.caption) {
             var caption = branch.createElement("caption", "figcaption");
             css.addClass(caption, dw_caption);
+            DocLooks.wear(caption, "caption");
             caption.textContent = img.caption;
             figure.appendChild(caption);
         }

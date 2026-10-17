@@ -4,9 +4,9 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
 import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
+import hue.captains.singapura.js.homing.ui.look.UiLookCrate;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public final class RecipesCrate implements Crate {
 
     @Override public String name() { return "homing-catalogue-demo-recipes"; }
 
-    @Override public List<Crate> requires() { return List.of(CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, DesignCrate.INSTANCE, UiElementsCrate.INSTANCE); }
+    @Override public List<Crate> requires() { return List.of(CoreJsCrate.INSTANCE, ServerCrate.INSTANCE, UiLookCrate.INSTANCE, UiElementsCrate.INSTANCE); }
 
     @Override
     public List<CrateEntry> entries() {

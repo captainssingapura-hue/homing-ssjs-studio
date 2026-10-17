@@ -2,8 +2,8 @@
 // CatalogueBrowser — a site's catalogue browsed: the tree and the details of
 // what is picked, side by side on one sheet - a panel lifted off the page once,
 // in its middle part and never narrower than its least, everything on it flat:
-// the tree the lesser part of a golden split, a hairline between them, each
-// scrolling on its own.
+// the tree the lesser part of a golden split - the house's split grid, fixed,
+// its seam between them - each scrolling on its own.
 // A composed widget, an umbrella over two of its own (CatalogueTree,
 // CatalogueDetails), each lent a box of the browser's own and grafted: its
 // DomOps party into the browser's, its focus party into the browser's - which
@@ -28,6 +28,9 @@
 // =============================================================================
 
 const _catalogueBrowserOwner = Object.freeze({ toString: () => "catalogueBrowser" });
+/** Its two panes: the tree the lesser part of a golden split, the details the greater - 1 to 1.618 - side by side. */
+const _CATALOGUE_SPLIT = Object.freeze({ kind: "split", orientation: "horizontal", children: [
+    { node: { kind: "cell", id: "tree" }, ratio: 1 }, { node: { kind: "cell", id: "details" }, ratio: 1.618 }] });
 var _catalogueBrowsers = 0;
 
 class CatalogueBrowser {
@@ -48,19 +51,18 @@ class CatalogueBrowser {
         var place = this._dom.createElement("place", "div");
         css.addClass(place, cw_sheet);
         root.appendChild(place);
-        this._sheet = new PanelBuilder().fills().host(place).build(this._dom.createBranch("sheet"));   // the panel activates the branch it is given
+        this._sheet = new Panel(this._dom.createBranch("sheet"), { fills: true, host: place });   // the panel activates the branch it is given
         this._sheet.elevation("elevated");
-        var split = this._dom.createElement("split", "div");
-        css.addClass(split, cw_split);
         var treeBox = this._dom.createElement("treeBox", "div");
         css.addClass(treeBox, cw_pane);
         css.addClass(treeBox, cw_pane_tree);
         var detailsBox = this._dom.createElement("detailsBox", "div");
         css.addClass(detailsBox, cw_pane);
         css.addClass(detailsBox, cw_pane_details);
-        split.appendChild(treeBox);
-        split.appendChild(detailsBox);
-        this._sheet.body.appendChild(split);
+        // laid out by the house's split grid, fixed: the tree never narrower than its names can bear, the line they meet at the grid's
+        this._split = new SplitGrid(this._dom.createBranch("split"), { host: this._sheet.body, minCellPx: 180, layout: JSON.parse(JSON.stringify(_CATALOGUE_SPLIT)) });
+        this._split.cell("tree").appendChild(treeBox);
+        this._split.cell("details").appendChild(detailsBox);
         this.root = root;
         this._focusParty = focusParties.mobile(name);
         this._tree = new CatalogueTree(treeBox, { at: (params && params.at) || "/" });
@@ -108,6 +110,7 @@ class CatalogueBrowser {
         this.leave();
         this._details.dispose();
         this._tree.dispose();
+        this._split.dispose();
         this._sheet.dispose();
         this._focusParty.dissolve();
         this._dom.dissolve();

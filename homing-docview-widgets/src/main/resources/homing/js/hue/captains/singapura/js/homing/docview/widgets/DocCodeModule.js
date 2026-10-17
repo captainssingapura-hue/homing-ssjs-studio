@@ -50,11 +50,13 @@ class DocCode extends ContentWidget {
         if (content.language) {
             var lang = branch.createElement("lang", "p");
             css.addClass(lang, dw_lang);
+            DocLooks.wear(lang, "caption");
             lang.textContent = content.language;
             into.appendChild(lang);
         }
         var pre = branch.createElement("pre", "pre");
         css.addClass(pre, dw_pre);
+        DocLooks.wear(pre, "code-block");
         var code = branch.createElement("code", "code");
         code.textContent = content.source;
         pre.appendChild(code);

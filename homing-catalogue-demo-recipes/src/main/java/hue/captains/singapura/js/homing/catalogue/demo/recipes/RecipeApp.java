@@ -1,5 +1,7 @@
 package hue.captains.singapura.js.homing.catalogue.demo.recipes;
 
+import hue.captains.singapura.js.homing.ui.look.LookModule;
+import hue.captains.singapura.js.homing.ui.look.CastingsModule;
 import hue.captains.singapura.js.homing.core.AppModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -58,6 +60,9 @@ public record RecipeApp() implements AppModule<RecipeApp.Params, RecipeApp> {
     @Override
     public ImportsFor<RecipeApp> imports() {
         return ImportsFor.<RecipeApp>builder()
+                // its title, the house's heading of its level
+                .add(new ModuleImports<>(List.of(new LookModule.Look()), LookModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new domOpsParty()), DomOpsPartyModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new RecipeStyles.rc_root(), new RecipeStyles.rc_title(), new RecipeStyles.rc_serves(),
                         new RecipeStyles.rc_heading(), new RecipeStyles.rc_list()), RecipeStyles.INSTANCE))

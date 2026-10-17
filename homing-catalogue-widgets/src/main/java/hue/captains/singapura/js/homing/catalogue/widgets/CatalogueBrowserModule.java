@@ -2,6 +2,8 @@ package hue.captains.singapura.js.homing.catalogue.widgets;
 
 import hue.captains.singapura.js.homing.component.keyboard.FocusPartyModule;
 import hue.captains.singapura.js.homing.component.keyboard.focusParties;
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -11,6 +13,7 @@ import hue.captains.singapura.js.homing.core.js.domOpsParties;
 import hue.captains.singapura.js.homing.workspace.parties.MessagingPartyModule;
 import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 import hue.captains.singapura.js.homing.ui.elements.PanelModule;
+import hue.captains.singapura.js.homing.ui.splitgrid.SplitGridModule;
 import hue.captains.singapura.js.homing.workspace.widgets.WidgetStyles;
 
 import java.util.List;
@@ -20,6 +23,8 @@ import java.util.List;
  * and the details of what is picked, composed: each lent a box and grafted, meeting in a
  * catalogue party of the browser's own, linked to the one it is given.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 18,
+        reason = "It makes its own elements, places elements, wears classes of its own and writes attributes: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record CatalogueBrowserModule() implements DomModule<CatalogueBrowserModule> {
 
     public static final CatalogueBrowserModule INSTANCE = new CatalogueBrowserModule();
@@ -41,9 +46,11 @@ public record CatalogueBrowserModule() implements DomModule<CatalogueBrowserModu
                 .add(new ModuleImports<>(List.of(new CatalogueChoiceModule.CATALOGUE()), CatalogueChoiceModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new CatalogueScopeSecretaryModule.CatalogueScopeSecretary()), CatalogueScopeSecretaryModule.INSTANCE))
                 // the one sheet it lays its panes on
-                .add(new ModuleImports<>(List.of(new PanelModule.PanelBuilder()), PanelModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new PanelModule.Panel()), PanelModule.INSTANCE))
+                // its two panes laid out by the house's split grid, fixed: the line they meet at is the grid's
+                .add(new ModuleImports<>(List.of(new SplitGridModule.SplitGrid()), SplitGridModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new WidgetStyles.wg_fill()), WidgetStyles.INSTANCE))
-                .add(new ModuleImports<>(List.of(new CatalogueStyles.cw_browser(), new CatalogueStyles.cw_sheet(), new CatalogueStyles.cw_split(), new CatalogueStyles.cw_pane(),
+                .add(new ModuleImports<>(List.of(new CatalogueStyles.cw_browser(), new CatalogueStyles.cw_sheet(), new CatalogueStyles.cw_pane(),
                         new CatalogueStyles.cw_pane_tree(), new CatalogueStyles.cw_pane_details()), CatalogueStyles.INSTANCE))
                 .build();
     }

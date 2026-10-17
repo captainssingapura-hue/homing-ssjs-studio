@@ -5,6 +5,15 @@
 // =============================================================================
 
 const _timerOwner = Object.freeze({ toString: () => "timer" });
+/** Its title: a page's own name - the house's first heading - on its own tag. */
+const _TITLE_HEADING = Object.freeze({ LEAF: "heading1" });
+
+/** A press on one of the timer's buttons: the timer told which. */
+class KitchenTimerPress {
+    constructor(timer, act) { this._timer = timer; this._act = act; }
+    canHandle(type) { return type === EVENT.CLICK; }
+    handle() { this._timer._pressed(this._act); }
+}
 
 class KitchenTimer {
     constructor(branch, params) {
@@ -14,22 +23,29 @@ class KitchenTimer {
         this._left = this._total;
         this._tick = null;
         var root = this._el("root", "article", rc_root);
-        this._el("title", "h1", rc_title, root).textContent = params.label || "Timer";
+        var heading = this._el("title", "h1", rc_title, root);
+        new Look(_TITLE_HEADING, ROLE.STANDALONE).wear(heading);
+        heading.textContent = params.label || "Timer";
         this._clock = this._el("clock", "p", rc_clock, root);
         this._note = this._el("note", "p", rc_serves, root);
         var row = this._el("row", "div", rc_row, root);
         var self = this;
-        this._go = this._button("go", "Start", "primary", function () { self._toggle(); }, row);
-        this._reset = this._button("reset", "Reset", "plain", function () { self._stop(); self._left = self._total; self._show(); }, row);
+        this._go = this._button("go", "Start", new PrimaryButton(PrimaryButtonFactory.create(branch, "go"), { label: "Start" }), row);
+        this._reset = this._button("reset", "Reset", new PlainButton(PlainButtonFactory.create(branch, "reset"), { label: "Reset" }), row);
         this.root = root;
         this._show();
     }
 
-    _button(name, label, colour, fn, parent) {
-        var builder = new ButtonBuilder(), el = this._branch.createElement(name, builder.tag);
-        var b = builder.label(label).colour(colour).onClick(fn).build(el);
-        parent.appendChild(el);
+    _button(name, label, b, parent) {
+        b.setOnClick(new KitchenTimerPress(this, name));
+        parent.appendChild(b.el);
         return b;
+    }
+
+    /** One of its buttons pressed, by its name: go starts or stops it, reset sets it back. */
+    _pressed(act) {
+        if (act === "go") this._toggle();
+        else if (act === "reset") { this._stop(); this._left = this._total; this._show(); }
     }
 
     _toggle() {
@@ -49,7 +65,7 @@ class KitchenTimer {
     _show() {
         var m = Math.floor(this._left / 60), s = this._left % 60;
         this._clock.textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-        this._go.label(this._tick ? "Pause" : (this._left === this._total ? "Start" : (this._left === 0 ? "Again" : "Go on")));
+        this._go.label = this._tick ? "Pause" : (this._left === this._total ? "Start" : (this._left === 0 ? "Again" : "Go on"));
         this._note.textContent = this._left === 0 ? "Done." : (this._tick ? "Counting down." : "Counts " + Math.round(this._total / 60) + " minutes down.");
     }
 

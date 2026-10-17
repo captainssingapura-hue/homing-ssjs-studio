@@ -33,6 +33,7 @@
 //   w._ask(type, { Content(content), Unavailable(why) })   - for a primitive's own use, once joined
 //   w._offerStage(branch) → the button's element, or null: no stage given
 //   w._keysInto(control)  - control: the element the keys go into when given, or a function answering it now
+//   w.disposed()          - what a primitive holds beside its branch, let go as it is disposed: its tables
 //   w.focus  its membership, once it has keys of its own, else null   w.activate()
 //   w.state() → "alone" | "waiting" | "shown" | "unavailable" - on the root as data-state too
 // =============================================================================
@@ -166,7 +167,11 @@ class ContentWidget {
 
     state() { return this._state; }
 
+    /** Called as it is disposed, before its branch goes: what it holds beside it. Nothing, unless said. */
+    disposed() {}
+
     dispose() {
+        this.disposed();
         this.leave();
         if (this._offKeys) { this._offKeys(); this._offKeys = null; }
         this._focusParty.dissolve();

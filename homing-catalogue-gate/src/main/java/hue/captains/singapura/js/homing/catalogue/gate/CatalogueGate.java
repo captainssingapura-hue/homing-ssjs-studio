@@ -6,6 +6,7 @@ import hue.captains.singapura.js.homing.conformance.engine.ServedModuleRenderer;
 import hue.captains.singapura.js.homing.conformance.rules.CrateClosure;
 import hue.captains.singapura.js.homing.conformance.rules.CrateConformance;
 import hue.captains.singapura.js.homing.conformance.rules.CssConformance;
+import hue.captains.singapura.js.homing.conformance.rules.DeclaredDebts;
 import hue.captains.singapura.js.homing.conformance.rules.DefaultJsRulePolicy;
 import hue.captains.singapura.js.homing.conformance.rules.Finding;
 import hue.captains.singapura.js.homing.conformance.rules.FindingGrader;
@@ -14,9 +15,6 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.CssGroup;
 import hue.captains.singapura.js.homing.core.DomModule;
-import hue.captains.singapura.js.homing.design.Deployment;
-import hue.captains.singapura.js.homing.design.Design;
-import hue.captains.singapura.js.homing.designs.HomingDesigns;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,12 +53,17 @@ public final class CatalogueGate {
         assertEquals(List.of(), result.illegalImports(), "every cross-crate import must be declared in requires()");
     }
 
-    /** Every served module of the crate's closure, graded strictly: the desk carries no debt here, and there is no ledger. */
+    /**
+     * Every served module of the crate's closure, graded strictly: the desk carries no debt here but
+     * what a module declares on its own class ({@code @ConformanceDebt}), with why - and a debt that
+     * is paid is refused, so the debts only shrink.
+     */
     public static void strict(Crate crate) {
         List<Finding> raw = new ConformanceEngine(DefaultJsRulePolicy.INSTANCE, new ServedModuleRenderer()).checkCrates(List.of(crate));
+        assertEquals(List.of(), DeclaredDebts.INSTANCE.unbalanced(List.of(crate), raw), "a debt not as declared - owed exactly, never more");
         List<GradedFinding> errors = FindingGrader.STRICT.grade(raw).stream().filter(GradedFinding::isError).toList();
         assertEquals(List.of(), errors.stream().map(g -> describe(g.finding())).toList(),
-                "the studio on the site stack carries no debt - fix these, there is no ledger to file them in");
+                "the studio on the site stack carries no debt but what its modules declare - fix these");
     }
 
     /** The CSS graph laws, for the crate's own modules. */
@@ -69,18 +72,6 @@ public final class CatalogueGate {
         List<Finding> css = CssConformance.check(new ArrayList<>(CrateClosure.of(List.of(crate))))
                 .stream().filter(f -> own.contains(f.moduleClass())).toList();
         assertEquals(List.of(), css.stream().map(CatalogueGate::describe).toList());
-    }
-
-    /** Every design binds every pair the crate's sheets wear. */
-    public static void designsBind(Crate crate) {
-        var groups = new ArrayList<CssGroup<?>>();
-        for (var e : crate.entries()) if (e.module() instanceof CssGroup<?> g) groups.add(g);
-        if (groups.isEmpty()) return;
-        var worn = Deployment.wornBy(groups);
-        for (var t : HomingDesigns.REGISTRY.themes()) {
-            var r = Deployment.of(worn, Deployment.scaledBy(groups), Deployment.grownBy(groups), (Design) t).resolve();
-            assertEquals(List.of(), r.findings(), () -> ((Design) t).slug() + ": " + r.findings());
-        }
     }
 
     /** The crate's modules take their keys through the party: none listens undeclared, none captures on the document. */

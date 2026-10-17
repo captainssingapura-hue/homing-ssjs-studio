@@ -50,7 +50,7 @@ class DocDesk {
         this._refsPath = refs.length ? tree.children[tree.children.length - 1].name : null;
         var shell = DocDesk._el(place, "shell", dv_shell, el);
         var grid = new SplitGrid(place.createBranch("grid"), {
-            host: shell, minCellPx: 160, seam: true,
+            host: shell, minCellPx: 160, resizable: true,
             layout: { kind: "split", orientation: "horizontal", children: [
                 { node: { kind: "cell", id: "contents" }, ratio: 1 },
                 { node: { kind: "cell", id: "doc" }, ratio: 3 }] }

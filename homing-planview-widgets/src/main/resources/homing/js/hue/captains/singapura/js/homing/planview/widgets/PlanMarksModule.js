@@ -16,6 +16,7 @@ class PlanMarks {
         var b = branch.createElement(name, "span");
         css.addClass(b, dw_badge);
         css.addClass(b, PlanMarks._TONES[mark] || pl_quiet);
+        DocLooks.wear(b, PlanMarks._BADGES[mark] || "badge");   // the house's badge of its tone
         b.textContent = word || mark;
         return b;
     }
@@ -50,3 +51,5 @@ class PlanMarks {
 
 /** How each status stands, as a colour. */
 PlanMarks._TONES = Object.freeze({ "done": dw_success, "resolved": dw_success, "in-progress": dw_warning, "open": dw_warning, "blocked": dw_danger });
+/** How each status stands, as the house's badge of its tone. */
+PlanMarks._BADGES = Object.freeze({ "done": "success-badge", "resolved": "success-badge", "in-progress": "warning-badge", "open": "warning-badge", "blocked": "danger-badge" });

@@ -4,9 +4,11 @@ import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.core.StandardJsModuleType;
 import hue.captains.singapura.js.homing.core.js.CoreJsCrate;
-import hue.captains.singapura.js.homing.design.DesignCrate;
 import hue.captains.singapura.js.homing.libs.LibsCrate;
+import hue.captains.singapura.js.homing.relgrid.prose.RelGridProseCrate;
 import hue.captains.singapura.js.homing.server.ServerCrate;
+import hue.captains.singapura.js.homing.ui.elements.UiElementsCrate;
+import hue.captains.singapura.js.homing.ui.look.UiLookCrate;
 import hue.captains.singapura.js.homing.ui.panzoom.UiPanZoomCrate;
 import hue.captains.singapura.js.homing.workspace.content.WorkspaceContentCrate;
 import hue.captains.singapura.js.homing.workspace.stage.WorkspaceStageCrate;
@@ -32,16 +34,19 @@ public final class DocViewWidgetsCrate implements Crate {
                 CoreJsCrate.INSTANCE,
                 // the focus party, the css manager, the href manager
                 ServerCrate.INSTANCE,
-                // the design words the sheet wears
-                DesignCrate.INSTANCE,
                 // the content parties' params and secretary
                 WorkspaceContentCrate.INSTANCE,
                 // marked: markdown's tokens
                 LibsCrate.INSTANCE,
                 // zoom and pan, for a drawing in place
                 UiPanZoomCrate.INSTANCE,
+                // its headings in the house's look
+                UiLookCrate.INSTANCE,
+                UiElementsCrate.INSTANCE,
                 // the stage: the button a widget offers itself by
-                WorkspaceStageCrate.INSTANCE);
+                WorkspaceStageCrate.INSTANCE,
+                // a doc's tables: a document's table on the grid
+                RelGridProseCrate.INSTANCE);
     }
 
     @Override
@@ -70,6 +75,7 @@ public final class DocViewWidgetsCrate implements Crate {
                 CrateEntry.of(MermaidEngineModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(DiagramStewardModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 // markdown made into elements, the base of every primitive, and the primitives
+                CrateEntry.of(DocLooksModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(MarkdownDomModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(SvgMarkupModule.INSTANCE, StandardJsModuleType.CONSUMER),
                 CrateEntry.of(CodeDiagramModule.INSTANCE, StandardJsModuleType.CONSUMER),

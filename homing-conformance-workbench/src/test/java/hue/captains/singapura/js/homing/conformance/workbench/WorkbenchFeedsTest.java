@@ -13,8 +13,11 @@ import hue.captains.singapura.js.homing.conformance.workbench.feeds.CratesFeed;
 import hue.captains.singapura.js.homing.conformance.workbench.feeds.ReportFeed;
 import hue.captains.singapura.js.homing.conformance.workbench.feeds.WorkbenchFeed;
 import hue.captains.singapura.js.homing.core.Crate;
+import hue.captains.singapura.js.homing.design.styling.InstalledStyling;
+import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
 import hue.captains.singapura.js.homing.server.EmptyParam;
 import hue.captains.singapura.js.homing.server.ResourceNotFound;
+import hue.captains.singapura.js.homing.ui.styles.HouseStyles;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,6 +48,7 @@ class WorkbenchFeedsTest {
 
     @BeforeAll
     static void export() throws Exception {
+        InstalledStyling.install(HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)));   // the instance the studio installs: what is made from its taxonomy is served (D51)
         var run = new ConformanceEngine().assemble(CrateClosure.of(CRATES), FindingGrader.STRICT);
         new ConformanceReportWriter().write(reportDir, run);
         report = new ConformanceReportSource(reportDir);
@@ -71,6 +75,29 @@ class WorkbenchFeedsTest {
         assertEquals("module:" + WorkbenchApp.class.getName(), app.getString("key"));
         assertEquals("homing-conformance-workbench", app.getString("crate"));
         assertEquals(WorkbenchApp.class.getName(), app.getString("fqcn"));
+    }
+
+    /**
+     * Every module says its kind, read off the module - a widget, a component simple or composed, other
+     * UI, non-UI, styles, infrastructure - and the root counts them, every kind, for the navigator to
+     * show which modules it lists.
+     */
+    @Test
+    void everyModuleSaysItsKind_andTheRootCountsThem() throws Exception {
+        var tree = new JsonObject(body(new CratesFeed(CRATES), null));
+        var leaves = new ArrayList<JsonObject>();
+        tree.getJsonArray("children").forEach(c -> collect((JsonObject) c, leaves));
+        java.util.function.Function<String, String> typeOf = label -> leaves.stream().filter(l -> l.getString("label").equals(label))
+                .findFirst().orElseThrow().getString("type");
+        assertEquals("widget", typeOf.apply("CrateNavigatorModule"), "a module that exports a widget");
+        assertEquals("styles", typeOf.apply("WorkbenchStyles"), "a CSS group");
+        assertEquals("non-ui", typeOf.apply("WorkbenchFeedsModule"), "a module that touches no DOM");
+        assertEquals("ui", typeOf.apply("WorkbenchNavigatorModule"), "a DOM module that exports no component: the navigators' base");
+        JsonArray types = tree.getJsonArray("types");
+        assertEquals(List.of("widget", "component-simple", "component-composed", "ui", "non-ui", "styles", "infrastructure"),
+                types.stream().map(o -> ((JsonObject) o).getString("type")).toList(), "every kind, in its order");
+        assertEquals(tree.getInteger("modules"), types.stream().mapToInt(o -> ((JsonObject) o).getInteger("modules")).sum(), "each module counted once");
+        for (JsonObject leaf : leaves) assertTrue(leaf.getString("typeLabel") != null && !leaf.getString("typeLabel").isBlank(), leaf.getString("label"));
     }
 
     private static void collect(JsonObject node, List<JsonObject> leaves) {

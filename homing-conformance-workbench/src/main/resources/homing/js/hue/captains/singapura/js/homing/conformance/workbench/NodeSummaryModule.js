@@ -26,7 +26,7 @@ class NodeSummary extends WorkbenchPane {
 
     show(n, b) {
         var card = this.text("card", "article", wb_card, null, null, b);
-        this.text("kicker", "p", wb_kicker, n.kind === "module" ? String(n.form).toLowerCase().replace(/_/g, "-") + " module" : n.kind, card, b);
+        this.text("kicker", "p", wb_kicker, n.kind === "module" ? String(n.typeLabel || "module").toLowerCase() : n.kind, card, b);
         this.text("title", "h2", wb_title, n.label, card, b);
         if (n.kind === "module") this.text("fqcn", "p", wb_code, n.fqcn, card, b);
         this.facts(b, card, NodeSummary.factsOf(n));
@@ -35,10 +35,11 @@ class NodeSummary extends WorkbenchPane {
 
     static factsOf(n) {
         switch (n.kind) {
-            case "crates":  return [["crates", n.crates], ["modules", n.modules]];
+            case "crates":  return [["crates", n.crates], ["modules", n.modules]]
+                                .concat((n.types || []).filter(function (t) { return t.modules; }).map(function (t) { return [t.label.toLowerCase(), t.modules]; }));
             case "crate":   return [["modules", n.modules], ["package", n.prefix || "(several)"], ["requires", n.requires.length ? n.requires.join(", ") : "none"]];
             case "package": return [["crate", n.crate], ["modules", n.modules]];
-            case "module":  return [["crate", n.crate], ["form", n.form]];
+            case "module":  return [["crate", n.crate], ["kind", n.typeLabel], ["form", n.form]];
             default:        return [];
         }
     }

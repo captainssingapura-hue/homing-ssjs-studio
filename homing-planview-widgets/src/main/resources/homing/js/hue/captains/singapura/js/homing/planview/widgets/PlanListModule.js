@@ -13,7 +13,7 @@ class PlanList extends ContentWidget {
     constructor(container, params) { super(container, params, PLAN_LIST, "plan-list"); }
 
     _draw(c, branch, into) {
-        var md = new MarkdownDom(branch);
+        var md = this._md = new MarkdownDom(branch);
         if (c.note) {
             var note = branch.createElement("note", "p");
             css.addClass(note, pl_figure);
@@ -24,7 +24,10 @@ class PlanList extends ContentWidget {
         css.addClass(rows, pl_rows);
         c.rows.forEach(function (r, i) { rows.appendChild(PlanList._row(branch, md, r, i)); });
         into.appendChild(rows);
+        if (md.tables().length) this._keysInto(function () { return md.keysHost(); });   // a press in a table: its keys
     }
+
+    disposed() { if (this._md) this._md.dispose(); }
 
     static _row(branch, md, r, i) {
         var row = branch.createElement("row" + i, "li");

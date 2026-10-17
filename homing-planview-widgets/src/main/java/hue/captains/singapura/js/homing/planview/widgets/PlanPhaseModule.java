@@ -1,5 +1,8 @@
 package hue.captains.singapura.js.homing.planview.widgets;
 
+import hue.captains.singapura.js.homing.docview.widgets.DocLooksModule;
+import hue.captains.singapura.js.homing.conformance.rules.ConformanceDebt;
+import hue.captains.singapura.js.homing.conformance.rules.WidgetDrawsOnlyComponentsRule;
 import hue.captains.singapura.js.homing.core.DomModule;
 import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
@@ -7,6 +10,7 @@ import hue.captains.singapura.js.homing.core.ModuleImports;
 import hue.captains.singapura.js.homing.docview.widgets.ContentWidgetModule;
 import hue.captains.singapura.js.homing.docview.widgets.DocWidgetStyles;
 import hue.captains.singapura.js.homing.docview.widgets.MarkdownDomModule;
+import hue.captains.singapura.js.homing.relgrid.prose.DocTableRelationModule;
 import hue.captains.singapura.js.homing.server.HrefManager;
 import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 
@@ -17,6 +21,8 @@ import java.util.List;
  * summary; its details - description, tasks, metrics, what it depends on, verification, rollback,
  * notes - folded until they are asked for.
  */
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 41,
+        reason = "It makes its own elements, places elements, wears classes of its own, writes attributes and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record PlanPhaseModule() implements DomModule<PlanPhaseModule> {
 
     public static final PlanPhaseModule INSTANCE = new PlanPhaseModule();
@@ -28,13 +34,16 @@ public record PlanPhaseModule() implements DomModule<PlanPhaseModule> {
     @Override
     public ImportsFor<PlanPhaseModule> imports() {
         return ImportsFor.<PlanPhaseModule>builder()
+                // its links, each in its leaf's look
+                .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new MarkdownDomModule.MarkdownDom()), MarkdownDomModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PlanPhaseContentModule.PLAN_PHASE()), PlanPhaseContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PlanMarksModule.PlanMarks()), PlanMarksModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new HrefManager.HrefManagerInstance()), HrefManager.INSTANCE))
-                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_view(), new DocWidgetStyles.dw_link(), new DocWidgetStyles.dw_table_box(),
-                        new DocWidgetStyles.dw_table(), new DocWidgetStyles.dw_th(), new DocWidgetStyles.dw_td()), DocWidgetStyles.INSTANCE))
+                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_view(), new DocWidgetStyles.dw_link()), DocWidgetStyles.INSTANCE))
+                // its metrics: what they say, as a document's table
+                .add(new ModuleImports<>(List.of(new DocTableRelationModule.DocTableRelation()), DocTableRelationModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new PlanStyles.pl_phase_head(), new PlanStyles.pl_figure(), new PlanStyles.pl_toggle(), new PlanStyles.pl_hidden(),
                         new PlanStyles.pl_details(), new PlanStyles.pl_block(), new PlanStyles.pl_block_head(), new PlanStyles.pl_rows(), new PlanStyles.pl_task()),
                         PlanStyles.INSTANCE))
