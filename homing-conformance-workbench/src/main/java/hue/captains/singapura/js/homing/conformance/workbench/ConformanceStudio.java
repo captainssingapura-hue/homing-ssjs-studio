@@ -13,6 +13,7 @@ import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
 import hue.captains.singapura.js.homing.site.Router;
 import hue.captains.singapura.js.homing.site.Site;
 import hue.captains.singapura.js.homing.site.mpa.Brand;
+import hue.captains.singapura.js.homing.design.styling.Styling;
 import hue.captains.singapura.js.homing.site.mpa.StandardMpa;
 import hue.captains.singapura.js.homing.ui.styles.HouseStyles;
 import hue.captains.singapura.tao.http.action.ActionRegistry;
@@ -50,6 +51,10 @@ import java.util.Objects;
  *   ConformanceStudio.of("Homing · core conformance", CORE_CRATES, ConformanceStudio.exportedReport(MyLauncher.class)).serve(8090);
  * </pre>
  *
+ * <p>It is served in the styling of the site whose crates it browses: the house's with the grid's
+ * frame unless a launcher hands it its own - a downstream whose crates draw leaves of its own
+ * registers them in it, as its site does.</p>
+ *
  * <p>The MPA serves the crates it browses beside the workbench's own, so the source pane reads a
  * module as it is served. The workbenches keep their states in the browser: the page is told no
  * server keeps them.</p>
@@ -62,11 +67,12 @@ public final class ConformanceStudio {
     private final Site site;
     private final List<WorkbenchFeed> feeds;
 
-    private ConformanceStudio(String brand, List<Crate> topLevel, ConformanceReportSource report) {
+    /** A studio over these crates, in the styling of the site they are served by, saying of their rules what this report says. */
+    public ConformanceStudio(String brand, Styling styling, List<Crate> topLevel, ConformanceReportSource report) {
         this.brand = Objects.requireNonNull(brand, "ConformanceStudio.brand");
         this.topLevel = List.copyOf(Objects.requireNonNull(topLevel, "ConformanceStudio.topLevel"));
         Objects.requireNonNull(report, "ConformanceStudio.report");
-        this.mpa = StandardMpa.of(Brand.of(brand), HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)), new Served(this.topLevel));
+        this.mpa = StandardMpa.of(Brand.of(brand), Objects.requireNonNull(styling, "ConformanceStudio.styling"), new Served(this.topLevel));
         Router router = WorkbenchWorkspaces.SITE.router(mpa, WorkbenchApp.INSTANCE, false);
         this.site = new Named("conformance-studio", router);
         this.feeds = List.of(new CratesFeed(this.topLevel), new CrateConformanceFeed(this.topLevel, report), new CrateGraphFeed(this.topLevel),
@@ -75,7 +81,7 @@ public final class ConformanceStudio {
 
     /** A studio over these crates, saying of their rules what this report says. */
     public static ConformanceStudio of(String brand, List<Crate> topLevel, ConformanceReportSource report) {
-        return new ConformanceStudio(brand, topLevel, report);
+        return new ConformanceStudio(brand, HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)), topLevel, report);
     }
 
     public String brand() { return brand; }
