@@ -1,0 +1,12 @@
+/* The document reference in the base layer: an entry of a document's references - ruled off above in the hairline, clear on the page, its corner square, and washed in the accent while a citation has asked for it. Its room is the list's. Whole: every property its look has (D9). */
+$casting {
+    background-color: transparent;
+    border-color: var(--fp-border);
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-radius: 0;
+
+    &$current {
+        background-color: var(--fp-accent-wash-light);
+    }
+}

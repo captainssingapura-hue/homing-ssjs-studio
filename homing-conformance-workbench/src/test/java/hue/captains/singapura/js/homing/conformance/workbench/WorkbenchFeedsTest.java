@@ -15,6 +15,7 @@ import hue.captains.singapura.js.homing.conformance.workbench.feeds.WorkbenchFee
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.design.styling.InstalledStyling;
 import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
+import hue.captains.singapura.js.homing.docview.widgets.DocViewBaseModule;
 import hue.captains.singapura.js.homing.server.EmptyParam;
 import hue.captains.singapura.js.homing.server.ResourceNotFound;
 import hue.captains.singapura.js.homing.ui.styles.HouseStyles;
@@ -48,7 +49,7 @@ class WorkbenchFeedsTest {
 
     @BeforeAll
     static void export() throws Exception {
-        InstalledStyling.install(HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)));   // the instance the studio installs: what is made from its taxonomy is served (D51)
+        InstalledStyling.install(HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE, DocViewBaseModule.INSTANCE)));   // the instance the studio installs: what is made from its taxonomy is served (D51)
         var run = new ConformanceEngine().assemble(CrateClosure.of(CRATES), FindingGrader.STRICT);
         new ConformanceReportWriter().write(reportDir, run);
         report = new ConformanceReportSource(reportDir);

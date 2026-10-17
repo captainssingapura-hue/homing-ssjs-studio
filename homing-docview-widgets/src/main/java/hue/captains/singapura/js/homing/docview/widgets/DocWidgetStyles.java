@@ -166,14 +166,9 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         @Override public String body() { return "list-style: none;\nmargin: 0;\npadding: 0;\ndisplay: flex;\nflex-direction: column;\n"; }
     }
 
-    /** A reference's entry: a hairline above it, its head, its summary, where it goes. */
+    /** A reference's entry, laid out: its head, its summary, where it goes - its rule and its ground its look's. */
     public record dw_ref() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return "display: flex;\nflex-direction: column;\ngap: 4px;\npadding: 10px 12px;\nborder-top-width: 1px;\nborder-top-style: solid;\n"; }
-    }
-
-    /** The entry a citation followed asks for: the design's current surface. */
-    public record dw_ref_current() implements CssClass<DocWidgetStyles> {
-        @Override public String body() { return ""; }
+        @Override public String body() { return "display: flex;\nflex-direction: column;\ngap: 4px;\npadding: 10px 12px;\n"; }
     }
 
     /** An entry's head: its title, and what it is when it is not a page of the site. */
@@ -210,7 +205,7 @@ public record DocWidgetStyles() implements CssGroup<DocWidgetStyles> {
         return List.of(new dw_widget(), new dw_note(), new dw_para(), new dw_heading(), new dw_list(), new dw_quote(), new dw_code_span(),
                 new dw_link(), new dw_cite(), new dw_rule(), new dw_pre(), new dw_lang(), new dw_dim(), new dw_badge(), new dw_success(), new dw_warning(),
                 new dw_danger(), new dw_figure(), new dw_svg(), new dw_views(), new dw_view(), new dw_plate(), new dw_drawing(), new dw_diagram(), new dw_push(),
-                new dw_figure_bar(), new dw_fill(), new dw_refs(), new dw_ref(), new dw_ref_current(), new dw_ref_head(), new dw_ref_title(), new dw_ref_summary(), new dw_ref_meta(), new dw_ref_where(),
+                new dw_figure_bar(), new dw_fill(), new dw_refs(), new dw_ref(), new dw_ref_head(), new dw_ref_title(), new dw_ref_summary(), new dw_ref_meta(), new dw_ref_where(),
                 new dw_caption(),
                 // last, so what is hidden stays hidden whatever else in the sheet says how it lays out
                 new dw_hidden());

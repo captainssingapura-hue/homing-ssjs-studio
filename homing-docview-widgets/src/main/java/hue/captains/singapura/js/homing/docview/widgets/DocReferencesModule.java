@@ -7,6 +7,9 @@ import hue.captains.singapura.js.homing.core.ExportsOf;
 import hue.captains.singapura.js.homing.core.ImportsFor;
 import hue.captains.singapura.js.homing.core.ModuleImports;
 import hue.captains.singapura.js.homing.server.HrefManager;
+import hue.captains.singapura.js.homing.ui.look.CastingsModule;
+import hue.captains.singapura.js.homing.ui.look.LookModule;
+import hue.captains.singapura.js.homing.ui.look.StatesAndEventsModule;
 import hue.captains.singapura.js.homing.workspace.widgets.SelfContainedWidget;
 
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.List;
  * section shows it: each reference its title, a link where it goes; what it is; its summary; where
  * it goes, and the sections that cite it.
  */
-@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 45,
+@ConformanceDebt(rule = WidgetDrawsOnlyComponentsRule.class, findings = 44,
         reason = "It makes its own elements, places elements, wears classes of its own, writes attributes and writes text of its own: it waits for the designed containers, the widget slot and the content components to draw only components.")
 public record DocReferencesModule() implements DomModule<DocReferencesModule> {
 
@@ -31,10 +34,14 @@ public record DocReferencesModule() implements DomModule<DocReferencesModule> {
         return ImportsFor.<DocReferencesModule>builder()
                 // its rows, links, badges and captions, each in its leaf's look
                 .add(new ModuleImports<>(List.of(new DocLooksModule.DocLooks()), DocLooksModule.INSTANCE))
+                // its entries, each the widgets' own component in its look, its state whether a citation asked for it
+                .add(new ModuleImports<>(List.of(new LookModule.Look()), LookModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new CastingsModule.ROLE()), CastingsModule.INSTANCE))
+                .add(new ModuleImports<>(List.of(new StatesAndEventsModule.STATE()), StatesAndEventsModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ContentWidgetModule.ContentWidget()), ContentWidgetModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new ReferencesContentModule.REFERENCES()), ReferencesContentModule.INSTANCE))
                 .add(new ModuleImports<>(List.of(new HrefManager.HrefManagerInstance()), HrefManager.INSTANCE))
-                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_refs(), new DocWidgetStyles.dw_ref(), new DocWidgetStyles.dw_ref_current(),
+                .add(new ModuleImports<>(List.of(new DocWidgetStyles.dw_refs(), new DocWidgetStyles.dw_ref(),
                         new DocWidgetStyles.dw_ref_head(), new DocWidgetStyles.dw_ref_title(), new DocWidgetStyles.dw_ref_summary(),
                         new DocWidgetStyles.dw_ref_meta(), new DocWidgetStyles.dw_ref_where(), new DocWidgetStyles.dw_link(), new DocWidgetStyles.dw_badge(),
                         new DocWidgetStyles.dw_warning(), new DocWidgetStyles.dw_dim(), new DocWidgetStyles.dw_note()), DocWidgetStyles.INSTANCE))

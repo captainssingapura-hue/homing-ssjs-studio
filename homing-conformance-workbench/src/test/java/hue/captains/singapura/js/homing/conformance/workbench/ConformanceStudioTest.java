@@ -11,6 +11,7 @@ import hue.captains.singapura.js.homing.conformance.workbench.feeds.ReportFeed;
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.design.styling.InstalledStyling;
 import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
+import hue.captains.singapura.js.homing.docview.widgets.DocViewBaseModule;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Query;
 import hue.captains.singapura.js.homing.ui.styles.HouseStyles;
@@ -37,7 +38,7 @@ class ConformanceStudioTest {
 
     @BeforeAll
     static void studio() throws Exception {
-        InstalledStyling.install(HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)));   // the instance the studio installs: what is made from its taxonomy is served (D51)
+        InstalledStyling.install(HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE, DocViewBaseModule.INSTANCE)));   // the instance the studio installs: what is made from its taxonomy is served (D51)
         new ConformanceReportWriter().write(reportDir, new ConformanceEngine().assemble(CrateClosure.of(CRATES), FindingGrader.STRICT));
         studio = ConformanceStudio.of("Test conformance", CRATES, new ConformanceReportSource(reportDir));
     }
