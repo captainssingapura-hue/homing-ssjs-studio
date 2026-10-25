@@ -12,11 +12,25 @@
 //   w.show(name) → true when the doc declares it    w.count()
 // =============================================================================
 
+/** An entry of a doc's references: the widgets' own component, its state whether a citation has asked for it - reflected, and its class. */
+const _DOC_REFERENCE = Object.freeze({
+    LEAF: "doc-reference",
+    AXES: Object.freeze({
+        current: Object.freeze({
+            values: Object.freeze([false, true]),
+            rest: false,
+            reflect: function (el, on) { if (on) el.setAttribute("aria-current", "true"); else el.removeAttribute("aria-current"); },
+            state: STATE.CURRENT
+        })
+    })
+});
+
 class DocReferences extends ContentWidget {
 
     constructor(container, params) {
         super(container, params, REFERENCES, "references");
         this._entries = new Map();   // name → its entry
+        this._entryLook = new Look(_DOC_REFERENCE, ROLE.STANDALONE);
         this._marked = null;
         this._pending = null;
         this._drawn = false;
@@ -28,9 +42,8 @@ class DocReferences extends ContentWidget {
         if (!this._drawn) { this._pending = name; return false; }   // not drawn yet: shown once it is
         var entry = this._entries.get(name);
         if (!entry) return false;
-        if (this._marked) { css.toggleClass(this._marked, dw_ref_current, false); DocLooks.current(this._marked, false); }
-        css.toggleClass(entry, dw_ref_current, true);
-        DocLooks.current(entry, true);   // the row's look draws the current one
+        if (this._marked) this._entryLook.show(this._marked, { current: false });
+        this._entryLook.show(entry, { current: true });   // the entry's look draws the current one
         this._marked = entry;
         entry.scrollIntoView({ block: "center" });
         return true;
@@ -61,7 +74,7 @@ class DocReferences extends ContentWidget {
     _entry(branch, ref, i) {
         var entry = branch.createElement("ref" + i, "li");
         css.addClass(entry, dw_ref);
-        DocLooks.wear(entry, "list-row", { only: ["color-background", "color-border", "shape-border", "shape-corner"] });
+        this._entryLook.wear(entry);   // the entry's look, whole: its rule above, its ground; its room the list's
         var head = branch.createElement("head" + i, "div");
         css.addClass(head, dw_ref_head);
         var goes = (ref.kind === "doc" || ref.kind === "external") && ref.to;

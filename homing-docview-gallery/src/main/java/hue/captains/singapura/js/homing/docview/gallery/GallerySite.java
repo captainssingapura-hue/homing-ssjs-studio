@@ -2,6 +2,7 @@ package hue.captains.singapura.js.homing.docview.gallery;
 
 import hue.captains.singapura.js.homing.catalogue.site.AppListing;
 import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
+import hue.captains.singapura.js.homing.docview.widgets.DocViewBaseModule;
 import hue.captains.singapura.js.homing.site.Path;
 import hue.captains.singapura.js.homing.site.Router;
 import hue.captains.singapura.js.homing.site.Site;
@@ -17,7 +18,7 @@ public record GallerySite() implements Site {
 
     public static final GallerySite INSTANCE = new GallerySite();
 
-    public static final StandardMpa MPA = StandardMpa.of(Brand.of("DocView widgets"), HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)), DocViewGalleryCrate.INSTANCE);
+    public static final StandardMpa MPA = StandardMpa.of(Brand.of("DocView widgets"), HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE, DocViewBaseModule.INSTANCE)), DocViewGalleryCrate.INSTANCE);
 
     public static final CatalogueRouter ROUTER = CatalogueRouter.at(Path.ROOT, GalleryCatalogue.INSTANCE, MPA).listing(AppListing.INSTANCE);
 

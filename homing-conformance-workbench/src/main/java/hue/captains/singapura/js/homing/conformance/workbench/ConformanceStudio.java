@@ -10,6 +10,7 @@ import hue.captains.singapura.js.homing.conformance.workbench.feeds.WorkbenchFee
 import hue.captains.singapura.js.homing.core.Crate;
 import hue.captains.singapura.js.homing.core.CrateEntry;
 import hue.captains.singapura.js.homing.relgrid.house.GridFrameBaseModule;
+import hue.captains.singapura.js.homing.docview.widgets.DocViewBaseModule;
 import hue.captains.singapura.js.homing.site.Router;
 import hue.captains.singapura.js.homing.site.Site;
 import hue.captains.singapura.js.homing.site.mpa.Brand;
@@ -81,7 +82,7 @@ public final class ConformanceStudio {
 
     /** A studio over these crates, saying of their rules what this report says. */
     public static ConformanceStudio of(String brand, List<Crate> topLevel, ConformanceReportSource report) {
-        return new ConformanceStudio(brand, HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE)), topLevel, report);
+        return new ConformanceStudio(brand, HouseStyles.INSTANCE.styling(List.of(GridFrameBaseModule.INSTANCE, DocViewBaseModule.INSTANCE)), topLevel, report);
     }
 
     public String brand() { return brand; }
